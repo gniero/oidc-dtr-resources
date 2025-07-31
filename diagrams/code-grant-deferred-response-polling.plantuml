@@ -1,0 +1,31 @@
+@startuml AuthorizationCodeGrantDeferredResponse
+
+actor User
+participant "User Agent" as UA
+participant "Client" as Client
+participant "Authorization Server" as AS
+participant "Resource Server" as RS
+
+== Authorization Request ==
+User -> UA: Initiates login
+UA -> Client: Sends login request
+Client -> UA: Redirects to Authorization Server
+UA -> AS: Authorization Request (response_type=code)
+AS -> UA: Presents authentication & consent UI
+UA -> User: Shows authentication & consent
+User -> UA: Provides credentials & consent
+UA -> AS: Submits credentials & consent
+AS -> UA: Redirects back to Client with Authorization Code
+UA -> Client: Delivers Authorization Code
+
+== Token Request ==
+Client -> AS: Token Request (code, client credentials)
+AS -> Client: Deferred Token Response (token pending)
+
+== Token Retrieval ==
+Client -> AS: Polls for Token
+AS -> Client: Access Token (when ready)
+
+== Resource Access ==
+Client -> RS: Access Resource (with Access Token)
+RS ->
