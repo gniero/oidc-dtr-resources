@@ -42,9 +42,44 @@ Throughout this document, values are quoted to indicate that they are to be take
 When using these values in protocol messages, the quotes MUST NOT be used as part of the value.
 
 ## Terminology
-This specification uses the terms "Access Token", "Authorization Endpoint", "Authorization Request", "Authorization Response", "Authorization Code Grant", "Authorization Server", "Client", "Client Authentication", "Client Identifier", "Token Endpoint", "Token Request" and "Token Response" defined by OAuth 2.0 [@!RFC6749], the terms "End-User" and "Request Object" as defined by OpenID Connect Core [@!OpenID.Core] and the term "JSON Web Token (JWT)" defined by JSON Web Token (JWT) [@!RFC7519].
+This specification uses the terms "Access Token", "Authorization Endpoint", "Authorization Request", "Authorization Response", "Authorization Code Grant", "Authorization Server", "Client", "Client Authentication", "Client Identifier", "Token Endpoint", "Token Request" and "Token Response" defined by OAuth 2.0 [@!RFC6749], the terms "OpenID Provider (OP)", "Relying Party (RP)", "End-User" and "Request Object" as defined by OpenID Connect Core [@!OpenID.Core] and the term "JSON Web Token (JWT)" defined by JSON Web Token (JWT) [@!RFC7519].
 
 # Overview
+Deferred Token Response (DTR) enables an OpenID Provider to defer the authentication of an End-User for an arbitrarily long time.
+The Deferred Token Response Flow consists of the following steps:
+
+1. The RP (Client) sends a request to the OpenID Provider (OP).
+1. The OP initiates an authentication process and collects authorization and identity information from the End-User.
+1. The OP responds to the RP with a unique identifier that identifies that authentication process.
+1. The OP eventually completes the authentication process.
+1. The RP will poll the Token Endpoint to receive an ID Token, Access Token, and optionally Refresh Token.
+
+These steps are illustrated in the following diagram:
+```
++--------+                           +--------+                                 
+|        |                           |        |                       +--------+
+|        |----(1) AuthN Request----->|        |                       |        |
+|        |                           |        |                       |        |
+|        |                           |        |<---(2) Start Auth---->|  End-  |
+|        |                           |        |                       |  User  |
+|        |<---(3) Auth Reference-----|        |                       |        |
+|        |                           |        |                       |        |
+|        |                           |        |----------------+      +--------+
+|        |                           |        |                |                
+|   RP   |----(5a) Poll Request----->|   OP   |                |                
+|        |                           |        |    (4) Complete AuthN process   
+|        |<---(5b) Poll Response-----|        |                |                
+|        |                           |        |                |                
+|        |            ...            |        |<---------------+                
+|        |                           |        |                                 
+|        |----(5a) Poll Request----->|        |                                 
+|        |                           |        |                                 
+|        |<---(5b) Poll Response-----|        |                                 
+|        |                           |        |                                 
++--------+                           +--------+                                 
+```
+
+The identity information and method used by the OP to authenticate the End-User is beyond the scope of this specification.
 
 # Deferred Token Response Flow
 
