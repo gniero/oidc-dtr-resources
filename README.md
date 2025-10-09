@@ -78,3 +78,20 @@ There are two cases to consider:
 
 One undesirable option is to send the End-User an email or SMS containing a link to the authentication service.
 This would train End-Users to click links in a high-security context, which is extremely undesirable.
+
+## Rendering the draft document
+The draft is written in the  `mmark` Markdown dialect and is stored in `openid-deferred-token-response-1_0.md`.
+
+To render the draft to an HTML or text file, you will need
+- [The `mmark` tool](https://github.com/mmarkdown/mmark)
+- [The `xml2rfc` tool](https://github.com/ietf-tools/xml2rfc)
+
+You can convert the Markdown file to XML by running:
+```shell
+mmark openid-deferred-token-response-1_0.md > openid-deferred-token-response-1_0.xml
+```
+
+You can then convert the XML file to HTML and text by running:
+```shell
+xml2rfc openid-deferred-token-response-1_0.xml --text --html --v3
+```
