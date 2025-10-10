@@ -97,7 +97,11 @@ Response type:
 : A `deferred` response type is introduced by this specification to be used in conjunction with the `code` value, in order to indicate to the OP that a deferred response is acceptable in order to fulfill the Authentication process in case it can't be done immediately
 
 Grant type: 
+<<<<<<< HEAD
 : This specification introduces the Deferred grant type (an extension grant type as defined by [@!RFC6749, section 4.5]) with the value: `urn:openid:params:grant-type:deferred`
+=======
+: This specification introduces the Deferred granty type (an extension grant type as defined by Section 4.5 of OAuth 2.0) with the value: `urn:openid:params:grant-type:deferred`
+>>>>>>> cf14e99 (Adds initial approach based on CIBA for token retrieval and deferred as grant type)
 
 ## Client Registration Metadata
 
