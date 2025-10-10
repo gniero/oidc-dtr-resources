@@ -90,8 +90,36 @@ These steps are illustrated in the following diagram:
 +----+                           +----+                            
 ```
 
+# Registration and Discovery Metadata
+
+## Authorization Server Metadata
+Response type:
+: A `deferred` response type is introduced by this specification to be used in conjunction with the `code` value, in order to indicate to the OP that a deferred response is acceptable in order to fulfill the Authentication process in case it can't be done immediately
+
+Grant type: 
+: This specification introduces the Deferred granty type (an extension grant type as defined by Section 4.5 of OAuth 2.0) with the value: `urn:openid:params:grant-type:deferred`
+
+## Client Registration Metadata
+
+Since the Deferred Token Response introduces a way to asynchronously notify the Client of an Authorization decision that could not be instantly made during User interaction, it is necessary for the Client to obtain this response somehow.
+
+The [@!OpenID.CIBA] introduces callback modes for the Authorization Server to inform the Client that an Authorization decision has been made, either by pushing the response directly, or notifying that a decision is available to be queried.
+
+In order to reduce the complexity for both Clients and Authorization Servers to handle distinct configurations, this specification reuses the `backchannel_client_notification_endpoint` attribute and behavior as described in sections 10.2 and 10.3 of [@!OpenID.CIBA] for  Ping and Push modes respecetively, as well as the `backchannel_token_delivery_mode`.
 
 # Deferred Token Response Flow
+
+## Authorization Request
+
+The Authorization Request in Deferred Token Response follows the approach of [@!OpenID.Core] Authorization Code Flow, where the device of consumption is the same device where the End-User interacts to authenticate, with the exception that the `response_type` must be appended by the `deferred` value
+
+## Deferred Authorization Response
+
+## Authorization Error Response
+
+## Deferred Token Request
+
+## Deferred Token Response
 
 # Implementation Considerations
 
@@ -124,6 +152,27 @@ No new registrations.
       <organization abbrev="Disney (was at Salesforce)">Disney</organization>
     </author>
     <date day="15" month="December" year="2023"/>
+  </front>
+</reference>
+<reference anchor="OpenID.CIBA" target="https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html">
+  <front>
+    <title>OpenID Connect Client-Initiated Backchannel Authentication Flow - Core 1.0</title>
+    <author fullname="Gonzalo Fernandez Rodriguez" initials="G." surname="Fernandez">
+      <organization abbrev="Telefonica">Telefonica</organization>
+    </author>
+    <author fullname="Florian Walter" initials="F." surname="Walter">
+      <organization abbrev="Deutsche Telekom AG">Deutsche Telekom AG</organization>
+    </author>
+    <author fullname="Axel Nennker" initials="A." surname="Nennker">
+      <organization abbrev="Deutsche Telekom AG">Deutsche Telekom AG</organization>
+    </author>
+    <author fullname="Dave Tonge" initials="D." surname="Tonge">
+      <organization abbrev="Moneyhub">Moneyhub</organization>
+    </author>
+    <author fullname="Brian Campbell" initials="B." surname="Campbell">
+      <organization abbrev="Ping Identity">Ping Identity</organization>
+    </author>
+    <date day="1" month="September" year="2021"/>
   </front>
 </reference>
 
