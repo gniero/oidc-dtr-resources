@@ -42,9 +42,54 @@ Throughout this document, values are quoted to indicate that they are to be take
 When using these values in protocol messages, the quotes MUST NOT be used as part of the value.
 
 ## Terminology
-This specification uses the terms "Access Token", "Authorization Endpoint", "Authorization Request", "Authorization Response", "Authorization Code Grant", "Authorization Server", "Client", "Client Authentication", "Client Identifier", "Token Endpoint", "Token Request" and "Token Response" defined by OAuth 2.0 [@!RFC6749], the terms "End-User" and "Request Object" as defined by OpenID Connect Core [@!OpenID.Core] and the term "JSON Web Token (JWT)" defined by JSON Web Token (JWT) [@!RFC7519].
+This specification uses the terms "Access Token", "Authorization Endpoint", "Authorization Request", "Authorization Response", "Authorization Code Grant", "Authorization Server", "Client", "Client Authentication", "Client Identifier", "Token Endpoint", "Token Request" and "Token Response" defined by OAuth 2.0 [@!RFC6749], the terms "OpenID Provider (OP)", "Relying Party (RP)", "End-User" and "Request Object" as defined by OpenID Connect Core [@!OpenID.Core] and the term "JSON Web Token (JWT)" defined by JSON Web Token (JWT) [@!RFC7519].
+
+This specification also defines the following terms:
+
+Authentication Process
+: The steps taken by an OpenID Provider to authenticate an End-User. The process MAY depend on Identity Information provided by the End-User. For example, the Authentication Process might involve checking the integrity of the Identity Information. The nature of the Authentication Process is beyond the scope of this specification.
+
+Identity Information
+: Information collected from the End-User by the OpenID Provider as input to the Authentication Process. For example, this might be a picture of a driver's license and a video of the End-User performing a series of gestures. The nature of the Identity Information is beyond the scope of this specification.
 
 # Overview
+Deferred Token Response (DTR) enables an OpenID Provider to defer the authentication of an End-User for an arbitrarily long time.
+The Deferred Token Response Flow consists of the following steps:
+
+1. The Relying Part (RP) sends a request to the OpenID Provider (OP).
+1. The OP initiates an Authentication Process and collects authorization and Identity Information from the End-User.
+1. The OP responds to the RP with a unique identifier that identifies that Authentication Process.
+1. The OP eventually completes the Authentication Process.
+1. The RP will poll the Token Endpoint to receive an ID Token, Access Token, and optionally Refresh Token.
+1. The OP optionally sends a Ping to the RP when the Authentication Process has completed.
+
+These steps are illustrated in the following diagram:
+```
++----+                           +----+                    +------+
+|    |                           |    |                    |      |
+|    |----(1) AuthN Request----->|    |                    |      |
+|    |                           |    |                    | End- |
+|    |                           |    |<--(2) Start Auth-->| User |
+|    |                           |    |                    |      |
+|    |<---(3) Auth Reference-----|    |                    |      |
+|    |                           |    |                    +------+
+|    |                           |    |---------+                  
+|    |                           |    |         |                  
+| RP |----(5a) Poll Request----->| OP |         |                  
+|    |                           |    | (4) Complete AuthN process 
+|    |<---(5b) Poll Response-----|    |         |                  
+|    |                           |    |         |                  
+|    |            ...            |    |<--------+                  
+|    |                           |    |                            
+|    |<---(6) Optional Ping------|    |                            
+|    |                           |    |                            
+|    |----(5a) Poll Request----->|    |                            
+|    |                           |    |                            
+|    |<---(5b) Poll Response-----|    |                            
+|    |                           |    |                            
++----+                           +----+                            
+```
+
 
 # Deferred Token Response Flow
 
