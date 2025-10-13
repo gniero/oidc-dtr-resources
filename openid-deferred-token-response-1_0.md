@@ -92,9 +92,11 @@ These steps are illustrated in the following diagram:
 
 # Registration and Discovery Metadata
 
+This will define any parameters needed for registration and discovery of the DTR flow features.
+
 ## Authorization Server Metadata
 Response type:
-: A `deferred` response type is introduced by this specification to be used in conjunction with the `code` value, in order to indicate to the OP that a deferred response is acceptable in order to fulfill the Authentication process in case it can't be done immediately
+: A `deferred` response type is introduced by this specification in order to indicate to the OP that a deferred authentication response is desired once the user interaction ends. Value MUST be provided in the response type attribute, and MUST NOT be used in conjunction with any other value.
 
 Grant type: 
 <<<<<<< HEAD
@@ -103,21 +105,21 @@ Grant type:
 : This specification introduces the Deferred granty type (an extension grant type as defined by Section 4.5 of OAuth 2.0) with the value: `urn:openid:params:grant-type:deferred`
 >>>>>>> cf14e99 (Adds initial approach based on CIBA for token retrieval and deferred as grant type)
 
+The OP's discovery metadata MUST indicate those values in `response_types_supported` and `grant_types_supported` respectively.
 ## Client Registration Metadata
 
 Since the Deferred Token Response introduces a way to asynchronously notify the Client of an Authorization decision that could not be instantly made during User interaction, it is necessary for the Client to obtain this response somehow.
 
-The [@!OpenID.CIBA] introduces callback modes for the Authorization Server to inform the Client that an Authorization decision has been made, either by pushing the response directly, or notifying that a decision is available to be queried.
+The [@?OpenID.CIBA] introduces callback modes for the Authorization Server to inform the Client that an Authorization decision has been made, either by pushing the response directly, or notifying that a decision is available to be queried. Although some parameters works similarly, introducing them separately allows for an RP that supports both specs to handle responses on endpoints at their discretion and avoid future conflicts.
 
-In order to reduce the complexity for both Clients and Authorization Servers to handle distinct configurations, this specification reuses the `backchannel_client_notification_endpoint` attribute and behavior as described in sections 10.2 and 10.3 of [@!OpenID.CIBA] for  Ping and Push modes respecetively, as well as the `backchannel_token_delivery_mode`.
 
-# Registration and Discovery Metadata
+deferred_client_notification_endpoint:
+: REQUIRED if the RP desires to be notified upon the Authentication decision has been taken. It MUST be an HTTPS URL.
 
-This will define any parameters needed for registration and discovery of the DTR flow features.
 
 # Authentication Request
 
-This will define the parameters for a DTR Authentication Request.
+The Authentication Request in Deferred Token Response follows the approach of [@!OpenID.Core] Authorization Code Flow, where the device of consumption is the same device where the End-User interacts to authenticate, with the exception that the `response_type` must be appended by the `deferred` value
 
 ## Authentication Request Validation
 
@@ -166,18 +168,6 @@ This will usually be because the End-User could not be authenticated based on th
 
 This will define the Authentication Request Error Response that the OP responds to the RP's Authentication Request with when the Authentication Request could not be started.
 This will usually be because the Authentication Request Validation failed, because the End-User did not authorize the request, or because the End-User did not provide acceptable Identity Information to the OP.
-
-## Authorization Request
-
-The Authorization Request in Deferred Token Response follows the approach of [@!OpenID.Core] Authorization Code Flow, where the device of consumption is the same device where the End-User interacts to authenticate, with the exception that the `response_type` must be appended by the `deferred` value
-
-## Deferred Authorization Response
-
-## Authorization Error Response
-
-## Deferred Token Request
-
-## Deferred Token Response
 
 # Implementation Considerations
 
