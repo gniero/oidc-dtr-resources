@@ -107,7 +107,61 @@ The [@!OpenID.CIBA] introduces callback modes for the Authorization Server to in
 
 In order to reduce the complexity for both Clients and Authorization Servers to handle distinct configurations, this specification reuses the `backchannel_client_notification_endpoint` attribute and behavior as described in sections 10.2 and 10.3 of [@!OpenID.CIBA] for  Ping and Push modes respecetively, as well as the `backchannel_token_delivery_mode`.
 
-# Deferred Token Response Flow
+# Registration and Discovery Metadata
+
+This will define any parameters needed for registration and discovery of the DTR flow features.
+
+# Authentication Request
+
+This will define the parameters for a DTR Authentication Request.
+
+## Authentication Request Validation
+
+This will define the logic that OPs should apply to validate Authentication Requests.
+
+## OpenID Provider Obtains End-User Authorization and Identity Information
+
+This will describe the OP obtaining authorization and Identity Information from the End-User.
+Most of that is beyond the scope of this specification.
+
+## Successful Authentication Request Acknowledgment
+
+This will define the response that the OP will send to the RP after starting an Authentication Process.
+
+## Authentication Request Acknowledgment Validation
+
+This will define the logic that RPs should apply to validate Authentication Request Acknowledgment responses.
+
+# OpenID Providers Authenticates End-User
+
+This will describe the OP validating the Identity Information from the End-User.
+How that works is beyond the scope of this specification.
+
+# Getting the Authentication Result
+
+This will define the steps for the RP to get the result of the Authentication Process.
+
+## Token Request Using DTR Grant Type
+
+This will define the Token Request that the RP polls the OP with.
+
+### Successful Token Response
+
+This will define the Token Response that the OP responds to the RP's poll with when the Authentication Process has finished successfully.
+
+## Ping Callback
+
+This will define the optional Ping Callback that the RP may request the OP to send it once the Authentication Process has finished.
+
+# Token Error Response
+
+This will define the Token Error Response that the OP responds to the RP's poll with when the Authentication Process has finished with an error.
+This will usually be because the End-User could not be authenticated based on the provided Identity Information.
+
+# Authentication Request Error Response
+
+This will define the Authentication Request Error Response that the OP responds to the RP's Authentication Request with when the Authentication Request could not be started.
+This will usually be because the Authentication Request Validation failed, because the End-User did not authorize the request, or because the End-User did not provide acceptable Identity Information to the OP.
 
 ## Authorization Request
 
@@ -178,7 +232,7 @@ No new registrations.
 
 # Use cases
 
-# Acknowledgements
+# Acknowledgments
 
 *To be completed.*
 
