@@ -106,11 +106,11 @@ The OP's discovery metadata MUST indicate those values in `response_types_suppor
 
 Since the Deferred Token Response introduces a way to asynchronously notify the Client of an Authorization decision that could not be instantly made during User interaction, it is necessary for the Client to obtain this response somehow.
 
-The [@?OpenID.CIBA] introduces callback modes for the Authorization Server to inform the Client that an Authorization decision has been made, either by pushing the response directly, or notifying that a decision is available to be queried. Although some parameters works similarly, introducing them separately allows for an RP that supports both specs to handle responses on endpoints at their discretion and avoid future conflicts.
+The [@?OpenID.CIBA] introduces callback modes for the Authorization Server to inform the Client that an Authorization decision has been made, either by pushing the response directly, or notifying that a decision is available to be queried. Although some parameters work similarly, introducing them separately allows for an RP that supports both specs to handle responses on endpoints at their discretion and avoid future conflicts.
 
 
-deferred_client_notification_endpoint:
-: REQUIRED if the RP desires to be notified upon the Authentication decision has been taken. It MUST be an HTTPS URL.
+`deferred_client_notification_endpoint`:
+: REQUIRED if the RP desires to be notified when the Authentication decision has been taken. It MUST be an HTTPS URL.
 
 
 # Authentication Request
