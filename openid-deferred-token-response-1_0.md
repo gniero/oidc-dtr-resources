@@ -90,14 +90,32 @@ These steps are illustrated in the following diagram:
 +----+                           +----+                            
 ```
 
-
 # Registration and Discovery Metadata
 
 This will define any parameters needed for registration and discovery of the DTR flow features.
 
+## Authorization Server Metadata
+Response type:
+: A `deferred` response type is introduced by this specification in order to indicate to the OP that a deferred authentication response is desired once the user interaction ends. Value MUST be provided in the response type attribute, and MUST NOT be used in conjunction with any other value.
+
+Grant type: 
+: This specification introduces the Deferred grant type (an extension grant type as defined by [@!RFC6749, section 4.5]) with the value: `urn:openid:params:grant-type:deferred`
+
+The OP's discovery metadata MUST indicate those values in `response_types_supported` and `grant_types_supported` respectively.
+## Client Registration Metadata
+
+Since the Deferred Token Response introduces a way to asynchronously notify the Client of an Authorization decision that could not be instantly made during User interaction, it is necessary for the Client to obtain this response somehow.
+
+The [@?OpenID.CIBA] introduces callback modes for the Authorization Server to inform the Client that an Authorization decision has been made, either by pushing the response directly, or notifying that a decision is available to be queried. Although some parameters work similarly, introducing them separately allows for an RP that supports both specs to handle responses on endpoints at their discretion and avoid future conflicts.
+
+
+`deferred_client_notification_endpoint`:
+: REQUIRED if the RP desires to be notified when the Authentication decision has been taken. It MUST be an HTTPS URL.
+
+
 # Authentication Request
 
-This will define the parameters for a DTR Authentication Request.
+The Authentication Request in Deferred Token Response follows the approach of [@!OpenID.Core] Authorization Code Flow, where the device of consumption is the same device where the End-User interacts to authenticate, with the exception that the `response_type` must be appended by the `deferred` value
 
 ## Authentication Request Validation
 
@@ -178,6 +196,27 @@ No new registrations.
       <organization abbrev="Disney (was at Salesforce)">Disney</organization>
     </author>
     <date day="15" month="December" year="2023"/>
+  </front>
+</reference>
+<reference anchor="OpenID.CIBA" target="https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html">
+  <front>
+    <title>OpenID Connect Client-Initiated Backchannel Authentication Flow - Core 1.0</title>
+    <author fullname="Gonzalo Fernandez Rodriguez" initials="G." surname="Fernandez">
+      <organization abbrev="Telefonica">Telefonica</organization>
+    </author>
+    <author fullname="Florian Walter" initials="F." surname="Walter">
+      <organization abbrev="Deutsche Telekom AG">Deutsche Telekom AG</organization>
+    </author>
+    <author fullname="Axel Nennker" initials="A." surname="Nennker">
+      <organization abbrev="Deutsche Telekom AG">Deutsche Telekom AG</organization>
+    </author>
+    <author fullname="Dave Tonge" initials="D." surname="Tonge">
+      <organization abbrev="Moneyhub">Moneyhub</organization>
+    </author>
+    <author fullname="Brian Campbell" initials="B." surname="Campbell">
+      <organization abbrev="Ping Identity">Ping Identity</organization>
+    </author>
+    <date day="1" month="September" year="2021"/>
   </front>
 </reference>
 
