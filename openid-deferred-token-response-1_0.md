@@ -102,6 +102,7 @@ Grant type:
 : This specification introduces the Deferred grant type (an extension grant type as defined by [@!RFC6749, section 4.5]) with the value: `urn:openid:params:grant-type:deferred`
 
 The OP's discovery metadata MUST indicate those values in `response_types_supported` and `grant_types_supported` respectively.
+
 ## Client Registration Metadata
 
 Since the Deferred Token Response introduces a way to asynchronously notify the Client of an Authorization decision that could not be instantly made during User interaction, it is necessary for the Client to obtain this response somehow.
@@ -113,11 +114,30 @@ deferred_client_notification_endpoint:
 : REQUIRED if the RP desires to be notified upon the Authentication decision has been taken. It MUST be an HTTPS URL.
 
 
-# Authentication Request
+# Authentication Request {#authentication-request}
 
-The Authentication Request in Deferred Token Response follows the approach of [@!OpenID.Core] Authorization Code Flow, where the device of consumption is the same device where the End-User interacts to authenticate, with the exception that the `response_type` must be appended by the `deferred` value
+Deferred Token Response introduces a new Authentication Request using the OAuth 2.0 Authorization Request. This request is based on the Authentication request of the Authorization Code Flow introduced in Section 3.1.2.1 of [@!OpenID.Core] with the exception of following parameter:
 
-## Authentication Request Validation
+response_type:
+: REQUIRED. Deferred Token Response value that determines the authorization processing flow to be used, including what parameters are returned from the endpoints used. This value MUST be `deferred_code`
+
+Relying Parties MAY present additional parameters in this request regarding to OAuth 2.0 extensions (such as Rich Authorization Requests).
+Authorization Servers MUST accept those parameters and process them accordingly.
+
+The following is a non-normative example request that would be sent by the User Agent to the Authorization Server in response to a corresponding HTTP 302 redirect response by the Client (with line wraps within values for display purposes only):
+
+```
+  GET /authorize?
+    response_type=deferred_code
+    &client_id=s6BhdRkqt3
+    &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
+    &scope=openid%20profile%20email
+    &nonce=n-0S6_WzA2Mj
+    &state=af0ifjsldkj HTTP/1.1
+  Host: server.example.com
+```
+
+## Authentication Request Validation {#authentication-request-validation}
 
 This will define the logic that OPs should apply to validate Authentication Requests.
 
@@ -128,7 +148,18 @@ Most of that is beyond the scope of this specification.
 
 ## Successful Authentication Request Acknowledgment
 
-This will define the response that the OP will send to the RP after starting an Authentication Process.
+If the {#authentication-request} is successfully validated in accordance with {#authentication-request-validation}, the OpenID Provider (OP) returns a response to the Relying Party indicating that the request has been accepted and any required user interaction has been completed.
+
+Note that this response does not constitute a final Authentication Response, but rather serves as an indication that processing is underway.
+
+The following is a non-normative example of an authentication request acknowledgement:
+
+```
+  HTTP/1.1 302 Found
+  Location: https://client.example.org/cb?
+    deferred_code=SplxlOBeZQQYbYS6WxSbIA
+    &state=af0ifjsldkj
+```
 
 ## Authentication Request Acknowledgment Validation
 
