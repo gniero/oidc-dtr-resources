@@ -53,41 +53,46 @@ Identity Information
 : Information collected from the End-User by the OpenID Provider as input to the Authentication Process. For example, this might be a picture of a driver's license and a video of the End-User performing a series of gestures. The nature of the Identity Information is beyond the scope of this specification.
 
 # Overview
-Deferred Token Response (DTR) enables an OpenID Provider to defer the authentication of an End-User for an arbitrarily long time.
+The Deferred Token Response (DTR) flow enables an OpenID Provider to defer the authentication of an End-User for an arbitrarily long time.
 The Deferred Token Response Flow consists of the following steps:
 
-1. The Relying Part (RP) sends a request to the OpenID Provider (OP).
-1. The OP initiates an Authentication Process and collects authorization and Identity Information from the End-User.
-1. The OP responds to the RP with a unique identifier that identifies that Authentication Process.
-1. The OP eventually completes the Authentication Process.
-1. The RP will poll the Token Endpoint to receive an ID Token, Access Token, and optionally Refresh Token.
-1. The OP optionally sends a Ping to the RP when the Authentication Process has completed.
+1. The Relying Party (RP) sends a request to the OpenID Provider (OP).
+2. The OP initiates an Authentication Process and collects authorization and Identity Information from the End-User.
+3. The OP responds to the RP with a code identifying that Authentication Process.
+4. The RP exchanges the code for a long-lived Access Token and optionally an interim ID Token at the OP.
+5. The RP polls the Token Endpoint to eventually receive an ID Token, Access Token, and optionally Refresh Token.
+6. The OP eventually completes the Authentication Process.
+7. The OP optionally sends a Ping to the RP when the Authentication Process has completed.
 
 These steps are illustrated in the following diagram:
 ```
-+----+                           +----+                    +------+
-|    |                           |    |                    |      |
-|    |----(1) AuthN Request----->|    |                    |      |
-|    |                           |    |                    | End- |
-|    |                           |    |<--(2) Start Auth-->| User |
-|    |                           |    |                    |      |
-|    |<---(3) Auth Reference-----|    |                    |      |
-|    |                           |    |                    +------+
-|    |                           |    |---------+                  
-|    |                           |    |         |                  
-| RP |----(5a) Poll Request----->| OP |         |                  
-|    |                           |    | (4) Complete AuthN process 
-|    |<---(5b) Poll Response-----|    |         |                  
-|    |                           |    |         |                  
-|    |            ...            |    |<--------+                  
-|    |                           |    |                            
-|    |<---(6) Optional Ping------|    |                            
-|    |                           |    |                            
-|    |----(5a) Poll Request----->|    |                            
-|    |                           |    |                            
-|    |<---(5b) Poll Response-----|    |                            
-|    |                           |    |                            
-+----+                           +----+                            
++----+                                +----+                  +------+
+|    |                                |    |                  |      |
+|    |---(1) AuthN Request----------->|    |                  |      |
+|    |                                |    |                  | End- |
+|    |                                |    |<-(2) Start Auth->| User |
+|    |                                |    |                  |      |
+|    |<--(3) Auth Code----------------|    |                  |      |
+|    |                                |    |                  +------+
+|    |---(4a) Initial Token Request-->|    |
+|    |                                |    |
+|    |<--(4b) Initial Token Response--|    |
+|    |                                |    |
+|    |                                |    |---------+
+|    |                                |    |         |
+| RP |---(5a) Poll Request----------->| OP |         |
+|    |                                |    | (6) Complete AuthN process
+|    |<--(5b) Poll Response-----------|    |         |
+|    |                                |    |         |
+|    |               ...              |    |<--------+
+|    |                                |    |
+|    |<--(7) Optional Ping------------|    |
+|    |                                |    |
+|    |---(5a) Poll Request----------->|    |
+|    |                                |    |
+|    |<--(5b) Poll Response ----------|    |
+|    |                                |    |
++----+                                +----+
 ```
 
 # Registration and Discovery Metadata
@@ -114,7 +119,11 @@ The [@?OpenID.CIBA] introduces callback modes for the Authorization Server to in
 : REQUIRED if the RP desires to be notified when the Authentication decision has been taken. It MUST be an HTTPS URL.
 
 
-# Authentication Request {#authentication-request}
+# Authentication using Deferred Token Flow
+
+This section describes how to perform authentication using the Deferred Token Flow.
+
+## Authentication Request {#authentication-request}
 
 Deferred Token Response introduces a new Authentication Request using the OAuth 2.0 Authorization Request. This request is based on the Authentication request of the Authorization Code Flow introduced in Section 3.1.2.1 of [@!OpenID.Core] with the exception of following parameter:
 
@@ -146,13 +155,13 @@ This will define the logic that OPs should apply to validate Authentication Requ
 This will describe the OP obtaining authorization and Identity Information from the End-User.
 Most of that is beyond the scope of this specification.
 
-## Successful Authentication Request Acknowledgment
+## Authentication Request Acknowledgment
 
 If the {#authentication-request} is successfully validated in accordance with {#authentication-request-validation}, the OpenID Provider (OP) returns a response to the Relying Party indicating that the request has been accepted and any required user interaction has been completed.
 
 Note that this response does not constitute a final Authentication Response, but rather serves as an indication that processing is underway.
 
-The following is a non-normative example of an authentication request acknowledgement:
+The following is a non-normative example of an authentication request acknowledgment:
 
 ```
   HTTP/1.1 302 Found
@@ -165,20 +174,51 @@ The following is a non-normative example of an authentication request acknowledg
 
 This will define the logic that RPs should apply to validate Authentication Request Acknowledgment responses.
 
-# OpenID Providers Authenticates End-User
+# Token Endpoint
+
+The RP sends a Token Request to the Token Endpoint, as described in [@!RFC6749, section 3.2], to obtain an Initial Token Response.
+
+## Initial Token Request
+
+This will define the request the RP should send to the OP to exchange the deferred code.
+This request MUST be secured with DPoP.
+
+## Initial Token Request Validation
+
+This will define the logic that the OP should use to validate the Initial Token Request.
+In particular, the DPoP headers MUST be valid.
+
+## Successful Initial Token Response
+
+This will define the response that the RP will receive from the OP when the Initial Token Request was successful.
+The response will always include an Access Token bound to the DPoP key.
+It MAY also include an interim ID Token containing unverified claims (at the discretion of the OP).
+
+## Initial Token Response Validation
+
+This will define the logic that the RP should use to validate the Initial Token Response.
+
+# OpenID Provider Authenticates End-User
 
 This will describe the OP validating the Identity Information from the End-User.
 How that works is beyond the scope of this specification.
 
-# Getting the Authentication Result
+# Deferred Notification Endpoint
+
+This will define the endpoint that the OP should optionally send a Ping to.
+This will be configured in client registration metadata and should only be used if configured.
+
+# Deferred Token Request Endpoint
 
 This will define the steps for the RP to get the result of the Authentication Process.
+This process polls a special endpoint for that purpose.
 
 ## Token Request Using DTR Grant Type
 
 This will define the Token Request that the RP polls the OP with.
+This request MUST use the DPoP-secured Access Token.
 
-### Successful Token Response
+## Successful Token Response
 
 This will define the Token Response that the OP responds to the RP's poll with when the Authentication Process has finished successfully.
 
@@ -190,6 +230,11 @@ This will define the optional Ping Callback that the RP may request the OP to se
 
 This will define the Token Error Response that the OP responds to the RP's poll with when the Authentication Process has finished with an error.
 This will usually be because the End-User could not be authenticated based on the provided Identity Information.
+
+# Initial Token Error Response
+
+This will define the Initial Token Error Response that the OP responds to the RP's Initial Token Request with when the Initial Token Request could not be validated.
+This will usually be because the Initial Token Request Validation failed, which will usually happen if the deferred code is expired, the DPoP proof is wrong, or the DPoP headers are missing.
 
 # Authentication Request Error Response
 
