@@ -101,7 +101,7 @@ This will define any parameters needed for registration and discovery of the DTR
 
 ## Authorization Server Metadata
 Response type:
-: A `deferred_code` response type is introduced by this specification in order to indicate to the OP that a deferred authentication response is desired once the user interaction ends. Value MUST be provided in the response type attribute, and MUST NOT be used in conjunction with any other value.
+: A `deferred_code` response type is introduced by this specification in order to indicate to the OP that a deferred authentication response is desired once the user interaction ends. Value MUST be provided in the response type attribute and 
 
 Grant type: 
 : This specification introduces the Deferred grant type (an extension grant type as defined by [@!RFC6749, section 4.5]) with the value: `urn:openid:params:grant-type:deferred`
@@ -242,6 +242,10 @@ This will define the Authentication Request Error Response that the OP responds 
 This will usually be because the Authentication Request Validation failed, because the End-User did not authorize the request, or because the End-User did not provide acceptable Identity Information to the OP.
 
 # Implementation Considerations
+
+## Multi-valued Response Type Authentication Request
+
+The OP MAY accept Authentication Requests providing the response type value as `deferred_code code`. In those cases, it means for the OP that it MAY chose, by its own means, when the Authentication response will be of deferred type or any other provided alternative. 
 
 # Privacy Considerations
 
