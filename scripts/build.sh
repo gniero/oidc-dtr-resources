@@ -9,7 +9,12 @@ set -e
 # Define the input and output files
 MARKDOWN_FILE="openid-deferred-token-response-1_0.md"
 XML_FILE="openid-deferred-token-response-1_0.xml"
-HTML_FILE="index.html"
+HTML_FILE="docs/index.html"
+
+# Create docs directory if it doesn't exist
+if [ ! -d "docs" ]; then
+    mkdir -p docs
+fi
 
 # Convert Markdown to XML using MMARK
 mmark $MARKDOWN_FILE > $XML_FILE
