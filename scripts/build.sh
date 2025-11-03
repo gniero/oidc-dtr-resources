@@ -15,7 +15,7 @@ HTML_FILE="index.html"
 mmark $MARKDOWN_FILE > $XML_FILE
 
 # Convert XML to HTML using XML2RFC
-xml2rfc $XML_FILE --text --html --v3 -o $HTML_FILE
+xml2rfc $XML_FILE --html --v3 -o $HTML_FILE
 
 # Clean up the XML file if needed
 rm $XML_FILE
