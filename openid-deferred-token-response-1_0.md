@@ -198,8 +198,11 @@ The following is a non-normative example of an initial token request:
 
 ## Initial Token Request Validation
 
-This will define the logic that the OP should use to validate the Initial Token Request.
-In particular, the DPoP headers MUST be valid.
+The OP Provider MUST validate the request received as follows:
+
+1. Authenticate the Client in accordance with Section 9 of [@!OpenID.Core].
+2. Ensure the Deferred Code was issued to the authenticated Client.
+3. Verify that the Deferred Code is valid and has not been previously used.
 
 ## Successful Initial Token Response
 
