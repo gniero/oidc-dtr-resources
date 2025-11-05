@@ -176,23 +176,54 @@ This will define the logic that RPs should apply to validate Authentication Requ
 
 # Token Endpoint
 
-The RP sends a Token Request to the Token Endpoint, as described in [@!RFC6749, section 3.2], to obtain an Initial Token Response.
+The RP sends a Token Request to the Token Endpoint, as described in [@!RFC6749, section 3.2], to obtain  Token Responses. It is RECOMMENDED that all interactions with the OP are secured with DPoP.
 
 ## Initial Token Request
 
-This will define the request the RP should send to the OP to exchange the deferred code.
-This request MUST be secured with DPoP.
+The Initial Token Request exchanges the deferred code obtained in the Authentication Request Acknowledgment.
+
+Supported extension parameters from the OAuth 2.0 Token Request MAY be included in this request.
+
+The following is a non-normative example of an initial token request:
+
+```
+  POST /token HTTP/1.1
+  Host: server.example.com
+  Content-Type: application/x-www-form-urlencoded
+  Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
+
+  grant_type=urn:openid:params:grant-type:deferred&deferred_code=SplxlOBeZQQYbYS6WxSbIA
+    &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
+```
 
 ## Initial Token Request Validation
 
-This will define the logic that the OP should use to validate the Initial Token Request.
-In particular, the DPoP headers MUST be valid.
+The OP Provider MUST validate the request received as follows:
+
+1. Authenticate the Client in accordance with Section 9 of [@!OpenID.Core].
+2. Ensure the Deferred Code was issued to the authenticated Client.
+3. Verify that the Deferred Code is valid and has not been previously used.
 
 ## Successful Initial Token Response
 
 This will define the response that the RP will receive from the OP when the Initial Token Request was successful.
-The response will always include an Access Token bound to the DPoP key.
-It MAY also include an interim ID Token containing unverified claims (at the discretion of the OP).
+
+It MAY include an interim ID Token containing unverified claims (at the discretion of the OP).
+
+The following is a non-normative example of a successful initial token response:
+
+```
+  HTTP/1.1 200 OK
+  Content-Type: application/json
+  Cache-Control: no-store
+
+  {
+   "auth_req_id": "f4oirNBUlM",
+   "expires_in": 10800
+   "interval": 60,
+   "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjI3MTdmMzAzYTI3NjVlOGFjYmY0MTEwMGFhOGE0NjllIiwidHlwIjoiSldUIn0.eyJpc3MiOiJodHRwOi8vc2VydmVyLmV4YW1wbGUuY29tIiwic3ViIjoiMjQ4Mjg5NzYxMDAxIiwiZW1haWwiOiJqb2huZG9lQGV4YW1wbGUuY29tIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJhdWQiOiJzNkJoZFJrcXQzIiwibm9uY2UiOiJuLTBTNl9XekEyTWoiLCJleHAiOjE3NjIxOTE2ODgsImlhdCI6MTc2MjE5MTk4OH0.TmW5LZmr5tM_gDbk6Tc7VAMw6zYv9eo1BqbKf19rhw8cHsPLLMA25YilywdA66KO2ESWvY3S5YJn3Azypri5jQOeQTmPQZAeXHjcVSBeABzAQz3eGIdtAaDLQ5p0DafdxgEDOrcLLK8yk3X16aBGpJegdBY1HfqAhuYPV2D_LUCeGbJxn0-4nLF9_U7Ws3c4o_3nq9ZNTVEAoJJckRYhXM6pPf2-1tZvRZD2P9B0vPSiJwqN2JFOBoDROwhxPJU4MKWQ3mp5pdGTZqlUL7wn0a2dG-EI1eq6oQrGwINqTHiqZbttCuz1wQtezRxHYITEAoVaI2c3zad0ZSzTbAGNkw"
+  }
+```
 
 ## Initial Token Response Validation
 
