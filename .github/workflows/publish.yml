@@ -1,0 +1,42 @@
+name: Publish HTML to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install MMARK and XML2RFC
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mmark
+          sudo apt-get install -y xml2rfc
+
+      - name: Build HTML from Markdown
+        run: |
+          chmod +x scripts/build.sh
+          ./scripts/build.sh
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
+          publish_branch: gh-pages
+          
+      - name: Clean up
+        run: |
+          rm -f openid-deferred-token-response-1_0.xml
+          rm -f openid-deferred-token-response-1_0.html
