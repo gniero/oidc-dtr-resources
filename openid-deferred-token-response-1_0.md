@@ -249,14 +249,53 @@ This process polls a special endpoint for that purpose.
 This will define the Token Request that the RP polls the OP with.
 This request MUST use the DPoP-secured Access Token.
 
+The following is a non-normative example of a deferred token request:
+
+```
+  POST /token HTTP/1.1
+  Host: server.example.com
+  Content-Type: application/x-www-form-urlencoded
+  Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
+
+  grant_type=urn:openid:params:grant-type:deferred&auth_req_id=f4oirNBUlM
+```
+
 ## Successful Token Response
 
 This will define the Token Response that the OP responds to the RP's poll with when the Authentication Process has finished successfully.
+
+The following is a non-normative example of a successful token response:
+
+```
+  HTTP/1.1 200 OK
+  Content-Type: application/json
+  Cache-Control: no-store
+
+  {
+   "access_token": "SlAV32hkKG",
+   "token_type": "Bearer",
+   "expires_in": 3600,
+   "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjI3MTdmMzAzYTI3NjVlOGFjYmY0MTEwMGFhOGE0NjllIiwidHlwIjoiSldUIn0.eyJpc3MiOiJodHRwOi8vc2VydmVyLmV4YW1wbGUuY29tIiwic3ViIjoiMjQ4Mjg5NzYxMDAxIiwiZW1haWwiOiJqb2huZG9lQGV4YW1wbGUuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF1ZCI6InM2QmhkUmtxdDMiLCJuYW1lIjoiSm9obkRvZSIsIm5vbmNlIjoibi0wUzZfV3pBMk1qIiwiZXhwIjoxNzYyMTkyNTg4LCJpYXQiOjE3NjIxOTI5ODh9.V0hhdCBkb2VzIG15IHNob2VsIHNheT8gWW91IHNob3VsZCBub3Qgc2hvdw",
+   "refresh_token": "8xLOxBtZp8"
+  }
+```
 
 ## Ping Callback
 
 This will define the optional Ping Callback that the RP may request the OP to send it once the Authentication Process has finished.
 
+The following is a non-normative example of a Ping callback sent as an HTTP POST request to the Client's Notification Endpoint (with line wraps within values for display purposes only).
+
+```
+    POST /cb HTTP/1.1
+    Host: client.example.com
+    Authorization: Bearer 8d67dc78-7faa-4d41-aabd-67707b374255
+    Content-Type: application/json
+
+    {
+     "auth_req_id": "f4oirNBUlM"
+    }
+```
 # Token Error Response
 
 This will define the Token Error Response that the OP responds to the RP's poll with when the Authentication Process has finished with an error.
