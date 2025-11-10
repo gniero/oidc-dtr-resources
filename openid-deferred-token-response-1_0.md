@@ -174,11 +174,15 @@ The following is a non-normative example of an authentication request acknowledg
 
 This will define the logic that RPs should apply to validate Authentication Request Acknowledgment responses.
 
-# Token Endpoint
+# Exchanging the Deferred Code to obtain Authentication ID
 
 The RP sends a Token Request to the Token Endpoint, as described in [@!RFC6749, section 3.2], to obtain  Token Responses. It is RECOMMENDED that all interactions with the OP are secured with DPoP.
 
-## Initial Token Request
+The Authentication ID is assigned by the OP to each Authentication Process in order to allow the RP to poll for the result of that process. This mechanism is similar to the `auth_req_id` defined in [@!OpenID.CIBA]. 
+
+The `deferred_code` value is not used for polling, allowing the OP to apply the same security considerations as it does for authorization codes as specified in [@!RFC6819, section 4.4.1] and [@!RFC9700].
+
+## Deferred Code Exchange Request
 
 The Initial Token Request exchanges the deferred code obtained in the Authentication Request Acknowledgment.
 
@@ -196,7 +200,7 @@ The following is a non-normative example of an initial token request:
     &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
 ```
 
-## Initial Token Request Validation
+## Deferred Code Exchange Request Validation
 
 The OP Provider MUST validate the request received as follows:
 
@@ -204,7 +208,7 @@ The OP Provider MUST validate the request received as follows:
 2. Ensure the Deferred Code was issued to the authenticated Client.
 3. Verify that the Deferred Code is valid and has not been previously used.
 
-## Successful Initial Token Response
+## Successful Deferred Code Exchange Response
 
 This will define the response that the RP will receive from the OP when the Initial Token Request was successful.
 
@@ -225,7 +229,7 @@ The following is a non-normative example of a successful initial token response:
   }
 ```
 
-## Initial Token Response Validation
+## Deferred Code Exchange Response Validation
 
 This will define the logic that the RP should use to validate the Initial Token Response.
 
@@ -239,12 +243,12 @@ How that works is beyond the scope of this specification.
 This will define the endpoint that the OP should optionally send a Ping to.
 This will be configured in client registration metadata and should only be used if configured.
 
-# Deferred Token Request Endpoint
+# Getting the Authentication Result
 
 This will define the steps for the RP to get the result of the Authentication Process.
 This process polls a special endpoint for that purpose.
 
-## Token Request Using DTR Grant Type
+## Token Request using the Authentication Request ID
 
 This will define the Token Request that the RP polls the OP with.
 This request MUST use the DPoP-secured Access Token.
@@ -259,6 +263,10 @@ The following is a non-normative example of a deferred token request:
 
   grant_type=urn:openid:params:grant-type:deferred&auth_req_id=f4oirNBUlM
 ```
+
+## Token Request Validation
+
+This will define the validation steps that the OP must perform in order to produce a successful token response or a Token request Error Response
 
 ## Successful Token Response
 
@@ -296,12 +304,12 @@ The following is a non-normative example of a Ping callback sent as an HTTP POST
      "auth_req_id": "f4oirNBUlM"
     }
 ```
-# Token Error Response
+# Token Request Error Response
 
 This will define the Token Error Response that the OP responds to the RP's poll with when the Authentication Process has finished with an error.
 This will usually be because the End-User could not be authenticated based on the provided Identity Information.
 
-# Initial Token Error Response
+# Deferred Code Exchange Error Response
 
 This will define the Initial Token Error Response that the OP responds to the RP's Initial Token Request with when the Initial Token Request could not be validated.
 This will usually be because the Initial Token Request Validation failed, which will usually happen if the deferred code is expired, the DPoP proof is wrong, or the DPoP headers are missing.
