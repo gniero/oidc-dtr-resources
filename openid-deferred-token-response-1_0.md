@@ -174,11 +174,15 @@ The following is a non-normative example of an authentication request acknowledg
 
 This will define the logic that RPs should apply to validate Authentication Request Acknowledgment responses.
 
-# Token Endpoint
+# Exchanging the Deferred Code to obtain Authentication ID
 
 The RP sends a Token Request to the Token Endpoint, as described in [@!RFC6749, section 3.2], to obtain  Token Responses. It is RECOMMENDED that all interactions with the OP are secured with DPoP.
 
-## Initial Token Request
+The Authentication ID is assigned by the OP to each Authentication Process in order to allow the RP to poll for the result of that process. This mechanism is similar to the `auth_req_id` defined in [@!OpenID.CIBA]. 
+
+The `deferred_code` value is not used for polling, allowing the OP to apply the same security considerations as it does for authorization codes as specified in [@!RFC6819, section 4.4.1] and [@!RFC9700].
+
+## Deferred Code Exchange Request
 
 The Initial Token Request exchanges the deferred code obtained in the Authentication Request Acknowledgment.
 
@@ -196,7 +200,7 @@ The following is a non-normative example of an initial token request:
     &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
 ```
 
-## Initial Token Request Validation
+## Deferred Code Exchange Request Validation
 
 The OP Provider MUST validate the request received as follows:
 
@@ -204,7 +208,7 @@ The OP Provider MUST validate the request received as follows:
 2. Ensure the Deferred Code was issued to the authenticated Client.
 3. Verify that the Deferred Code is valid and has not been previously used.
 
-## Successful Initial Token Response
+## Successful Deferred Code Exchange Response
 
 This will define the response that the RP will receive from the OP when the Initial Token Request was successful.
 
@@ -225,7 +229,7 @@ The following is a non-normative example of a successful initial token response:
   }
 ```
 
-## Initial Token Response Validation
+## Deferred Code Exchange Response Validation
 
 This will define the logic that the RP should use to validate the Initial Token Response.
 
@@ -239,30 +243,73 @@ How that works is beyond the scope of this specification.
 This will define the endpoint that the OP should optionally send a Ping to.
 This will be configured in client registration metadata and should only be used if configured.
 
-# Deferred Token Request Endpoint
+# Getting the Authentication Result
 
 This will define the steps for the RP to get the result of the Authentication Process.
 This process polls a special endpoint for that purpose.
 
-## Token Request Using DTR Grant Type
+## Token Request using the Authentication Request ID
 
 This will define the Token Request that the RP polls the OP with.
 This request MUST use the DPoP-secured Access Token.
+
+The following is a non-normative example of a deferred token request:
+
+```
+  POST /token HTTP/1.1
+  Host: server.example.com
+  Content-Type: application/x-www-form-urlencoded
+  Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
+
+  grant_type=urn:openid:params:grant-type:deferred&auth_req_id=f4oirNBUlM
+```
+
+## Token Request Validation
+
+This will define the validation steps that the OP must perform in order to produce a successful token response or a Token request Error Response
 
 ## Successful Token Response
 
 This will define the Token Response that the OP responds to the RP's poll with when the Authentication Process has finished successfully.
 
+The following is a non-normative example of a successful token response:
+
+```
+  HTTP/1.1 200 OK
+  Content-Type: application/json
+  Cache-Control: no-store
+
+  {
+   "access_token": "SlAV32hkKG",
+   "token_type": "Bearer",
+   "expires_in": 3600,
+   "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjI3MTdmMzAzYTI3NjVlOGFjYmY0MTEwMGFhOGE0NjllIiwidHlwIjoiSldUIn0.eyJpc3MiOiJodHRwOi8vc2VydmVyLmV4YW1wbGUuY29tIiwic3ViIjoiMjQ4Mjg5NzYxMDAxIiwiZW1haWwiOiJqb2huZG9lQGV4YW1wbGUuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF1ZCI6InM2QmhkUmtxdDMiLCJuYW1lIjoiSm9obkRvZSIsIm5vbmNlIjoibi0wUzZfV3pBMk1qIiwiZXhwIjoxNzYyMTkyNTg4LCJpYXQiOjE3NjIxOTI5ODh9.V0hhdCBkb2VzIG15IHNob2VsIHNheT8gWW91IHNob3VsZCBub3Qgc2hvdw",
+   "refresh_token": "8xLOxBtZp8"
+  }
+```
+
 ## Ping Callback
 
 This will define the optional Ping Callback that the RP may request the OP to send it once the Authentication Process has finished.
 
-# Token Error Response
+The following is a non-normative example of a Ping callback sent as an HTTP POST request to the Client's Notification Endpoint (with line wraps within values for display purposes only).
+
+```
+    POST /cb HTTP/1.1
+    Host: client.example.com
+    Authorization: Bearer 8d67dc78-7faa-4d41-aabd-67707b374255
+    Content-Type: application/json
+
+    {
+     "auth_req_id": "f4oirNBUlM"
+    }
+```
+# Token Request Error Response
 
 This will define the Token Error Response that the OP responds to the RP's poll with when the Authentication Process has finished with an error.
 This will usually be because the End-User could not be authenticated based on the provided Identity Information.
 
-# Initial Token Error Response
+# Deferred Code Exchange Error Response
 
 This will define the Initial Token Error Response that the OP responds to the RP's Initial Token Request with when the Initial Token Request could not be validated.
 This will usually be because the Initial Token Request Validation failed, which will usually happen if the deferred code is expired, the DPoP proof is wrong, or the DPoP headers are missing.
