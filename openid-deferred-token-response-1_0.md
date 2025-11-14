@@ -236,7 +236,7 @@ This will define the logic that the RP should use to validate the Initial Token 
 # OpenID Provider Authenticates End-User
 
 This will describe the OP validating the Identity Information from the End-User.
-How that works is beyond the scope of this specification.
+How that works is beyond the scope of this specification. Reminder to consider cancellation that has been described later in this specification.
 
 # Deferred Notification Endpoint
 
@@ -266,7 +266,7 @@ The following is a non-normative example of a deferred token request:
 
 ## Token Request Validation
 
-This will define the validation steps that the OP must perform in order to produce a successful token response or a Token request Error Response
+This will define the validation steps that the OP must perform in order to produce a successful token response or a Token request Error Response. Reminder to consider the cancellation that has been described later in this specification.
 
 ## Successful Token Response
 
@@ -304,10 +304,48 @@ The following is a non-normative example of a Ping callback sent as an HTTP POST
      "auth_req_id": "f4oirNBUlM"
     }
 ```
-# Token Request Error Response
+
+# Canceling an Ongoing Authentication Process
+
+In some scenarios, the RP might want to cancel an ongoing Authentication Process that got deferred before it has completed (e.g. user-initiated cancellation) in order to avoid unnecessary processing for both RP and OP. This specification defines the Cancellation Endpoint that the RP can use to cancel an ongoing Authentication Process. 
+
+Other mechanisms such as maximum timeout parameter in the authentication request MAY be supported by the OP, but are out of scope for this specification.
+
+The Authentication Cancellation can be achieved by the RP sending a request to the OP as described in the following sections. 
+
+## Authentication Cancellation Request
+
+Once the RP gets possession of the `deferred_code` from the Initial Token Response, it can send an Authentication Cancellation Request to the OP in order to cancel the ongoing Authentication Process.
+
+The following is a non-normative example of an authentication cancellation request:
+
+```
+  POST /df-authentication/cancel HTTP/1.1
+  Host: server.example.com
+  Content-Type: application/x-www-form-urlencoded
+  Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
+
+  deferred_auth_id=SplxlOBeZQQYbYS6WxSbIA
+```
+
+## Authentication Cancellation Request Validation
+
+1. Authenticate the Client in accordance with Section 9 of [@!OpenID.Core].
+2. Ensure the Deferred Authentication was issued to the authenticated Client.
+3. Verify that no access token has been issued for the Deferred Authentication.
+
+After successful validation, the OP either interrupts the Authentication Process, or marks it as cancelled in case ongoing processing cannot be immediately stopped. Any requests to poll for the result of the Authentication Process after cancellation MUST be handled as described in [(#token-request-error-response, use title)]. 
+
+Disposal of any collected Identity Information is beyond the scope of this specification.
+
+## Authentication Cancellation Response`
+
+This will define the response that the RP will receive from the OP when the Authentication Cancellation Request was successful.
+
+# Token Request Error Response {#token-request-error-response}
 
 This will define the Token Error Response that the OP responds to the RP's poll with when the Authentication Process has finished with an error.
-This will usually be because the End-User could not be authenticated based on the provided Identity Information.
+This will usually be because the End-User could not be authenticated based on the provided Identity Information. Reminder to consider cancellation that has been described earlier in this specification.
 
 # Deferred Code Exchange Error Response
 
@@ -318,6 +356,10 @@ This will usually be because the Initial Token Request Validation failed, which 
 
 This will define the Authentication Request Error Response that the OP responds to the RP's Authentication Request with when the Authentication Request could not be started.
 This will usually be because the Authentication Request Validation failed, because the End-User did not authorize the request, or because the End-User did not provide acceptable Identity Information to the OP.
+
+# Authentication Cancellation Request Error Response
+
+This will define the Authentication Cancellation Error Response that the OP responds to the RP's Authentication Cancellation Request with when the Authentication Cancellation Request could not be validated.
 
 # Implementation Considerations
 
