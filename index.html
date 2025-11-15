@@ -1227,7 +1227,7 @@ li > p:last-of-type:only-child {
 <dd class="workgroup">OpenID Connect</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-11-11" class="published">11 November 2025</time>
+<time datetime="2025-11-15" class="published">15 November 2025</time>
     </dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
@@ -1299,7 +1299,7 @@ li > p:last-of-type:only-child {
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
-            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-exchanging-the-deferred-cod" class="internal xref">Exchanging the Deferred Code to obtain Authentication ID</a></p>
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-exchanging-the-deferred-cod" class="internal xref">Exchanging the Deferred Code to obtain Deferred Authentication ID</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
                 <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-deferred-code-exchange-requ" class="internal xref">Deferred Code Exchange Request</a></p>
@@ -1598,13 +1598,13 @@ Most of that is beyond the scope of this specification.<a href="#section-4.3-1" 
 </div>
 </section>
 </div>
-<div id="exchanging-the-deferred-code-to-obtain-authentication-id">
+<div id="exchanging-the-deferred-code-to-obtain-deferred-authentication-id">
 <section id="section-5">
       <h2 id="name-exchanging-the-deferred-cod">
-<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-exchanging-the-deferred-cod" class="section-name selfRef">Exchanging the Deferred Code to obtain Authentication ID</a>
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-exchanging-the-deferred-cod" class="section-name selfRef">Exchanging the Deferred Code to obtain Deferred Authentication ID</a>
       </h2>
 <p id="section-5-1">The RP sends a Token Request to the Token Endpoint, as described in <span><a href="https://rfc-editor.org/rfc/rfc6749" class="relref">Section 3.2</a> of [<a href="#RFC6749" class="cite xref">RFC6749</a>]</span>, to obtain  Token Responses. It is RECOMMENDED that all interactions with the OP are secured with DPoP.<a href="#section-5-1" class="pilcrow">¶</a></p>
-<p id="section-5-2">The Authentication ID is assigned by the OP to each Authentication Process in order to allow the RP to poll for the result of that process. This mechanism is similar to the <code>auth_req_id</code> defined in <span>[<a href="#OpenID.CIBA" class="cite xref">OpenID.CIBA</a>]</span>.<a href="#section-5-2" class="pilcrow">¶</a></p>
+<p id="section-5-2">The Deferred Authentication ID is assigned by the OP to each Authentication Process in order to allow the RP to poll for the result of that process. This mechanism is similar to the <code>auth_req_id</code> defined in <span>[<a href="#OpenID.CIBA" class="cite xref">OpenID.CIBA</a>]</span>.<a href="#section-5-2" class="pilcrow">¶</a></p>
 <p id="section-5-3">The <code>deferred_code</code> value is not used for polling, allowing the OP to apply the same security considerations as it does for authorization codes as specified in <span><a href="https://rfc-editor.org/rfc/rfc6819" class="relref">Section 4.4.1</a> of [<a href="#RFC6819" class="cite xref">RFC6819</a>]</span> and <span>[<a href="#RFC9700" class="cite xref">RFC9700</a>]</span>.<a href="#section-5-3" class="pilcrow">¶</a></p>
 <div id="deferred-code-exchange-request">
 <section id="section-5.1">
@@ -1656,7 +1656,7 @@ Most of that is beyond the scope of this specification.<a href="#section-4.3-1" 
   Cache-Control: no-store
 
   {
-   "auth_req_id": "f4oirNBUlM",
+   "deferred_auth_id": "f4oirNBUlM",
    "expires_in": 10800
    "interval": 60,
    "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjI3MTdmMzAzYTI3NjVlOGFjYmY0MTEwMGFhOGE0NjllIiwidHlwIjoiSldUIn0.eyJpc3MiOiJodHRwOi8vc2VydmVyLmV4YW1wbGUuY29tIiwic3ViIjoiMjQ4Mjg5NzYxMDAxIiwiZW1haWwiOiJqb2huZG9lQGV4YW1wbGUuY29tIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJhdWQiOiJzNkJoZFJrcXQzIiwibm9uY2UiOiJuLTBTNl9XekEyTWoiLCJleHAiOjE3NjIxOTE2ODgsImlhdCI6MTc2MjE5MTk4OH0.TmW5LZmr5tM_gDbk6Tc7VAMw6zYv9eo1BqbKf19rhw8cHsPLLMA25YilywdA66KO2ESWvY3S5YJn3Azypri5jQOeQTmPQZAeXHjcVSBeABzAQz3eGIdtAaDLQ5p0DafdxgEDOrcLLK8yk3X16aBGpJegdBY1HfqAhuYPV2D_LUCeGbJxn0-4nLF9_U7Ws3c4o_3nq9ZNTVEAoJJckRYhXM6pPf2-1tZvRZD2P9B0vPSiJwqN2JFOBoDROwhxPJU4MKWQ3mp5pdGTZqlUL7wn0a2dG-EI1eq6oQrGwINqTHiqZbttCuz1wQtezRxHYITEAoVaI2c3zad0ZSzTbAGNkw"
@@ -1714,7 +1714,7 @@ This request MUST use the DPoP-secured Access Token.<a href="#section-8.1-1" cla
   Content-Type: application/x-www-form-urlencoded
   Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
 
-  grant_type=urn:openid:params:grant-type:deferred&amp;auth_req_id=f4oirNBUlM
+  grant_type=urn:openid:params:grant-type:deferred&amp;deferred_auth_id=f4oirNBUlM
 </pre><a href="#section-8.1-3" class="pilcrow">¶</a>
 </div>
 </section>
@@ -1764,7 +1764,7 @@ This request MUST use the DPoP-secured Access Token.<a href="#section-8.1-1" cla
     Content-Type: application/json
 
     {
-     "auth_req_id": "f4oirNBUlM"
+     "deferred_auth_id": "f4oirNBUlM"
     }
 </pre><a href="#section-8.4-3" class="pilcrow">¶</a>
 </div>
