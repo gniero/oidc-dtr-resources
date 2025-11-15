@@ -174,11 +174,11 @@ The following is a non-normative example of an authentication request acknowledg
 
 This will define the logic that RPs should apply to validate Authentication Request Acknowledgment responses.
 
-# Exchanging the Deferred Code to obtain Authentication ID
+# Exchanging the Deferred Code to obtain Deferred Authentication ID
 
 The RP sends a Token Request to the Token Endpoint, as described in [@!RFC6749, section 3.2], to obtain  Token Responses. It is RECOMMENDED that all interactions with the OP are secured with DPoP.
 
-The Authentication ID is assigned by the OP to each Authentication Process in order to allow the RP to poll for the result of that process. This mechanism is similar to the `auth_req_id` defined in [@!OpenID.CIBA]. 
+The Deferred Authentication ID is assigned by the OP to each Authentication Process in order to allow the RP to poll for the result of that process. This mechanism is similar to the `auth_req_id` defined in [@!OpenID.CIBA]. 
 
 The `deferred_code` value is not used for polling, allowing the OP to apply the same security considerations as it does for authorization codes as specified in [@!RFC6819, section 4.4.1] and [@!RFC9700].
 
@@ -222,7 +222,7 @@ The following is a non-normative example of a successful initial token response:
   Cache-Control: no-store
 
   {
-   "auth_req_id": "f4oirNBUlM",
+   "deferred_auth_id": "f4oirNBUlM",
    "expires_in": 10800
    "interval": 60,
    "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjI3MTdmMzAzYTI3NjVlOGFjYmY0MTEwMGFhOGE0NjllIiwidHlwIjoiSldUIn0.eyJpc3MiOiJodHRwOi8vc2VydmVyLmV4YW1wbGUuY29tIiwic3ViIjoiMjQ4Mjg5NzYxMDAxIiwiZW1haWwiOiJqb2huZG9lQGV4YW1wbGUuY29tIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJhdWQiOiJzNkJoZFJrcXQzIiwibm9uY2UiOiJuLTBTNl9XekEyTWoiLCJleHAiOjE3NjIxOTE2ODgsImlhdCI6MTc2MjE5MTk4OH0.TmW5LZmr5tM_gDbk6Tc7VAMw6zYv9eo1BqbKf19rhw8cHsPLLMA25YilywdA66KO2ESWvY3S5YJn3Azypri5jQOeQTmPQZAeXHjcVSBeABzAQz3eGIdtAaDLQ5p0DafdxgEDOrcLLK8yk3X16aBGpJegdBY1HfqAhuYPV2D_LUCeGbJxn0-4nLF9_U7Ws3c4o_3nq9ZNTVEAoJJckRYhXM6pPf2-1tZvRZD2P9B0vPSiJwqN2JFOBoDROwhxPJU4MKWQ3mp5pdGTZqlUL7wn0a2dG-EI1eq6oQrGwINqTHiqZbttCuz1wQtezRxHYITEAoVaI2c3zad0ZSzTbAGNkw"
@@ -261,7 +261,7 @@ The following is a non-normative example of a deferred token request:
   Content-Type: application/x-www-form-urlencoded
   Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
 
-  grant_type=urn:openid:params:grant-type:deferred&auth_req_id=f4oirNBUlM
+  grant_type=urn:openid:params:grant-type:deferred&deferred_auth_id=f4oirNBUlM
 ```
 
 ## Token Request Validation
@@ -301,7 +301,7 @@ The following is a non-normative example of a Ping callback sent as an HTTP POST
     Content-Type: application/json
 
     {
-     "auth_req_id": "f4oirNBUlM"
+     "deferred_auth_id": "f4oirNBUlM"
     }
 ```
 # Token Request Error Response
