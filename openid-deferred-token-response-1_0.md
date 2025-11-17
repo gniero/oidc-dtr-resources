@@ -171,8 +171,8 @@ Most of that is beyond the scope of this specification.
 
 If the {#authentication-request} is successfully validated in accordance with {#authentication-request-validation}, the OpenID Provider (OP) returns a response to the Relying Party indicating that the request has been accepted and any required user interaction has been completed.
 
-If the `response_type` requested by the Relying Party was `deferred_code code`, the OpenID Provider MAY respond with a Successful Authentication Response as defined in [@!OpenID.Connect, section 3.1.2.5] to indicate that the user was authenticated immediately.
-The remainder of the Authentication then proceeds as an Authorization Code Flow as defined in [@!OpenID.Connect, section 3.1].
+If the `response_type` requested by the Relying Party was `deferred_code code`, the OpenID Provider MAY respond with a Successful Authentication Response as defined in [@!OpenID.Core, section 3.1.2.5] to indicate that the user was authenticated immediately.
+The remainder of the Authentication then proceeds as an Authorization Code Flow as defined in [@!OpenID.Core, section 3.1].
 
 Otherwise, the response MUST contain the parameter `deferred_code`.
 Note that a response containing the `deferred_code` parameter does not constitute a final Authentication Response, but rather serves as an indication that processing is underway.
