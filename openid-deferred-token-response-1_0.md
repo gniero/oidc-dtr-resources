@@ -317,6 +317,8 @@ The Authentication Cancellation can be achieved by the RP sending a request to t
 
 Once the RP gets possession of the `deferred_code` from the Initial Token Response, it can send an Authentication Cancellation Request to the OP in order to cancel the ongoing Authentication Process.
 
+This request is meant to be sent
+
 The following is a non-normative example of an authentication cancellation request:
 
 ```
@@ -334,13 +336,24 @@ The following is a non-normative example of an authentication cancellation reque
 2. Ensure the Deferred Authentication was issued to the authenticated Client.
 3. Verify that no access token has been issued for the Deferred Authentication.
 
-After successful validation, the OP either interrupts the Authentication Process, or marks it as cancelled in case ongoing processing cannot be immediately stopped. Any requests to poll for the result of the Authentication Process after cancellation MUST be handled as described in [(#token-request-error-response, use title)]. 
+After successful validation, the OP marks this Authentication Request as cancelled. Any requests to poll for the result of the Authentication Process after the OP accepts the cancellation request MUST be handled as described in [(#token-request-error-response, use title)]. 
 
 Disposal of any collected Identity Information is beyond the scope of this specification.
 
 ## Authentication Cancellation Response
 
-This will define the response that the RP will receive from the OP when the Authentication Cancellation Request was successful.
+The OP responds to the RP's Authentication Cancellation Request with 200 OK status code if the cancellation was successful, or if the RP submitted an invalid or already-processed `deferred_auth_id`.
+
+Since the purpose of this request is to stop the Authentication Process, distinction of the cancellation outcome is not necessary for the RP.
+This behavior is similar to [@!RFC7009, section 2.2].
+
+The following is a non-normative example of an authentication cancellation response:
+
+```
+  HTTP/1.1 200 OK
+  Content-Type: application/json
+  Cache-Control: no-store
+```
 
 # Token Request Error Response {#token-request-error-response}
 
