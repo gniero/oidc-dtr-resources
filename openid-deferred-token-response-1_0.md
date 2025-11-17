@@ -14,9 +14,9 @@ status = "standard"
 initials="F.K."
 surname="Jacobsen"
 fullname="Frederik Krogsdal Jacobsen"
-organization="Criipto"
+organization="Idura"
     [author.address]
-    email = "frederik.krogsdal@criipto.com"
+    email = "frederik.krogsdal@idura.eu"
 
 [[author]]
 initials="G."
