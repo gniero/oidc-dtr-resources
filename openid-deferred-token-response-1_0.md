@@ -338,7 +338,7 @@ After successful validation, the OP either interrupts the Authentication Process
 
 Disposal of any collected Identity Information is beyond the scope of this specification.
 
-## Authentication Cancellation Response`
+## Authentication Cancellation Response
 
 This will define the response that the RP will receive from the OP when the Authentication Cancellation Request was successful.
 
