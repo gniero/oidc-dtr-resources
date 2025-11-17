@@ -372,7 +372,30 @@ This will usually be because the Authentication Request Validation failed, becau
 
 # Authentication Cancellation Request Error Response
 
-This will define the Authentication Cancellation Error Response that the OP responds to the RP's Authentication Cancellation Request with when the Authentication Cancellation Request could not be validated.
+An Authentication Cancellation Error Response is returned directly from the Cancellation Endpoint in response to the Cancellation Request sent by the RP. The applicable error codes are detailed below (some of which are in conformance with OAuth 2.0 section [@RFC6749, 5.2]).
+
+Authentication Error Responses are sent in the same format as Token Error Responses, i.e. the HTTP response body uses the application/json media type with the following parameters:
+
+error:
+: REQUIRED. A single ASCII error code from one present in the list below.
+
+error_description:
+: OPTIONAL. Human-readable ASCII [USASCII] text providing additional information, used to assist the client developer in understanding the error that occurred. Values for the "error_description" parameter MUST NOT include characters outside the set %x20-21 / %x23-5B / %x5D-7E.
+
+error_uri:
+: OPTIONAL. A URI identifying a human-readable web page with information about the error to provide the client developer with additional information. Values for the "error_uri" parameter MUST conform to the URI-reference syntax and thus MUST NOT include characters outside the set %x21 / %x23-5B / %x5D-7E.
+
+List of authentication error codes associated with HTTP Errors.
+
+HTTP 400 Bad Request
+
+invalid_request:
+: The request is missing a required parameter, includes an invalid parameter value, includes a parameter more than once, contains more than one of the hints, or is otherwise malformed.
+
+HTTP 401 Unauthorized
+
+invalid_client:
+: Client authentication failed (e.g., invalid client credentials, unknown client, no client authentication included, or unsupported authentication method).
 
 # Implementation Considerations
 
