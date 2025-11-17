@@ -309,7 +309,7 @@ The following is a non-normative example of a Ping callback sent as an HTTP POST
 
 In some scenarios, the RP might want to cancel an ongoing Authentication Process that got deferred before it has completed (e.g. user-initiated cancellation) in order to avoid unnecessary processing for both RP and OP. This specification defines the Cancellation Endpoint that the RP can use to cancel an ongoing Authentication Process. 
 
-Other mechanisms such as maximum timeout parameter in the authentication request MAY be supported by the OP, but are out of scope for this specification.
+Other mechanisms such as a timeout parameter in the authentication request MAY be supported by the OP, but are out of scope for this specification.
 
 The Authentication Cancellation can be achieved by the RP sending a request to the OP as described in the following sections. 
 
@@ -317,7 +317,6 @@ The Authentication Cancellation can be achieved by the RP sending a request to t
 
 Once the RP gets possession of the `deferred_code` from the Initial Token Response, it can send an Authentication Cancellation Request to the OP in order to cancel the ongoing Authentication Process.
 
-This request is meant to be sent
 
 The following is a non-normative example of an authentication cancellation request:
 
