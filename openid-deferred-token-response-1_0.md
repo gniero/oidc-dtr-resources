@@ -123,12 +123,24 @@ The [@?OpenID.CIBA] introduces callback modes for the Authorization Server to in
 
 This section describes how to perform authentication using the Deferred Token Flow.
 
+## Deferred Code Response Type
+
+This section registers a new Response Type, the `deferred_code`, in accordance with the stipulations in [@!RFC6749, section 8.4].
+It also defines combinations of the `deferred_code` Response Type with other Response Types.
+The intended purpose of the `deferred_code` is that the response MUST contain a Deferred Authorization Code which can be used at the Token Endpoint.
+
+`deferred_code`
+: When supplied as the `response_type` parameter in an OAuth 2.0 Authorization Request, a successful response MUST include the parameter `deferred_code`. The Authorization Server SHOULD NOT return an OAuth 2.0 Authorization Code, Access Token, or Access Token Type in a successful response to the grant request. If a `redirect_uri` is supplied, the User Agent SHOULD be redirected there after granting or denying access. The request MAY include a `state` parameter, and if so, the Authorization Server MUST echo its value as a response parameter when issuing either a successful response or an error response.
+
+`deferred_code code`
+: When supplied as the `response_type` parameter in an OAuth 2.0 Authorization Request, a successful response MUST include either the parameter `deferred_code` or the parameter `code`. The Authorization Server SHOULD NOT return an OAuth 2.0 Access Token, or Access Token Type in a successful response to the grant request. If a `redirect_uri` is supplied, the User Agent SHOULD be redirected there after granting or denying access. The request MAY include a `state` parameter, and if so, the Authorization Server MUST echo its value as a response parameter when issuing either a successful response or an error response.
+
 ## Authentication Request {#authentication-request}
 
 Deferred Token Response introduces a new Authentication Request using the OAuth 2.0 Authorization Request. This request is based on the Authentication request of the Authorization Code Flow introduced in Section 3.1.2.1 of [@!OpenID.Core] with the exception of following parameter:
 
 response_type:
-: REQUIRED. Deferred Token Response value that determines the authorization processing flow to be used, including what parameters are returned from the endpoints used. This value MUST be `deferred_code`
+: REQUIRED. Deferred Token Response value that determines the authorization processing flow to be used, including what parameters are returned from the endpoints used. This value MUST be either `deferred_code` or `deferred_code code`.
 
 Relying Parties MAY present additional parameters in this request regarding to OAuth 2.0 extensions (such as Rich Authorization Requests).
 Authorization Servers MUST accept those parameters and process them accordingly.
@@ -159,9 +171,13 @@ Most of that is beyond the scope of this specification.
 
 If the {#authentication-request} is successfully validated in accordance with {#authentication-request-validation}, the OpenID Provider (OP) returns a response to the Relying Party indicating that the request has been accepted and any required user interaction has been completed.
 
-Note that this response does not constitute a final Authentication Response, but rather serves as an indication that processing is underway.
+If the `response_type` requested by the Relying Party was `deferred_code code`, the OpenID Provider MAY respond with a Successful Authentication Response as defined in [@!OpenID.Connect, section 3.1.2.5] to indicate that the user was authenticated immediately.
+The remainder of the Authentication then proceeds as an Authorization Code Flow as defined in [@!OpenID.Connect, section 3.1].
 
-The following is a non-normative example of an authentication request acknowledgment:
+Otherwise, the response MUST contain the parameter `deferred_code`.
+Note that a response containing the `deferred_code` parameter does not constitute a final Authentication Response, but rather serves as an indication that processing is underway.
+
+The following is a non-normative example of an Authentication Request Acknowledgment:
 
 ```
   HTTP/1.1 302 Found
