@@ -1,0 +1,32 @@
+name: PR Build Check
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  build-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install MMARK and XML2RFC
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mmark xml2rfc
+
+      - name: Run build script
+        run: |
+          chmod +x scripts/build.sh
+          ./scripts/build.sh
+
+      - name: Verify generated HTML
+        run: |
+          if [ -f "docs/index.html" ]; then
+            echo "docs/index.html found"
+          else
+            echo "ERROR: docs/index.html not generated" >&2
+            ls -la docs || true
+            exit 1
+          fi
