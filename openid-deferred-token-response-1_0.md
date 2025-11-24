@@ -192,17 +192,19 @@ This will define the logic that RPs should apply to validate Authentication Requ
 
 # Exchanging the Deferred Code to obtain Deferred Authentication ID
 
-The RP sends a Token Request to the Token Endpoint, as described in [@!RFC6749, section 3.2], to obtain  Token Responses. It is RECOMMENDED that all interactions with the OP are secured with DPoP.
+The Relying Party (RP) sends a Request to the Token Endpoint, as specified in [@!RFC6749, section 3.2], to exchange the deferred code. Upon successful processing of this request, the OpenID Provider (OP) assigns a Deferred Authentication ID to each Authentication Process. This identifier enables the RP to poll for the result of the corresponding process, in a manner analogous to the `auth_req_id` defined in [@!OpenID.CIBA].
 
-The Deferred Authentication ID is assigned by the OP to each Authentication Process in order to allow the RP to poll for the result of that process. This mechanism is similar to the `auth_req_id` defined in [@!OpenID.CIBA]. 
+The `deferred_code` value is not utilized for polling. This allows the OP to apply the same security considerations to the `deferred_code` as are applied to authorization codes, as described in [@!RFC6819, section 4.4.1] and [@!RFC9700].
 
-The `deferred_code` value is not used for polling, allowing the OP to apply the same security considerations as it does for authorization codes as specified in [@!RFC6819, section 4.4.1] and [@!RFC9700].
+All interactions with the OP SHOULD be secured using Demonstration of Proof-of-Possession (DPoP). When a DPoP proof is presented in the Deferred Code Exchange Request, subsequent interactions between the OP and RP that are related to the same Authentication Process MUST be bound to the same public key.
 
 ## Deferred Code Exchange Request
 
 The Initial Token Request exchanges the deferred code obtained in the Authentication Request Acknowledgment.
 
 Supported extension parameters from the OAuth 2.0 Token Request MAY be included in this request.
+
+A DPoP proof MAY be included in this request in order to bind the Deferred Authentication ID to a public key. Its payload MUST contain the `deferred_code` matching the one sent in the Deferred Code parameter.
 
 The following is a non-normative example of an initial token request:
 
@@ -211,7 +213,7 @@ The following is a non-normative example of an initial token request:
   Host: server.example.com
   Content-Type: application/x-www-form-urlencoded
   Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
-
+  DPoP: eyJ0eXAiOiJkcG9wK2p3dCIsImFsZyI6IkVTMjU2IiwiandrIjp7Imt0eSI6IkVDIiwieCI6Imw4dEZyaHgtMzR0VjNoUklDUkRZOXpDa0RscEJoRjQyVVFVZldWQVdCRnMiLCJ5IjoiOVZFNGpmX09rX282NHpiVFRsY3VOSmFqSG10NnY5VERWclUwQ2R2R1JEQSIsImNydiI6IlAtMjU2In19.eyJqdGkiOiJBeDBwYjcyazRtZCIsImh0bSI6IlBPU1QiLCJodHUiOiJodHRwczovL3NlcnZlci5leGFtcGxlLmNvbS90b2tlbiIsImlhdCI6MTc2MzcyMzExMn0.uy3IfO-j8Yg4Aux0uGAuh7_m24WDCfWCUacRPWtFHS9J-HWASoiEqBsuxI1LN3V4To4Mn1ZRv0AVBxuOA6km3g
   grant_type=urn:openid:params:grant-type:deferred&deferred_code=SplxlOBeZQQYbYS6WxSbIA
     &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
 ```
@@ -223,12 +225,17 @@ The OP Provider MUST validate the request received as follows:
 1. Authenticate the Client in accordance with Section 9 of [@!OpenID.Core].
 2. Ensure the Deferred Code was issued to the authenticated Client.
 3. Verify that the Deferred Code is valid and has not been previously used.
+4. If a DPoP proof was provided, 
+   1. Validate it in accordance with [@!RFC9449, section 4.3].
+   2. Check if DPoP proof payload contains the `deferred_code` matching the one sent in the Deferred Code parameter.
 
-## Successful Deferred Code Exchange Response
+## Successful Deferred Code Exchange Response{#successful-deferred-code-exchange-response}
 
 This will define the response that the RP will receive from the OP when the Initial Token Request was successful.
 
 It MAY include an interim ID Token containing unverified claims (at the discretion of the OP).
+
+When a DPoP proof is provided in the Deferred Code Exchange Request, the OP MUST bind the `deferred_auth_id` to its respective public key.
 
 The following is a non-normative example of a successful initial token response:
 
@@ -269,6 +276,8 @@ This process polls a special endpoint for that purpose.
 This will define the Token Request that the RP polls the OP with.
 This request MUST use the DPoP-secured Access Token.
 
+If a DPoP proof was presented by the RP in the Deferred Code Exchange Request, the RP MUST also present a DPoP proof in this request, utilizing the same public key as previously used. The payload of the DPoP proof MUST include the `deferred_auth_id` value that matches the Deferred Authentication ID parameter provided in the request.
+
 The following is a non-normative example of a deferred token request:
 
 ```
@@ -276,12 +285,24 @@ The following is a non-normative example of a deferred token request:
   Host: server.example.com
   Content-Type: application/x-www-form-urlencoded
   Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
+  DPoP: eyJ0eXAiOiJkcG9wK2p3dCIsImFsZyI6IkVTMjU2IiwiandrIjp7Imt0eSI6IkVDIiwieCI6Imw4dEZyaHgtMzR0VjNoUklDUkRZOXpDa0RscEJoRjQyVVFVZldWQVdCRnMiLCJ5IjoiOVZFNGpmX09rX282NHpiVFRsY3VOSmFqSG10NnY5VERWclUwQ2R2R1JEQSIsImNydiI6IlAtMjU2In19.eyJqdGkiOiJwS2piNGFEZjEiLCJodG0iOiJQT1NUIiwiaHR1IjoiaHR0cHM6Ly9zZXJ2ZXIuZXhhbXBsZS5jb20vdG9rZW4iLCJpYXQiOjE3NjM3MjMyMjB9.4dr1uoyy8m1giIcVgfsXmO_WISirgOAJxqJZul58QCu_MdxOBZ76HNO70BNyF8NJdv8HACS54etcvBr6C2iXxg
 
   grant_type=urn:openid:params:grant-type:deferred&deferred_auth_id=f4oirNBUlM
 ```
 
 ## Token Request Validation
 
+The OP MUST validate the request received as follows:
+
+1. Authenticate the Client in accordance with Section 9 of [@!OpenID.Core].
+2. Ensure the Deferred Authentication ID was issued to the authenticated Client.
+3. If a DPoP proof was associated with the Deferred Authentication ID as specified in {#successful-deferred-code-exchange-response},
+   1. Validate the existance of a DPoP proof in the request, with its public key matching the previously used
+   2. Validate the DPoP token it in accordance with [@!RFC9449, section 4.3].
+   3. Check if DPoP proof payload contains the `deferred_auth_id` matching the one sent in the Deferred Authentication ID parameter.
+4. Verify that the Authentication Process has been completed, has not been canceled nor reached timeout
+5. Ensure that no access token has been previously issued for the Deferred Authentication ID.
+   
 This will define the validation steps that the OP must perform in order to produce a successful token response or a Token request Error Response. Reminder to consider the cancellation that has been described later in this specification.
 
 ## Successful Token Response
@@ -297,7 +318,7 @@ The following is a non-normative example of a successful token response:
 
   {
    "access_token": "SlAV32hkKG",
-   "token_type": "Bearer",
+   "token_type": "DPoP",
    "expires_in": 3600,
    "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjI3MTdmMzAzYTI3NjVlOGFjYmY0MTEwMGFhOGE0NjllIiwidHlwIjoiSldUIn0.eyJpc3MiOiJodHRwOi8vc2VydmVyLmV4YW1wbGUuY29tIiwic3ViIjoiMjQ4Mjg5NzYxMDAxIiwiZW1haWwiOiJqb2huZG9lQGV4YW1wbGUuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF1ZCI6InM2QmhkUmtxdDMiLCJuYW1lIjoiSm9obkRvZSIsIm5vbmNlIjoibi0wUzZfV3pBMk1qIiwiZXhwIjoxNzYyMTkyNTg4LCJpYXQiOjE3NjIxOTI5ODh9.V0hhdCBkb2VzIG15IHNob2VsIHNheT8gWW91IHNob3VsZCBub3Qgc2hvdw",
    "refresh_token": "8xLOxBtZp8"
