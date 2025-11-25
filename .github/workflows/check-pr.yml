@@ -15,7 +15,7 @@ jobs:
         run: |
           mkdir mmark_temp
           curl -L -o mmark_temp/mmark.tgz https://github.com/mmarkdown/mmark/releases/download/v2.2.47/mmark_2.2.47_linux_amd64.tgz
-          tar -xzf mmark_temp/mmark.tgz
+          tar -xzf mmark_temp/mmark.tgz -C mmark_temp
           sudo mv mmark_temp/mmark /usr/local/bin/mmark
           rm -rf mmark_temp
       
