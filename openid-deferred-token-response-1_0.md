@@ -262,7 +262,7 @@ After issuing the `deferred_code` in the Authentication Request Acknowledgment, 
 
 The specific processing performed by the OP during this step is outside the scope of this specification. For example, the OP might perform manual review, contact using the information provided, or other methods to authenticate the End-User based on the provided Identity Information.
 
-During this time, the OP MUST observe for timeouts, or cancellation requests from the RP as described in (#canceling-an-ongoing-authentication-process).
+While processing the request, the OP MAY allow the RP to cancel the request as described in (#canceling-an-ongoing-authentication-process).
 
 # Deferred Notification Endpoint
 
