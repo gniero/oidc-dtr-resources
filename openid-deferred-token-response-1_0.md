@@ -260,9 +260,9 @@ This will define the logic that the RP should use to validate the Initial Token 
 
 After issuing the `deferred_code` in the Authentication Request Acknowledgment, the OP continues the Authentication Process by validating the Identity Information obtained from the End-User. The OP MAY take an arbitrary amount of time to complete this process.
 
-The processing performed by the OP during this step is outside the scope of this specification. As an example, the OP might use biometric verification, manual review, or other methods to authenticate the End-User based on the provided Identity Information.
+The specific processing performed by the OP during this step is outside the scope of this specification. For example, the OP might perform manual review, contact using the information provided, or other methods to authenticate the End-User based on the provided Identity Information.
 
-During this time, the OP MUST observe for timeouts, or cancellation requests from the RP as described in [(#canceling-an-ongoing-authentication-process, use title)].
+During this time, the OP MUST observe for timeouts, or cancellation requests from the RP as described in (#canceling-an-ongoing-authentication-process).
 
 # Deferred Notification Endpoint
 
@@ -345,7 +345,7 @@ The following is a non-normative example of a Ping callback sent as an HTTP POST
     }
 ```
 
-# Canceling an Ongoing Authentication Process
+# Canceling an Ongoing Authentication Process {#canceling-an-ongoing-authentication-process}
 
 In some scenarios, the RP might want to cancel an ongoing Authentication Process that got deferred before it has completed (e.g. user-initiated cancellation) in order to avoid unnecessary processing for both RP and OP. This specification defines the Cancellation Endpoint that the RP can use to cancel an ongoing Authentication Process. 
 
