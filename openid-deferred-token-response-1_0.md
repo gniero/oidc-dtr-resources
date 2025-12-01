@@ -258,8 +258,11 @@ This will define the logic that the RP should use to validate the Initial Token 
 
 # OpenID Provider Authenticates End-User
 
-This will describe the OP validating the Identity Information from the End-User.
-How that works is beyond the scope of this specification. Reminder to consider cancellation that has been described later in this specification.
+After issuing the `deferred_code` in the Authentication Request Acknowledgment, the OP continues the Authentication Process by validating the Identity Information obtained from the End-User. The OP MAY take an arbitrary amount of time to complete this process.
+
+The processing performed by the OP during this step is outside the scope of this specification. As an example, the OP might use biometric verification, manual review, or other methods to authenticate the End-User based on the provided Identity Information.
+
+During this time, the OP MUST observe for timeouts, or cancellation requests from the RP as described in [(#canceling-an-ongoing-authentication-process, use title)].
 
 # Deferred Notification Endpoint
 
