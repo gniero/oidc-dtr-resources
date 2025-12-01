@@ -1212,7 +1212,7 @@ li > p:last-of-type:only-child {
 <thead><tr>
 <td class="left"></td>
 <td class="center">openid-deferred-token-response</td>
-<td class="right">November 2025</td>
+<td class="right">December 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Jacobsen &amp; de Oliveira Niero</td>
@@ -1227,7 +1227,7 @@ li > p:last-of-type:only-child {
 <dd class="workgroup">OpenID Connect</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-11-28" class="published">28 November 2025</time>
+<time datetime="2025-12-01" class="published">1 December 2025</time>
     </dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
@@ -1742,8 +1742,9 @@ Note that a response containing the <code>deferred_code</code> parameter does no
       <h2 id="name-openid-provider-authenticat">
 <a href="#section-6" class="section-number selfRef">6. </a><a href="#name-openid-provider-authenticat" class="section-name selfRef">OpenID Provider Authenticates End-User</a>
       </h2>
-<p id="section-6-1">This will describe the OP validating the Identity Information from the End-User.
-How that works is beyond the scope of this specification. Reminder to consider cancellation that has been described later in this specification.<a href="#section-6-1" class="pilcrow">¶</a></p>
+<p id="section-6-1">After issuing the <code>deferred_code</code> in the Authentication Request Acknowledgment, the OP continues the Authentication Process by validating the Identity Information obtained from the End-User. The OP MAY take an arbitrary amount of time to complete this process.<a href="#section-6-1" class="pilcrow">¶</a></p>
+<p id="section-6-2">The specific processing performed by the OP during this step is outside the scope of this specification. For example, the OP might perform manual review, contact using the information provided, or other methods to authenticate the End-User based on the provided Identity Information.<a href="#section-6-2" class="pilcrow">¶</a></p>
+<p id="section-6-3">While processing the request, the OP MAY allow the RP to cancel the request as described in <a href="#canceling-an-ongoing-authentication-process" class="auto internal xref">Section 9</a>.<a href="#section-6-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="deferred-notification-endpoint">
