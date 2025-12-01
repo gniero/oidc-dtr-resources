@@ -330,7 +330,11 @@ The following is a non-normative example of a successful token response:
 
 ## Ping Callback
 
-This will define the optional Ping Callback that the RP may request the OP to send it once the Authentication Process has finished.
+If the client has informed a `deferred_client_notification_endpoint` during client registration, the OP MAY send a Ping to that endpoint once the Authentication Process has finished (regardless of the outcome).
+
+RPs SHOULD not expect the Ping to be sent for timed-out Authentication Processes, as the expiration is informed to the RP via the `expires_in` parameter in the (#successful-deferred-code-exchange-response).
+
+In this request, the OP sends the `client_notification_token` in the `Authorization` header as a Bearer token in order to authenticate the request.
 
 The following is a non-normative example of a Ping callback sent as an HTTP POST request to the Client's Notification Endpoint (with line wraps within values for display purposes only).
 
@@ -445,6 +449,10 @@ The OP MAY accept Authentication Requests providing the response type value as `
 # Privacy Considerations
 
 # Security Considerations
+
+In addition to the security considerations described in [@!RFC6749], [@!RFC7519], [@!RFC9449], and [@!OpenID.Core], the following considerations apply to this specification.
+
+## Client Notification Token
 
 # IANA Considerations
 
