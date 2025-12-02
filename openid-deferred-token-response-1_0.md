@@ -454,6 +454,14 @@ In addition to the security considerations described in [@!RFC6749], [@!RFC7519]
 
 ## Client Notification Token
 
+The `client_notification_token` is a bearer token that enables the OP to authenticate to the RP when sending the Ping Callback. Therefore, it is imperative that this token is protected against unauthorized access and disclosure.
+
+This token must be generated following the least privilege principle, ensuring it can only be used for its intended purpose of authenticating the OP to the RP during the Ping Callback.
+
+Redirection-based flows that include the `client_notification_token` in the URL are discouraged, as URLs can be logged or exposed in various ways, potentially leading to token leakage.
+
+RPs MAY consider the adoption of mechanisms such as Pushed Authorization Requests [@!RFC9126] or Encrypted Request Objects defined in Section 6.1 of [@!OpenID.Core] to avoid exposing `client_notification_token` in URLs.
+
 # IANA Considerations
 
 No new registrations.
