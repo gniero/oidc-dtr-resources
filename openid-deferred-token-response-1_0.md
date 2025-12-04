@@ -467,11 +467,13 @@ In addition to the security considerations described in [@!RFC6749], [@!RFC7519]
 
 The `deferred_notification_token` is a bearer token that enables the OP to authenticate to the RP when sending the Ping Callback. Therefore, it is imperative that this token is protected against unauthorized access and disclosure.
 
-This token must be generated following the least privilege principle, ensuring it can only be used for its intended purpose of authenticating the OP to the RP during the Ping Callback.
+This token SHOULD be generated following the least privilege principle, ensuring it can only be used for its intended purpose of authenticating the OP to the RP during the Ping Callback.
 
 Redirection-based flows that include the `deferred_notification_token` in the URL are discouraged, as URLs can be logged or exposed in various ways, potentially leading to token leakage.
 
-RPs MAY consider the adoption of mechanisms such as Pushed Authorization Requests [@!RFC9126] or Encrypted Request Objects defined in Section 6.1 of [@!OpenID.Core] to avoid exposing `deferred_notification_token` in URLs.
+RPs MAY consider the adoption of mechanisms such as Pushed Authorization Requests [@!RFC9126] or Encrypted Request Objects defined in Section 6.1 of [@!OpenID.Core] to avoid exposing `deferred_notification_token` in URLs. 
+
+Implementations that opt to use request objects passed by reference SHOULD ensure that the request object is protected against unauthorized access, for example by using short-lived, single-use URIs with adequate entropy.
 
 # IANA Considerations
 
