@@ -371,11 +371,13 @@ The following is a non-normative example of an authentication cancellation reque
 
 ## Authentication Cancellation Request Validation
 
+The OP MUST validate the request received as follows:
+
 1. Authenticate the Client in accordance with Section 9 of [@!OpenID.Core].
 2. Ensure the Deferred Authentication was issued to the authenticated Client.
 3. Verify that no access token has been issued for the Deferred Authentication.
 
-After successful validation, the OP marks this Authentication Request as cancelled. Any requests to poll for the result of the Authentication Process after the OP accepts the cancellation request MUST be handled as described in [(#token-request-error-response, use title)]. 
+After successful validation, the OP marks this Authentication Request as cancelled. Any requests to poll for the result of the Authentication Process after the OP accepts the cancellation request MUST be handled as described in (#token-request-error-response). 
 
 Disposal of any collected Identity Information is beyond the scope of this specification.
 
