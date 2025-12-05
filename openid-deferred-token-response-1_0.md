@@ -163,7 +163,10 @@ The following is a non-normative example request that would be sent by the User 
 The OpenID Provider MUST validate the request received as follows:
 
 1. Verify that the `response_type` parameter is present and has a value of either `deferred_code` or `deferred_code code`.
-2. Validate the remaining parameters in accordance with Section 3.1.2.2 - Authentication Request Validation of [@!OpenID.Core].
+2. Check if the Client is registered to use the Deferred Token Response flow.
+3. Validate the remaining Authentication Request parameters in accordance with Section 3.1.2.2 - Authentication Request Validation of [@!OpenID.Core].
+
+If any OAuth 2.0 extensions are present in the request, the OP MUST validate them accordingly.
 
 If the OpenID Provider encounters any error, it MUST return an error response, per (#authentication-request-error-response).
 
