@@ -188,7 +188,9 @@ The following is a non-normative example of an Authentication Request Acknowledg
 
 ## Authentication Request Acknowledgment Validation
 
-This will define the logic that RPs should apply to validate Authentication Request Acknowledgment responses.
+If a Client receives an HTTP status code of 200 OK, it MUST validate all required parameters.
+
+The Client SHOULD promptly proceed to the exchange of the `deferred_code`.
 
 # Exchanging the Deferred Code to obtain Deferred Authentication ID
 
