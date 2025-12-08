@@ -164,13 +164,13 @@ This will define the logic that OPs should apply to validate Authentication Requ
 
 ## OpenID Provider Obtains End-User Authorization and Identity Information
 
-Upon receiving a valid Authentication Request, the OpenID Provider (OP) determines whether End-User interaction is required to complete the authentication process. It MAY redirect the User Agent to an OP-controlled interface to collect any required Identity Information from the End-User and obtain explicit authorization.
+Upon receiving a valid Authentication Request, the OpenID Provider (OP) determines whether End-User interaction is required to complete the authentication process. It MAY present OP-controlled interfaces through the User Agent to collect any required Identity Information from the End-User and obtain explicit authorization.
 
 The OP MAY prompt the End-User to provide credentials, perform multi-factor authentication, or supply additional Identity Information (such as biometric data, government-issued documents, or other forms of verification).
 
-The nature and extent of the Identity Information collected are determined by the OP's policies based on the requirements of the Relying Party (RP).
+The nature and extent of the Identity Information collected are determined by the OP's policies and the authentication requirements of the Relying Party (RP).
 
-If the End-User successfully completes the required interaction and provides required Identity Information, the OP continues processing the Authentication Request. If the End-User declines or fails to provide sufficient information, the OP MUST return error response as defined in (#authentication-request-error-response).
+If no interaction is required, or the End-User successfully completes the required interaction, the OP continues processing the Authentication Request. If the End-User declines or fails to provide sufficient information, the OP MUST return error response as defined in (#authentication-request-error-response).
 
 ## Authentication Request Acknowledgment
 
