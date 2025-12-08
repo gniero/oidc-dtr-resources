@@ -235,7 +235,7 @@ This will define the response that the RP will receive from the OP when the Init
 
 It MAY include an interim ID Token containing unverified claims (at the discretion of the OP).
 
-When a DPoP proof is provided in the Deferred Code Exchange Request, the OP MUST bind the `deferred_auth_id` to the public key in the DPoP proof.
+The OP MUST bind the public key used in DPoP proofs to `deferred_auth_id` when RP's Client is of type Public Client () and a DPoP proof is presented in the Deferred Code Exchange Request. Further interactions involving a `deferred_auth_id` MUST require a DPoP proof utilizing the same public key. This mechanism is similar to the binding of DPoP proofs to Refresh Tokens as described in [@!RFC9449, section 5].
 
 The following is a non-normative example of a successful initial token response:
 
@@ -299,14 +299,16 @@ The OP MUST validate the request received as follows:
 
 1. Authenticate the Client in accordance with Section 9 of [@!OpenID.Core].
 2. Ensure the Deferred Authentication ID was issued to the authenticated Client.
-3. If a DPoP proof was associated with the Deferred Authentication ID as specified in (#successful-deferred-code-exchange-response),
-   1. Validate the existence of a DPoP proof in the request, with its public key matching the previously used
-   2. Validate the DPoP token in accordance with [@!RFC9449, section 4.3].
-   3. Check if the DPoP proof payload contains the `deferred_auth_id` matching the one sent in the Deferred Authentication ID parameter.
-4. Verify that the Authentication Process has been completed, has not been canceled nor reached timeout
-5. Ensure that no access token has been previously issued for the Deferred Authentication ID.
+3. If the Client is a Public Client as defined in [@!RFC6749] and a DPoP proof was associated with the Deferred Authentication ID as specified in (#successful-deferred-code-exchange-response),
+   1. Ensure that a DPoP proof is present in the request.
+   2. Validate that the public key in the DPoP proof matches the one previously used.
+4. If a DPoP proof is provided in the request,
+   1. Validate the DPoP token in accordance with [@!RFC9449, section 4.3].
+   2. Check if the DPoP proof payload contains the `deferred_auth_id` matching the one sent in the Deferred Authentication ID parameter.
+5. Verify that the Authentication Process has been completed, has not been canceled nor reached timeout
+6. Ensure that no access token has been previously issued for the Deferred Authentication ID.
    
-This will define the validation steps that the OP must perform in order to produce a successful token response or a Token request Error Response. Reminder to consider the cancellation that has been described later in this specification.
+If the OP encounters any error, it MUST return an error response, per (#token-request-error-response).
 
 ## Successful Token Response
 
