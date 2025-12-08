@@ -162,14 +162,14 @@ The following is a non-normative example request that would be sent by the User 
 
 This will define the logic that OPs should apply to validate Authentication Requests.
 
-## OpenID Provider Obtains End-User Authorization and Identity Information
+## OpenID Provider Obtains End-User Authorization and Identity Information {#op-obtains-end-user-authorization-and-identity-information}
 
 This will describe the OP obtaining authorization and Identity Information from the End-User.
 Most of that is beyond the scope of this specification.
 
 ## Authentication Request Acknowledgment
 
-If the {#authentication-request} is successfully validated in accordance with {#authentication-request-validation}, the OpenID Provider (OP) returns a response to the Relying Party indicating that the request has been accepted and any required user interaction has been completed.
+If the Authentication Request is successfully processed in accordance with (#op-obtains-end-user-authorization-and-identity-information), the OpenID Provider (OP) returns a response to the Relying Party indicating that the request has been accepted and any required user interaction has been completed.
 
 If the `response_type` requested by the Relying Party was `deferred_code code`, the OpenID Provider MAY respond with a Successful Authentication Response as defined in Section 3.1.2.5 of [@!OpenID.Core] to indicate that the user was authenticated immediately.
 The remainder of the Authentication then proceeds as an Authorization Code Flow as defined in Section 3.1 of [@!OpenID.Core].
