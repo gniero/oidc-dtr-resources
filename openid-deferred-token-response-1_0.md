@@ -170,7 +170,7 @@ The OP MAY prompt the End-User to provide credentials, perform multi-factor auth
 
 The nature and extent of the Identity Information collected are determined by the OP's policies and the authentication requirements of the Relying Party (RP).
 
-If no interaction is required, or the End-User successfully completes the required interaction, the OP continues processing the Authentication Request. If the End-User declines or fails to provide sufficient information, the OP MUST return error response as defined in (#authentication-request-error-response).
+If no interaction is required, or the End-User successfully completes the required interaction, the OP continues processing the Authentication Request. If the End-User declines or fails to provide sufficient information, the OP MUST return an error response as defined in (#authentication-request-error-response).
 
 ## Authentication Request Acknowledgment
 
