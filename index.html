@@ -1604,7 +1604,17 @@ Authorization Servers MUST accept those parameters and process them accordingly.
         <h3 id="name-authentication-request-vali">
 <a href="#section-4.3" class="section-number selfRef">4.3. </a><a href="#name-authentication-request-vali" class="section-name selfRef">Authentication Request Validation</a>
         </h3>
-<p id="section-4.3-1">This will define the logic that OPs should apply to validate Authentication Requests.<a href="#section-4.3-1" class="pilcrow">¶</a></p>
+<p id="section-4.3-1">The OpenID Provider MUST validate the request received as follows:<a href="#section-4.3-1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="compact type-1" id="section-4.3-2">
+<li id="section-4.3-2.1">Verify that the <code>response_type</code> parameter is present and has a value of either <code>deferred_code</code> or <code>deferred_code code</code>.<a href="#section-4.3-2.1" class="pilcrow">¶</a>
+</li>
+          <li id="section-4.3-2.2">Check if the Client is registered to use the Deferred Token Response flow.<a href="#section-4.3-2.2" class="pilcrow">¶</a>
+</li>
+          <li id="section-4.3-2.3">Validate the remaining Authentication Request parameters in accordance with Section 3.1.2.2 - Authentication Request Validation of <span>[<a href="#OpenID.Core" class="cite xref">OpenID.Core</a>]</span>.<a href="#section-4.3-2.3" class="pilcrow">¶</a>
+</li>
+        </ol>
+<p id="section-4.3-3">If any OAuth 2.0 extensions are present in the request, the OP MUST validate them accordingly.<a href="#section-4.3-3" class="pilcrow">¶</a></p>
+<p id="section-4.3-4">If the OpenID Provider encounters any error, it MUST return an error response, per <a href="#authentication-request-error-response" class="auto internal xref">Section 12</a>.<a href="#section-4.3-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="op-obtains-end-user-authorization-and-identity-information">
