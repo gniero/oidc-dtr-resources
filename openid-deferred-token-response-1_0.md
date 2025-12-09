@@ -331,11 +331,11 @@ The following is a non-normative example of a successful token response:
 
 ## Ping Callback
 
-If the client has informed a `deferred_client_notification_endpoint` during client registration, the OP sends a Ping to that endpoint once the Authentication Process has finished, regardless of the outcome.
+If the client has registered a `deferred_client_notification_endpoint` during client registration, the OP sends a Ping to that endpoint once the Authentication Process has finished, regardless of the outcome.
 
-Ping callbacks are not sent for timed-out Authentication Processes, as the expiration is informed to the RP via the `expires_in` parameter in the (#successful-deferred-code-exchange-response).
+Ping callbacks are not sent for timed-out Authentication Processes, since the RP is informed of the expiration time via the `expires_in` parameter in the (#successful-deferred-code-exchange-response).
 
-In this request, the OP sends the `deferred_notification_token` in the `Authorization` header as a Bearer token in order to authenticate the request. It MUST ensure that a (#successful-deferred-code-exchange-response) was previously sent to the RP containing the `deferred_auth_id`. RPs MAY associate the `deferred_notification_token` with the `deferred_auth_id` in order to strengthen validation.
+In this request, the OP sends the `deferred_notification_token` in the `Authorization` header as a Bearer token in order to authenticate the request. The OP MUST ensure that a (#successful-deferred-code-exchange-response) was previously sent to the RP containing the `deferred_auth_id`. RPs MAY associate the `deferred_notification_token` with the `deferred_auth_id` in order to strengthen validation.
 
 The following is a non-normative example of a Ping callback sent as an HTTP POST request to the Deferred Client Notification Endpoint (with line wraps within values for display purposes only).
 
