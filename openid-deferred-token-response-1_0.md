@@ -473,7 +473,7 @@ Redirection-based flows that include the `deferred_notification_token` in the UR
 
 RPs MAY consider the adoption of mechanisms such as Pushed Authorization Requests [@!RFC9126] or Encrypted Request Objects defined in Section 6.1 of [@!OpenID.Core] to avoid exposing `deferred_notification_token` in URLs. 
 
-Implementations that opt to use request objects passed by reference SHOULD ensure that the request object is protected against unauthorized access, for example by using short-lived, single-use URIs with adequate entropy or mTLS.
+Implementations that opt to use request objects passed by reference SHOULD ensure that the request object is protected against unauthorized access, for example by using short-lived, single-use URIs with adequate entropy, or requiring mTLS.
 
 # IANA Considerations
 
