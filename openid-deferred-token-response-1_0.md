@@ -164,8 +164,13 @@ This will define the logic that OPs should apply to validate Authentication Requ
 
 ## OpenID Provider Obtains End-User Authorization and Identity Information {#op-obtains-end-user-authorization-and-identity-information}
 
-This will describe the OP obtaining authorization and Identity Information from the End-User.
-Most of that is beyond the scope of this specification.
+Upon receiving a valid Authentication Request, the OpenID Provider (OP) determines whether End-User interaction is required to complete the authentication process. It MAY present OP-controlled interfaces through the User Agent to collect any required Identity Information from the End-User and obtain explicit authorization.
+
+The OP MAY prompt the End-User to provide credentials, perform multi-factor authentication, or supply additional Identity Information (such as biometric data, government-issued documents, or other forms of verification).
+
+The nature and extent of the Identity Information collected are determined by the OP's policies and the authentication requirements of the Relying Party (RP).
+
+If no interaction is required, or the End-User successfully completes the required interaction, the OP continues processing the Authentication Request. If the End-User declines or fails to provide sufficient information, the OP MUST return an error response as defined in (#authentication-request-error-response).
 
 ## Authentication Request Acknowledgment
 
@@ -406,7 +411,7 @@ This will usually be because the End-User could not be authenticated based on th
 This will define the Initial Token Error Response that the OP responds to the RP's Initial Token Request with when the Initial Token Request could not be validated.
 This will usually be because the Initial Token Request Validation failed, which will usually happen if the deferred code is expired, the DPoP proof is wrong, or the DPoP headers are missing.
 
-# Authentication Request Error Response
+# Authentication Request Error Response {#authentication-request-error-response}
 
 This will define the Authentication Request Error Response that the OP responds to the RP's Authentication Request with when the Authentication Request could not be started.
 This will usually be because the Authentication Request Validation failed, because the End-User did not authorize the request, or because the End-User did not provide acceptable Identity Information to the OP.
