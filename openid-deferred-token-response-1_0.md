@@ -260,6 +260,7 @@ The following is a non-normative example of a successful initial token response:
 ## Deferred Code Exchange Response Validation
 
 This will define the logic that the RP should use to validate the Initial Token Response.
+Note to mention the possibility of associating the `deferred_notification_token` with the `deferred_auth_id` for later validation of the Ping Callback.
 
 # OpenID Provider Authenticates End-User
 
@@ -269,7 +270,7 @@ The specific processing performed by the OP during this step is outside the scop
 
 While processing the request, the OP MAY allow the RP to cancel the request as described in (#canceling-an-ongoing-authentication-process).
 
-# Deferred Notification Endpoint
+# Deferred Client Notification Endpoint
 
 This will define the endpoint that the OP should optionally send a Ping to.
 This will be configured in client registration metadata and should only be used if configured.
@@ -335,9 +336,13 @@ The following is a non-normative example of a successful token response:
 
 ## Ping Callback
 
-This will define the optional Ping Callback that the RP may request the OP to send it once the Authentication Process has finished.
+If the client has registered a `deferred_client_notification_endpoint` during client registration, the OP sends a Ping to that endpoint once the Authentication Process has finished, regardless of the outcome.
 
-The following is a non-normative example of a Ping callback sent as an HTTP POST request to the Client's Notification Endpoint (with line wraps within values for display purposes only).
+Ping callbacks are not sent for timed-out Authentication Processes, since the RP is informed of the expiration time via the `expires_in` parameter in the (#successful-deferred-code-exchange-response).
+
+In this request, the OP sends the `deferred_notification_token` in the `Authorization` header as a Bearer token in order to authenticate the request. The OP MUST ensure that a (#successful-deferred-code-exchange-response) was previously sent to the RP containing the `deferred_auth_id`. RPs MAY associate the `deferred_notification_token` with the `deferred_auth_id` in order to strengthen validation.
+
+The following is a non-normative example of a Ping callback sent as an HTTP POST request to the Deferred Client Notification Endpoint (with line wraps within values for display purposes only).
 
 ```
     POST /cb HTTP/1.1
@@ -349,6 +354,16 @@ The following is a non-normative example of a Ping callback sent as an HTTP POST
      "deferred_auth_id": "f4oirNBUlM"
     }
 ```
+
+The Client MUST verify the `deferred_notification_token` to authenticate the request. If the bearer token is invalid, the RP SHOULD respond with an HTTP 401 Unauthorized status code.
+
+For valid requests, the Deferred Client Notification Endpoint SHOULD respond with an HTTP 204 No Content status code. The OP SHOULD also accept responses with HTTP 200 OK, and any body in the response SHOULD be ignored.
+
+The Client MUST NOT return an HTTP 3xx status code. The OP MUST NOT follow redirects.
+
+Handling of HTTP error codes in the 4xx and 5xx ranges by the OP is out of scope for this specification. Administrative action is likely to be required in these cases.
+
+Clients MUST ignore unrecognized request parameters.
 
 # Canceling an Ongoing Authentication Process {#canceling-an-ongoing-authentication-process}
 
@@ -452,6 +467,20 @@ The OP MAY accept Authentication Requests providing the response type value as `
 # Privacy Considerations
 
 # Security Considerations
+
+In addition to the security considerations described in [@!RFC6749], [@!RFC7519], [@!RFC9449], and [@!OpenID.Core], the following considerations apply to this specification.
+
+## Deferred Notification Token
+
+The `deferred_notification_token` is a bearer token that enables the OP to authenticate to the RP when sending the Ping Callback. Therefore, it is imperative that this token is protected against unauthorized access and disclosure.
+
+This token SHOULD be generated following the least privilege principle, ensuring it can only be used for its intended purpose of authenticating the OP to the RP during the Ping Callback.
+
+Redirection-based flows that include the `deferred_notification_token` in the URL are discouraged, as URLs can be logged or exposed in various ways, potentially leading to token leakage.
+
+RPs MAY consider the adoption of mechanisms such as Pushed Authorization Requests [@!RFC9126] or Encrypted Request Objects defined in Section 6.1 of [@!OpenID.Core] to avoid exposing `deferred_notification_token` in URLs. 
+
+Implementations that opt to use request objects passed by reference SHOULD ensure that the request object is protected against unauthorized access, for example by using short-lived, single-use URIs with adequate entropy, or requiring mTLS.
 
 # IANA Considerations
 
