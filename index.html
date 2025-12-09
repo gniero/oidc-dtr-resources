@@ -1227,7 +1227,7 @@ li > p:last-of-type:only-child {
 <dd class="workgroup">OpenID Connect</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-12-08" class="published">8 December 2025</time>
+<time datetime="2025-12-09" class="published">9 December 2025</time>
     </dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
@@ -1615,8 +1615,10 @@ Authorization Servers MUST accept those parameters and process them accordingly.
         <h3 id="name-openid-provider-obtains-end">
 <a href="#section-4.4" class="section-number selfRef">4.4. </a><a href="#name-openid-provider-obtains-end" class="section-name selfRef">OpenID Provider Obtains End-User Authorization and Identity Information</a>
         </h3>
-<p id="section-4.4-1">This will describe the OP obtaining authorization and Identity Information from the End-User.
-Most of that is beyond the scope of this specification.<a href="#section-4.4-1" class="pilcrow">¶</a></p>
+<p id="section-4.4-1">Upon receiving a valid Authentication Request, the OpenID Provider (OP) determines whether End-User interaction is required to complete the authentication process. It MAY present OP-controlled interfaces through the User Agent to collect any required Identity Information from the End-User and obtain explicit authorization.<a href="#section-4.4-1" class="pilcrow">¶</a></p>
+<p id="section-4.4-2">The OP MAY prompt the End-User to provide credentials, perform multi-factor authentication, or supply additional Identity Information (such as biometric data, government-issued documents, or other forms of verification).<a href="#section-4.4-2" class="pilcrow">¶</a></p>
+<p id="section-4.4-3">The nature and extent of the Identity Information collected are determined by the OP's policies and the authentication requirements of the Relying Party (RP).<a href="#section-4.4-3" class="pilcrow">¶</a></p>
+<p id="section-4.4-4">If no interaction is required, or the End-User successfully completes the required interaction, the OP continues processing the Authentication Request. If the End-User declines or fails to provide sufficient information, the OP MUST return an error response as defined in <a href="#authentication-request-error-response" class="auto internal xref">Section 12</a>.<a href="#section-4.4-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="authentication-request-acknowledgment">
