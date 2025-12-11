@@ -23,7 +23,7 @@
     intervaltree 3.0.2
     Jinja2 3.1.2
     lxml 5.2.1
-    platformdirs 4.5.0
+    platformdirs 4.5.1
     pycountry 23.12.11
     PyYAML 6.0.1
     requests 2.31.0
@@ -1227,7 +1227,7 @@ li > p:last-of-type:only-child {
 <dd class="workgroup">OpenID Connect</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-12-09" class="published">9 December 2025</time>
+<time datetime="2025-12-11" class="published">11 December 2025</time>
     </dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
@@ -1719,7 +1719,7 @@ Note that a response containing the <code>deferred_code</code> parameter does no
         </h3>
 <p id="section-5.3-1">This will define the response that the RP will receive from the OP when the Initial Token Request was successful.<a href="#section-5.3-1" class="pilcrow">¶</a></p>
 <p id="section-5.3-2">It MAY include an interim ID Token containing unverified claims (at the discretion of the OP).<a href="#section-5.3-2" class="pilcrow">¶</a></p>
-<p id="section-5.3-3">When a DPoP proof is provided in the Deferred Code Exchange Request, the OP MUST bind the <code>deferred_auth_id</code> to the public key in the DPoP proof.<a href="#section-5.3-3" class="pilcrow">¶</a></p>
+<p id="section-5.3-3">The OP MUST bind the public key used in DPoP proofs to <code>deferred_auth_id</code> when RP's Client is of type Public Client as defined in <span>[<a href="#RFC6749" class="cite xref">RFC6749</a>]</span> and a DPoP proof is presented in the Deferred Code Exchange Request. Further interactions involving a <code>deferred_auth_id</code> MUST require a DPoP proof utilizing the same public key. This mechanism is similar to the binding of DPoP proofs to Refresh Tokens as described in <span><a href="https://rfc-editor.org/rfc/rfc9449#section-5" class="relref">Section 5</a> of [<a href="#RFC9449" class="cite xref">RFC9449</a>]</span>.<a href="#section-5.3-3" class="pilcrow">¶</a></p>
 <p id="section-5.3-4">The following is a non-normative example of a successful initial token response:<a href="#section-5.3-4" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-5.3-5">
 <pre>  HTTP/1.1 200 OK
@@ -1806,22 +1806,29 @@ This request MUST use the DPoP-secured Access Token.<a href="#section-8.1-1" cla
           <li id="section-8.2-2.2">Ensure the Deferred Authentication ID was issued to the authenticated Client.<a href="#section-8.2-2.2" class="pilcrow">¶</a>
 </li>
           <li id="section-8.2-2.3">
-            <p id="section-8.2-2.3.1">If a DPoP proof was associated with the Deferred Authentication ID as specified in <a href="#successful-deferred-code-exchange-response" class="auto internal xref">Section 5.3</a>,<a href="#section-8.2-2.3.1" class="pilcrow">¶</a></p>
+            <p id="section-8.2-2.3.1">If the Client is a Public Client as defined in <span>[<a href="#RFC6749" class="cite xref">RFC6749</a>]</span> and a DPoP proof was associated with the Deferred Authentication ID as specified in <a href="#successful-deferred-code-exchange-response" class="auto internal xref">Section 5.3</a>:<a href="#section-8.2-2.3.1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="compact type-1" id="section-8.2-2.3.2">
-<li id="section-8.2-2.3.2.1">Validate the existence of a DPoP proof in the request, with its public key matching the previously used<a href="#section-8.2-2.3.2.1" class="pilcrow">¶</a>
+<li id="section-8.2-2.3.2.1">Ensure that a DPoP proof is present in the request.<a href="#section-8.2-2.3.2.1" class="pilcrow">¶</a>
 </li>
-              <li id="section-8.2-2.3.2.2">Validate the DPoP token in accordance with <span><a href="https://rfc-editor.org/rfc/rfc9449#section-4.3" class="relref">Section 4.3</a> of [<a href="#RFC9449" class="cite xref">RFC9449</a>]</span>.<a href="#section-8.2-2.3.2.2" class="pilcrow">¶</a>
-</li>
-              <li id="section-8.2-2.3.2.3">Check if the DPoP proof payload contains the <code>deferred_auth_id</code> matching the one sent in the Deferred Authentication ID parameter.<a href="#section-8.2-2.3.2.3" class="pilcrow">¶</a>
+              <li id="section-8.2-2.3.2.2">Validate that the public key used for the DPoP proof is the same used for the Deferred Token Exchange as defined in<a href="#deferred-code-exchange-request" class="auto internal xref">Section 5.1</a>.<a href="#section-8.2-2.3.2.2" class="pilcrow">¶</a>
 </li>
             </ol>
 </li>
-          <li id="section-8.2-2.4">Verify that the Authentication Process has been completed, has not been canceled nor reached timeout<a href="#section-8.2-2.4" class="pilcrow">¶</a>
+          <li id="section-8.2-2.4">
+            <p id="section-8.2-2.4.1">If a DPoP proof is provided in the request:<a href="#section-8.2-2.4.1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="compact type-1" id="section-8.2-2.4.2">
+<li id="section-8.2-2.4.2.1">Validate the DPoP token in accordance with <span><a href="https://rfc-editor.org/rfc/rfc9449#section-4.3" class="relref">Section 4.3</a> of [<a href="#RFC9449" class="cite xref">RFC9449</a>]</span>.<a href="#section-8.2-2.4.2.1" class="pilcrow">¶</a>
 </li>
-          <li id="section-8.2-2.5">Ensure that no access token has been previously issued for the Deferred Authentication ID.<a href="#section-8.2-2.5" class="pilcrow">¶</a>
+              <li id="section-8.2-2.4.2.2">Check if the DPoP proof payload contains the <code>deferred_auth_id</code> matching the one sent in the Deferred Authentication ID parameter.<a href="#section-8.2-2.4.2.2" class="pilcrow">¶</a>
+</li>
+            </ol>
+</li>
+          <li id="section-8.2-2.5">Verify that the Authentication Process has been completed, has not been canceled and has not reached timeout<a href="#section-8.2-2.5" class="pilcrow">¶</a>
+</li>
+          <li id="section-8.2-2.6">Ensure that no access token has been previously issued for the Deferred Authentication ID.<a href="#section-8.2-2.6" class="pilcrow">¶</a>
 </li>
         </ol>
-<p id="section-8.2-3">This will define the validation steps that the OP must perform in order to produce a successful token response or a Token request Error Response. Reminder to consider the cancellation that has been described later in this specification.<a href="#section-8.2-3" class="pilcrow">¶</a></p>
+<p id="section-8.2-3">If the OP encounters any error, it MUST return an error response, per <a href="#token-request-error-response" class="auto internal xref">Section 10</a>.<a href="#section-8.2-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="successful-token-response">
