@@ -148,14 +148,14 @@ Authorization Servers MUST accept those parameters and process them accordingly.
 The following is a non-normative example request that would be sent by the User Agent to the Authorization Server in response to a corresponding HTTP 302 redirect response by the Client (with line wraps within values for display purposes only):
 
 ```
-  GET /authorize?
-    response_type=deferred_code
-    &client_id=s6BhdRkqt3
-    &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
-    &scope=openid%20profile%20email
-    &nonce=n-0S6_WzA2Mj
-    &state=af0ifjsldkj HTTP/1.1
-  Host: server.example.com
+GET /authorize?
+  response_type=deferred_code
+  &client_id=s6BhdRkqt3
+  &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
+  &scope=openid%20profile%20email
+  &nonce=n-0S6_WzA2Mj
+  &state=af0ifjsldkj HTTP/1.1
+Host: server.example.com
 ```
 
 ## Authentication Request Validation {#authentication-request-validation}
@@ -193,10 +193,10 @@ Note that a response containing the `deferred_code` parameter does not constitut
 The following is a non-normative example of an Authentication Request Acknowledgment:
 
 ```
-  HTTP/1.1 302 Found
-  Location: https://client.example.org/cb?
-    deferred_code=SplxlOBeZQQYbYS6WxSbIA
-    &state=af0ifjsldkj
+HTTP/1.1 302 Found
+Location: https://client.example.org/cb?
+  deferred_code=SplxlOBeZQQYbYS6WxSbIA
+  &state=af0ifjsldkj
 ```
 
 ## Authentication Request Acknowledgment Validation
@@ -222,13 +222,13 @@ A DPoP proof MAY be included in this request in order to bind the Deferred Authe
 The following is a non-normative example of an initial token request:
 
 ```
-  POST /token HTTP/1.1
-  Host: server.example.com
-  Content-Type: application/x-www-form-urlencoded
-  Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
-  DPoP: eyJ0eXAiOiJkcG9wK2p3dCIsImFsZyI6IkVTMjU2IiwiandrIjp7Imt0eSI6IkVDIiwieCI6Imw4dEZyaHgtMzR0VjNoUklDUkRZOXpDa0RscEJoRjQyVVFVZldWQVdCRnMiLCJ5IjoiOVZFNGpmX09rX282NHpiVFRsY3VOSmFqSG10NnY5VERWclUwQ2R2R1JEQSIsImNydiI6IlAtMjU2In19.eyJqdGkiOiJBeDBwYjcyazRtZCIsImh0bSI6IlBPU1QiLCJodHUiOiJodHRwczovL3NlcnZlci5leGFtcGxlLmNvbS90b2tlbiIsImlhdCI6MTc2MzcyMzExMn0.uy3IfO-j8Yg4Aux0uGAuh7_m24WDCfWCUacRPWtFHS9J-HWASoiEqBsuxI1LN3V4To4Mn1ZRv0AVBxuOA6km3g
-  grant_type=urn:openid:params:grant-type:deferred&deferred_code=SplxlOBeZQQYbYS6WxSbIA
-    &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
+POST /token HTTP/1.1
+Host: server.example.com
+Content-Type: application/x-www-form-urlencoded
+Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
+DPoP: eyJ0eXAiOiJkcG9wK2p3dCIsImFsZyI6IkVTMjU2IiwiandrIjp7Imt0eSI6IkVDIiwieCI6Imw4dEZyaHgtMzR0VjNoUklDUkRZOXpDa0RscEJoRjQyVVFVZldWQVdCRnMiLCJ5IjoiOVZFNGpmX09rX282NHpiVFRsY3VOSmFqSG10NnY5VERWclUwQ2R2R1JEQSIsImNydiI6IlAtMjU2In19.eyJqdGkiOiJBeDBwYjcyazRtZCIsImh0bSI6IlBPU1QiLCJodHUiOiJodHRwczovL3NlcnZlci5leGFtcGxlLmNvbS90b2tlbiIsImlhdCI6MTc2MzcyMzExMn0.uy3IfO-j8Yg4Aux0uGAuh7_m24WDCfWCUacRPWtFHS9J-HWASoiEqBsuxI1LN3V4To4Mn1ZRv0AVBxuOA6km3g
+grant_type=urn:openid:params:grant-type:deferred&deferred_code=SplxlOBeZQQYbYS6WxSbIA
+  &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
 ```
 
 ## Deferred Code Exchange Request Validation
@@ -253,16 +253,16 @@ The OP MUST bind the public key used in DPoP proofs to `deferred_auth_id` when R
 The following is a non-normative example of a successful initial token response:
 
 ```
-  HTTP/1.1 200 OK
-  Content-Type: application/json
-  Cache-Control: no-store
+HTTP/1.1 200 OK
+Content-Type: application/json
+Cache-Control: no-store
 
-  {
-   "deferred_auth_id": "f4oirNBUlM",
-   "expires_in": 10800
-   "interval": 60,
-   "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjI3MTdmMzAzYTI3NjVlOGFjYmY0MTEwMGFhOGE0NjllIiwidHlwIjoiSldUIn0.eyJpc3MiOiJodHRwOi8vc2VydmVyLmV4YW1wbGUuY29tIiwic3ViIjoiMjQ4Mjg5NzYxMDAxIiwiZW1haWwiOiJqb2huZG9lQGV4YW1wbGUuY29tIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJhdWQiOiJzNkJoZFJrcXQzIiwibm9uY2UiOiJuLTBTNl9XekEyTWoiLCJleHAiOjE3NjIxOTE2ODgsImlhdCI6MTc2MjE5MTk4OH0.TmW5LZmr5tM_gDbk6Tc7VAMw6zYv9eo1BqbKf19rhw8cHsPLLMA25YilywdA66KO2ESWvY3S5YJn3Azypri5jQOeQTmPQZAeXHjcVSBeABzAQz3eGIdtAaDLQ5p0DafdxgEDOrcLLK8yk3X16aBGpJegdBY1HfqAhuYPV2D_LUCeGbJxn0-4nLF9_U7Ws3c4o_3nq9ZNTVEAoJJckRYhXM6pPf2-1tZvRZD2P9B0vPSiJwqN2JFOBoDROwhxPJU4MKWQ3mp5pdGTZqlUL7wn0a2dG-EI1eq6oQrGwINqTHiqZbttCuz1wQtezRxHYITEAoVaI2c3zad0ZSzTbAGNkw"
-  }
+{
+  "deferred_auth_id": "f4oirNBUlM",
+  "expires_in": 10800
+  "interval": 60,
+  "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjI3MTdmMzAzYTI3NjVlOGFjYmY0MTEwMGFhOGE0NjllIiwidHlwIjoiSldUIn0.eyJpc3MiOiJodHRwOi8vc2VydmVyLmV4YW1wbGUuY29tIiwic3ViIjoiMjQ4Mjg5NzYxMDAxIiwiZW1haWwiOiJqb2huZG9lQGV4YW1wbGUuY29tIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJhdWQiOiJzNkJoZFJrcXQzIiwibm9uY2UiOiJuLTBTNl9XekEyTWoiLCJleHAiOjE3NjIxOTE2ODgsImlhdCI6MTc2MjE5MTk4OH0.TmW5LZmr5tM_gDbk6Tc7VAMw6zYv9eo1BqbKf19rhw8cHsPLLMA25YilywdA66KO2ESWvY3S5YJn3Azypri5jQOeQTmPQZAeXHjcVSBeABzAQz3eGIdtAaDLQ5p0DafdxgEDOrcLLK8yk3X16aBGpJegdBY1HfqAhuYPV2D_LUCeGbJxn0-4nLF9_U7Ws3c4o_3nq9ZNTVEAoJJckRYhXM6pPf2-1tZvRZD2P9B0vPSiJwqN2JFOBoDROwhxPJU4MKWQ3mp5pdGTZqlUL7wn0a2dG-EI1eq6oQrGwINqTHiqZbttCuz1wQtezRxHYITEAoVaI2c3zad0ZSzTbAGNkw"
+}
 ```
 
 ## Deferred Code Exchange Response Validation
@@ -298,13 +298,13 @@ If a DPoP proof was presented by the RP in the Deferred Code Exchange Request, t
 The following is a non-normative example of a deferred token request:
 
 ```
-  POST /token HTTP/1.1
-  Host: server.example.com
-  Content-Type: application/x-www-form-urlencoded
-  Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
-  DPoP: eyJ0eXAiOiJkcG9wK2p3dCIsImFsZyI6IkVTMjU2IiwiandrIjp7Imt0eSI6IkVDIiwieCI6Imw4dEZyaHgtMzR0VjNoUklDUkRZOXpDa0RscEJoRjQyVVFVZldWQVdCRnMiLCJ5IjoiOVZFNGpmX09rX282NHpiVFRsY3VOSmFqSG10NnY5VERWclUwQ2R2R1JEQSIsImNydiI6IlAtMjU2In19.eyJqdGkiOiJwS2piNGFEZjEiLCJodG0iOiJQT1NUIiwiaHR1IjoiaHR0cHM6Ly9zZXJ2ZXIuZXhhbXBsZS5jb20vdG9rZW4iLCJpYXQiOjE3NjM3MjMyMjB9.4dr1uoyy8m1giIcVgfsXmO_WISirgOAJxqJZul58QCu_MdxOBZ76HNO70BNyF8NJdv8HACS54etcvBr6C2iXxg
+POST /token HTTP/1.1
+Host: server.example.com
+Content-Type: application/x-www-form-urlencoded
+Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
+DPoP: eyJ0eXAiOiJkcG9wK2p3dCIsImFsZyI6IkVTMjU2IiwiandrIjp7Imt0eSI6IkVDIiwieCI6Imw4dEZyaHgtMzR0VjNoUklDUkRZOXpDa0RscEJoRjQyVVFVZldWQVdCRnMiLCJ5IjoiOVZFNGpmX09rX282NHpiVFRsY3VOSmFqSG10NnY5VERWclUwQ2R2R1JEQSIsImNydiI6IlAtMjU2In19.eyJqdGkiOiJwS2piNGFEZjEiLCJodG0iOiJQT1NUIiwiaHR1IjoiaHR0cHM6Ly9zZXJ2ZXIuZXhhbXBsZS5jb20vdG9rZW4iLCJpYXQiOjE3NjM3MjMyMjB9.4dr1uoyy8m1giIcVgfsXmO_WISirgOAJxqJZul58QCu_MdxOBZ76HNO70BNyF8NJdv8HACS54etcvBr6C2iXxg
 
-  grant_type=urn:openid:params:grant-type:deferred&deferred_auth_id=f4oirNBUlM
+grant_type=urn:openid:params:grant-type:deferred&deferred_auth_id=f4oirNBUlM
 ```
 
 ## Token Request Validation
@@ -331,17 +331,17 @@ This will define the Token Response that the OP responds to the RP's poll with w
 The following is a non-normative example of a successful token response:
 
 ```
-  HTTP/1.1 200 OK
-  Content-Type: application/json
-  Cache-Control: no-store
+HTTP/1.1 200 OK
+Content-Type: application/json
+Cache-Control: no-store
 
-  {
-   "access_token": "SlAV32hkKG",
-   "token_type": "DPoP",
-   "expires_in": 3600,
-   "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjI3MTdmMzAzYTI3NjVlOGFjYmY0MTEwMGFhOGE0NjllIiwidHlwIjoiSldUIn0.eyJpc3MiOiJodHRwOi8vc2VydmVyLmV4YW1wbGUuY29tIiwic3ViIjoiMjQ4Mjg5NzYxMDAxIiwiZW1haWwiOiJqb2huZG9lQGV4YW1wbGUuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF1ZCI6InM2QmhkUmtxdDMiLCJuYW1lIjoiSm9obkRvZSIsIm5vbmNlIjoibi0wUzZfV3pBMk1qIiwiZXhwIjoxNzYyMTkyNTg4LCJpYXQiOjE3NjIxOTI5ODh9.V0hhdCBkb2VzIG15IHNob2VsIHNheT8gWW91IHNob3VsZCBub3Qgc2hvdw",
-   "refresh_token": "8xLOxBtZp8"
-  }
+{
+  "access_token": "SlAV32hkKG",
+  "token_type": "DPoP",
+  "expires_in": 3600,
+  "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjI3MTdmMzAzYTI3NjVlOGFjYmY0MTEwMGFhOGE0NjllIiwidHlwIjoiSldUIn0.eyJpc3MiOiJodHRwOi8vc2VydmVyLmV4YW1wbGUuY29tIiwic3ViIjoiMjQ4Mjg5NzYxMDAxIiwiZW1haWwiOiJqb2huZG9lQGV4YW1wbGUuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF1ZCI6InM2QmhkUmtxdDMiLCJuYW1lIjoiSm9obkRvZSIsIm5vbmNlIjoibi0wUzZfV3pBMk1qIiwiZXhwIjoxNzYyMTkyNTg4LCJpYXQiOjE3NjIxOTI5ODh9.V0hhdCBkb2VzIG15IHNob2VsIHNheT8gWW91IHNob3VsZCBub3Qgc2hvdw",
+  "refresh_token": "8xLOxBtZp8"
+}
 ```
 
 ## Ping Callback
@@ -355,14 +355,14 @@ In this request, the OP sends the `deferred_notification_token` in the `Authoriz
 The following is a non-normative example of a Ping callback sent as an HTTP POST request to the Deferred Client Notification Endpoint (with line wraps within values for display purposes only).
 
 ```
-    POST /cb HTTP/1.1
-    Host: client.example.com
-    Authorization: Bearer 8d67dc78-7faa-4d41-aabd-67707b374255
-    Content-Type: application/json
+POST /cb HTTP/1.1
+Host: client.example.com
+Authorization: Bearer 8d67dc78-7faa-4d41-aabd-67707b374255
+Content-Type: application/json
 
-    {
-     "deferred_auth_id": "f4oirNBUlM"
-    }
+{
+  "deferred_auth_id": "f4oirNBUlM"
+}
 ```
 
 The Client MUST verify the `deferred_notification_token` to authenticate the request. If the bearer token is invalid, the RP SHOULD respond with an HTTP 401 Unauthorized status code.
@@ -391,12 +391,12 @@ Once the RP gets possession of the `deferred_code` from the Initial Token Respon
 The following is a non-normative example of an authentication cancellation request:
 
 ```
-  POST /df-authentication/cancel HTTP/1.1
-  Host: server.example.com
-  Content-Type: application/x-www-form-urlencoded
-  Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
+POST /df-authentication/cancel HTTP/1.1
+Host: server.example.com
+Content-Type: application/x-www-form-urlencoded
+Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
 
-  deferred_auth_id=SplxlOBeZQQYbYS6WxSbIA
+deferred_auth_id=SplxlOBeZQQYbYS6WxSbIA
 ```
 
 ## Authentication Cancellation Request Validation
@@ -421,9 +421,9 @@ This behavior is similar to [@!RFC7009, section 2.2].
 The following is a non-normative example of an authentication cancellation response:
 
 ```
-  HTTP/1.1 200 OK
-  Content-Type: application/json
-  Cache-Control: no-store
+HTTP/1.1 200 OK
+Content-Type: application/json
+Cache-Control: no-store
 ```
 
 # Token Request Error Response {#token-request-error-response}
