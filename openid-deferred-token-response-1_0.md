@@ -198,7 +198,7 @@ The `deferred_code` value is not utilized for polling. This allows the OP to app
 
 Interactions involving Public Clients as defined in [@!RFC6749] SHOULD be secured using Demonstration of Proof-of-Possession (DPoP) [@!RFC9449]. In such cases, the public key used for the DPoP proof presented in the Deferred Code Exchange Request MUST be the same for the Token Request. 
 
-## Deferred Code Exchange Request
+## Deferred Code Exchange Request {#deferred-code-exchange-request}
 
 The Initial Token Request exchanges the deferred code obtained in the Authentication Request Acknowledgment.
 
@@ -235,7 +235,7 @@ This will define the response that the RP will receive from the OP when the Init
 
 It MAY include an interim ID Token containing unverified claims (at the discretion of the OP).
 
-The OP MUST bind the public key used in DPoP proofs to `deferred_auth_id` when RP's Client is of type Public Client () and a DPoP proof is presented in the Deferred Code Exchange Request. Further interactions involving a `deferred_auth_id` MUST require a DPoP proof utilizing the same public key. This mechanism is similar to the binding of DPoP proofs to Refresh Tokens as described in [@!RFC9449, section 5].
+The OP MUST bind the public key used in DPoP proofs to `deferred_auth_id` when RP's Client is of type Public Client as defined in [@!RFC6749] and a DPoP proof is presented in the Deferred Code Exchange Request. Further interactions involving a `deferred_auth_id` MUST require a DPoP proof utilizing the same public key. This mechanism is similar to the binding of DPoP proofs to Refresh Tokens as described in [@!RFC9449, section 5].
 
 The following is a non-normative example of a successful initial token response:
 
@@ -301,7 +301,7 @@ The OP MUST validate the request received as follows:
 2. Ensure the Deferred Authentication ID was issued to the authenticated Client.
 3. If the Client is a Public Client as defined in [@!RFC6749] and a DPoP proof was associated with the Deferred Authentication ID as specified in (#successful-deferred-code-exchange-response):
    1. Ensure that a DPoP proof is present in the request.
-   2. Validate that the public key in the DPoP proof matches the one previously used.
+   2. Validate that the public key used for the DPoP proof is the same used for the Deferred Token Exchange as defined in(#deferred-code-exchange-request).
 4. If a DPoP proof is provided in the request:
    1. Validate the DPoP token in accordance with [@!RFC9449, section 4.3].
    2. Check if the DPoP proof payload contains the `deferred_auth_id` matching the one sent in the Deferred Authentication ID parameter.
