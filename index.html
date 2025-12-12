@@ -1527,7 +1527,6 @@ The Deferred Token Response Flow consists of the following steps:<a href="#secti
 </dd>
         <dd class="break"></dd>
 </dl>
-<p id="section-3.1-3">The OP's discovery metadata MUST indicate those values in <code>response_types_supported</code> and <code>grant_types_supported</code> respectively.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="client-registration-metadata">
@@ -1581,7 +1580,8 @@ The intended purpose of the <code>deferred_code</code> is that the response MUST
         </h3>
 <p id="section-4.2-1">Deferred Token Response introduces a new Authentication Request using the OAuth 2.0 Authorization Request. This request is based on the Authentication request of the Authorization Code Flow introduced in Section 3.1.2.1 of <span>[<a href="#OpenID.Core" class="cite xref">OpenID.Core</a>]</span> with the exception of following parameter:<a href="#section-4.2-1" class="pilcrow">¶</a></p>
 <span class="break"></span><dl class="dlCompact dlParallel" id="section-4.2-2">
-          <dt id="section-4.2-2.1">response_type:</dt>
+          <dt id="section-4.2-2.1">
+<code>response_type</code>:</dt>
           <dd style="margin-left: 1.5em" id="section-4.2-2.2">REQUIRED. Deferred Token Response value that determines the authorization processing flow to be used, including what parameters are returned from the endpoints used. This value MUST be either <code>deferred_code</code> or <code>deferred_code code</code>.<a href="#section-4.2-2.2" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
@@ -1984,15 +1984,18 @@ This will usually be because the Authentication Request Validation failed, becau
 <p id="section-13-1">An Authentication Cancellation Error Response is returned directly from the Cancellation Endpoint in response to the Cancellation Request sent by the RP. The applicable error codes are detailed below (some of which are in conformance with OAuth 2.0 section <a href="https://rfc-editor.org/rfc/rfc6749#section-5.2" class="relref">5.2</a>).<a href="#section-13-1" class="pilcrow">¶</a></p>
 <p id="section-13-2">Authentication Error Responses are sent in the same format as Token Error Responses, i.e. the HTTP response body uses the application/json media type with the following parameters:<a href="#section-13-2" class="pilcrow">¶</a></p>
 <span class="break"></span><dl class="dlCompact dlParallel" id="section-13-3">
-        <dt id="section-13-3.1">error:</dt>
+        <dt id="section-13-3.1">
+<code>error</code>:</dt>
         <dd style="margin-left: 1.5em" id="section-13-3.2">REQUIRED. A single ASCII error code from one present in the list below.<a href="#section-13-3.2" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
-<dt id="section-13-3.3">error_description:</dt>
+<dt id="section-13-3.3">
+<code>error_description</code>:</dt>
         <dd style="margin-left: 1.5em" id="section-13-3.4">OPTIONAL. Human-readable ASCII [USASCII] text providing additional information, used to assist the client developer in understanding the error that occurred. Values for the "error_description" parameter MUST NOT include characters outside the set %x20-21 / %x23-5B / %x5D-7E.<a href="#section-13-3.4" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
-<dt id="section-13-3.5">error_uri:</dt>
+<dt id="section-13-3.5">
+<code>error_uri</code>:</dt>
         <dd style="margin-left: 1.5em" id="section-13-3.6">OPTIONAL. A URI identifying a human-readable web page with information about the error to provide the client developer with additional information. Values for the "error_uri" parameter MUST conform to the URI-reference syntax and thus MUST NOT include characters outside the set %x21 / %x23-5B / %x5D-7E.<a href="#section-13-3.6" class="pilcrow">¶</a>
 </dd>
       <dd class="break"></dd>
@@ -2000,14 +2003,16 @@ This will usually be because the Authentication Request Validation failed, becau
 <p id="section-13-4">List of authentication error codes associated with HTTP Errors.<a href="#section-13-4" class="pilcrow">¶</a></p>
 <p id="section-13-5">HTTP 400 Bad Request<a href="#section-13-5" class="pilcrow">¶</a></p>
 <span class="break"></span><dl class="dlCompact dlParallel" id="section-13-6">
-        <dt id="section-13-6.1">invalid_request:</dt>
+        <dt id="section-13-6.1">
+<code>invalid_request</code>:</dt>
         <dd style="margin-left: 1.5em" id="section-13-6.2">The request is missing a required parameter, includes an invalid parameter value, includes a parameter more than once, contains more than one of the hints, or is otherwise malformed.<a href="#section-13-6.2" class="pilcrow">¶</a>
 </dd>
       <dd class="break"></dd>
 </dl>
 <p id="section-13-7">HTTP 401 Unauthorized<a href="#section-13-7" class="pilcrow">¶</a></p>
 <span class="break"></span><dl class="dlCompact dlParallel" id="section-13-8">
-        <dt id="section-13-8.1">invalid_client:</dt>
+        <dt id="section-13-8.1">
+<code>invalid_client</code>:</dt>
         <dd style="margin-left: 1.5em" id="section-13-8.2">Client authentication failed (e.g., invalid client credentials, unknown client, no client authentication included, or unsupported authentication method).<a href="#section-13-8.2" class="pilcrow">¶</a>
 </dd>
       <dd class="break"></dd>
