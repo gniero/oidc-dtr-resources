@@ -109,8 +109,6 @@ OPs capable of handling the Deferred Token Response Flows MUST advertise support
 `grant_types_supported`: 
 : This specification introduces the Deferred grant type (an extension grant type as defined by [@!RFC6749, section 4.5]) with the value: `urn:openid:params:grant-type:deferred`
 
-The OP's discovery metadata MUST indicate those values in `response_types_supported` and `grant_types_supported` respectively.
-
 ## Client Registration Metadata
 
 Since the Deferred Token Response introduces a way to asynchronously notify the Client of an Authorization decision that could not be instantly made during User interaction, it is necessary for the Client to obtain this response somehow.
@@ -142,7 +140,7 @@ The intended purpose of the `deferred_code` is that the response MUST contain a 
 
 Deferred Token Response introduces a new Authentication Request using the OAuth 2.0 Authorization Request. This request is based on the Authentication request of the Authorization Code Flow introduced in Section 3.1.2.1 of [@!OpenID.Core] with the exception of following parameter:
 
-response_type:
+`response_type`:
 : REQUIRED. Deferred Token Response value that determines the authorization processing flow to be used, including what parameters are returned from the endpoints used. This value MUST be either `deferred_code` or `deferred_code code`.
 
 Relying Parties MAY present additional parameters in this request regarding to OAuth 2.0 extensions (such as Rich Authorization Requests).
@@ -450,25 +448,25 @@ An Authentication Cancellation Error Response is returned directly from the Canc
 
 Authentication Error Responses are sent in the same format as Token Error Responses, i.e. the HTTP response body uses the application/json media type with the following parameters:
 
-error:
+`error`:
 : REQUIRED. A single ASCII error code from one present in the list below.
 
-error_description:
+`error_description`:
 : OPTIONAL. Human-readable ASCII [USASCII] text providing additional information, used to assist the client developer in understanding the error that occurred. Values for the "error_description" parameter MUST NOT include characters outside the set %x20-21 / %x23-5B / %x5D-7E.
 
-error_uri:
+`error_uri`:
 : OPTIONAL. A URI identifying a human-readable web page with information about the error to provide the client developer with additional information. Values for the "error_uri" parameter MUST conform to the URI-reference syntax and thus MUST NOT include characters outside the set %x21 / %x23-5B / %x5D-7E.
 
 List of authentication error codes associated with HTTP Errors.
 
 HTTP 400 Bad Request
 
-invalid_request:
+`invalid_request`:
 : The request is missing a required parameter, includes an invalid parameter value, includes a parameter more than once, contains more than one of the hints, or is otherwise malformed.
 
 HTTP 401 Unauthorized
 
-invalid_client:
+`invalid_client`:
 : Client authentication failed (e.g., invalid client credentials, unknown client, no client authentication included, or unsupported authentication method).
 
 # Implementation Considerations
