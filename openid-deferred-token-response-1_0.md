@@ -100,10 +100,13 @@ These steps are illustrated in the following diagram:
 This will define any parameters needed for registration and discovery of the DTR flow features.
 
 ## Authorization Server Metadata
-Response type:
+
+OPs capable of handling the Deferred Token Response Flows MUST advertise support for it in its OAuth 2.0 Authorization Server Metadata [@!RFC8414] as follows:
+
+`response_types_supported`:
 : A `deferred_code` response type is introduced by this specification in order to indicate to the OP that a deferred authentication response is acceptable once the user interaction ends.
 
-Grant type: 
+`grant_types_supported`: 
 : This specification introduces the Deferred grant type (an extension grant type as defined by [@!RFC6749, section 4.5]) with the value: `urn:openid:params:grant-type:deferred`
 
 The OP's discovery metadata MUST indicate those values in `response_types_supported` and `grant_types_supported` respectively.
