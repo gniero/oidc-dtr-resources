@@ -1227,7 +1227,7 @@ li > p:last-of-type:only-child {
 <dd class="workgroup">OpenID Connect</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-12-11" class="published">11 December 2025</time>
+<time datetime="2025-12-12" class="published">12 December 2025</time>
     </dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
@@ -2048,7 +2048,7 @@ This will usually be because the Authentication Request Validation failed, becau
 <p id="section-16.1-2">This token SHOULD be generated following the least privilege principle, ensuring it can only be used for its intended purpose of authenticating the OP to the RP during the Ping Callback.<a href="#section-16.1-2" class="pilcrow">¶</a></p>
 <p id="section-16.1-3">Redirection-based flows that include the <code>deferred_notification_token</code> in the URL are discouraged, as URLs can be logged or exposed in various ways, potentially leading to token leakage.<a href="#section-16.1-3" class="pilcrow">¶</a></p>
 <p id="section-16.1-4">RPs MAY consider the adoption of mechanisms such as Pushed Authorization Requests <span>[<a href="#RFC9126" class="cite xref">RFC9126</a>]</span> or Encrypted Request Objects defined in Section 6.1 of <span>[<a href="#OpenID.Core" class="cite xref">OpenID.Core</a>]</span> to avoid exposing <code>deferred_notification_token</code> in URLs.<a href="#section-16.1-4" class="pilcrow">¶</a></p>
-<p id="section-16.1-5">Implementations that opt to use request objects passed by reference SHOULD ensure that the request object is protected against unauthorized access, for example by using short-lived, single-use URIs with adequate entropy, or requiring mTLS.<a href="#section-16.1-5" class="pilcrow">¶</a></p>
+<p id="section-16.1-5">Implementations that opt to use request objects passed by reference SHOULD ensure that the request object is protected against unauthorized access, for example by using short-lived, single-use URIs with adequate entropy, or requiring a form of authentication such as mTLS.<a href="#section-16.1-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
