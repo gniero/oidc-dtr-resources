@@ -109,8 +109,6 @@ OPs capable of handling the Deferred Token Response Flows MUST advertise support
 `grant_types_supported`: 
 : This specification introduces the Deferred grant type (an extension grant type as defined by [@!RFC6749, section 4.5]) with the value: `urn:openid:params:grant-type:deferred`
 
-The OP's discovery metadata MUST indicate those values in `response_types_supported` and `grant_types_supported` respectively.
-
 ## Client Registration Metadata
 
 Since the Deferred Token Response introduces a way to asynchronously notify the Client of an Authorization decision that could not be instantly made during User interaction, it is necessary for the Client to obtain this response somehow.
