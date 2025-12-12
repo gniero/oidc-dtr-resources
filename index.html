@@ -1587,14 +1587,14 @@ The intended purpose of the <code>deferred_code</code> is that the response MUST
 Authorization Servers MUST accept those parameters and process them accordingly.<a href="#section-4.2-3" class="pilcrow">¶</a></p>
 <p id="section-4.2-4">The following is a non-normative example request that would be sent by the User Agent to the Authorization Server in response to a corresponding HTTP 302 redirect response by the Client (with line wraps within values for display purposes only):<a href="#section-4.2-4" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-4.2-5">
-<pre>  GET /authorize?
-    response_type=deferred_code
-    &amp;client_id=s6BhdRkqt3
-    &amp;redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
-    &amp;scope=openid%20profile%20email
-    &amp;nonce=n-0S6_WzA2Mj
-    &amp;state=af0ifjsldkj HTTP/1.1
-  Host: server.example.com
+<pre>GET /authorize?
+  response_type=deferred_code
+  &amp;client_id=s6BhdRkqt3
+  &amp;redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
+  &amp;scope=openid%20profile%20email
+  &amp;nonce=n-0S6_WzA2Mj
+  &amp;state=af0ifjsldkj HTTP/1.1
+Host: server.example.com
 </pre><a href="#section-4.2-5" class="pilcrow">¶</a>
 </div>
 </section>
@@ -1640,10 +1640,10 @@ The remainder of the Authentication then proceeds as an Authorization Code Flow 
 Note that a response containing the <code>deferred_code</code> parameter does not constitute a final Authentication Response, but rather serves as an indication that processing is underway.<a href="#section-4.5-3" class="pilcrow">¶</a></p>
 <p id="section-4.5-4">The following is a non-normative example of an Authentication Request Acknowledgment:<a href="#section-4.5-4" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-4.5-5">
-<pre>  HTTP/1.1 302 Found
-  Location: https://client.example.org/cb?
-    deferred_code=SplxlOBeZQQYbYS6WxSbIA
-    &amp;state=af0ifjsldkj
+<pre>HTTP/1.1 302 Found
+Location: https://client.example.org/cb?
+  deferred_code=SplxlOBeZQQYbYS6WxSbIA
+  &amp;state=af0ifjsldkj
 </pre><a href="#section-4.5-5" class="pilcrow">¶</a>
 </div>
 </section>
@@ -1676,13 +1676,13 @@ Note that a response containing the <code>deferred_code</code> parameter does no
 <p id="section-5.1-3">A DPoP proof MAY be included in this request in order to bind the Deferred Authentication ID to a public key. Its payload MUST contain the <code>deferred_code</code> matching the one sent in the Deferred Code parameter. The RP SHOULD ensure that a public key is not reused across different Authentication Processes.<a href="#section-5.1-3" class="pilcrow">¶</a></p>
 <p id="section-5.1-4">The following is a non-normative example of an initial token request:<a href="#section-5.1-4" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-5.1-5">
-<pre>  POST /token HTTP/1.1
-  Host: server.example.com
-  Content-Type: application/x-www-form-urlencoded
-  Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
-  DPoP: eyJ0eXAiOiJkcG9wK2p3dCIsImFsZyI6IkVTMjU2IiwiandrIjp7Imt0eSI6IkVDIiwieCI6Imw4dEZyaHgtMzR0VjNoUklDUkRZOXpDa0RscEJoRjQyVVFVZldWQVdCRnMiLCJ5IjoiOVZFNGpmX09rX282NHpiVFRsY3VOSmFqSG10NnY5VERWclUwQ2R2R1JEQSIsImNydiI6IlAtMjU2In19.eyJqdGkiOiJBeDBwYjcyazRtZCIsImh0bSI6IlBPU1QiLCJodHUiOiJodHRwczovL3NlcnZlci5leGFtcGxlLmNvbS90b2tlbiIsImlhdCI6MTc2MzcyMzExMn0.uy3IfO-j8Yg4Aux0uGAuh7_m24WDCfWCUacRPWtFHS9J-HWASoiEqBsuxI1LN3V4To4Mn1ZRv0AVBxuOA6km3g
-  grant_type=urn:openid:params:grant-type:deferred&amp;deferred_code=SplxlOBeZQQYbYS6WxSbIA
-    &amp;redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
+<pre>POST /token HTTP/1.1
+Host: server.example.com
+Content-Type: application/x-www-form-urlencoded
+Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
+DPoP: eyJ0eXAiOiJkcG9wK2p3dCIsImFsZyI6IkVTMjU2IiwiandrIjp7Imt0eSI6IkVDIiwieCI6Imw4dEZyaHgtMzR0VjNoUklDUkRZOXpDa0RscEJoRjQyVVFVZldWQVdCRnMiLCJ5IjoiOVZFNGpmX09rX282NHpiVFRsY3VOSmFqSG10NnY5VERWclUwQ2R2R1JEQSIsImNydiI6IlAtMjU2In19.eyJqdGkiOiJBeDBwYjcyazRtZCIsImh0bSI6IlBPU1QiLCJodHUiOiJodHRwczovL3NlcnZlci5leGFtcGxlLmNvbS90b2tlbiIsImlhdCI6MTc2MzcyMzExMn0.uy3IfO-j8Yg4Aux0uGAuh7_m24WDCfWCUacRPWtFHS9J-HWASoiEqBsuxI1LN3V4To4Mn1ZRv0AVBxuOA6km3g
+grant_type=urn:openid:params:grant-type:deferred&amp;deferred_code=SplxlOBeZQQYbYS6WxSbIA
+  &amp;redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
 </pre><a href="#section-5.1-5" class="pilcrow">¶</a>
 </div>
 </section>
@@ -1722,16 +1722,16 @@ Note that a response containing the <code>deferred_code</code> parameter does no
 <p id="section-5.3-3">The OP MUST bind the public key used in DPoP proofs to <code>deferred_auth_id</code> when RP's Client is of type Public Client as defined in <span>[<a href="#RFC6749" class="cite xref">RFC6749</a>]</span> and a DPoP proof is presented in the Deferred Code Exchange Request. Further interactions involving a <code>deferred_auth_id</code> MUST require a DPoP proof utilizing the same public key. This mechanism is similar to the binding of DPoP proofs to Refresh Tokens as described in <span><a href="https://rfc-editor.org/rfc/rfc9449#section-5" class="relref">Section 5</a> of [<a href="#RFC9449" class="cite xref">RFC9449</a>]</span>.<a href="#section-5.3-3" class="pilcrow">¶</a></p>
 <p id="section-5.3-4">The following is a non-normative example of a successful initial token response:<a href="#section-5.3-4" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-5.3-5">
-<pre>  HTTP/1.1 200 OK
-  Content-Type: application/json
-  Cache-Control: no-store
+<pre>HTTP/1.1 200 OK
+Content-Type: application/json
+Cache-Control: no-store
 
-  {
-   "deferred_auth_id": "f4oirNBUlM",
-   "expires_in": 10800
-   "interval": 60,
-   "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjI3MTdmMzAzYTI3NjVlOGFjYmY0MTEwMGFhOGE0NjllIiwidHlwIjoiSldUIn0.eyJpc3MiOiJodHRwOi8vc2VydmVyLmV4YW1wbGUuY29tIiwic3ViIjoiMjQ4Mjg5NzYxMDAxIiwiZW1haWwiOiJqb2huZG9lQGV4YW1wbGUuY29tIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJhdWQiOiJzNkJoZFJrcXQzIiwibm9uY2UiOiJuLTBTNl9XekEyTWoiLCJleHAiOjE3NjIxOTE2ODgsImlhdCI6MTc2MjE5MTk4OH0.TmW5LZmr5tM_gDbk6Tc7VAMw6zYv9eo1BqbKf19rhw8cHsPLLMA25YilywdA66KO2ESWvY3S5YJn3Azypri5jQOeQTmPQZAeXHjcVSBeABzAQz3eGIdtAaDLQ5p0DafdxgEDOrcLLK8yk3X16aBGpJegdBY1HfqAhuYPV2D_LUCeGbJxn0-4nLF9_U7Ws3c4o_3nq9ZNTVEAoJJckRYhXM6pPf2-1tZvRZD2P9B0vPSiJwqN2JFOBoDROwhxPJU4MKWQ3mp5pdGTZqlUL7wn0a2dG-EI1eq6oQrGwINqTHiqZbttCuz1wQtezRxHYITEAoVaI2c3zad0ZSzTbAGNkw"
-  }
+{
+  "deferred_auth_id": "f4oirNBUlM",
+  "expires_in": 10800
+  "interval": 60,
+  "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjI3MTdmMzAzYTI3NjVlOGFjYmY0MTEwMGFhOGE0NjllIiwidHlwIjoiSldUIn0.eyJpc3MiOiJodHRwOi8vc2VydmVyLmV4YW1wbGUuY29tIiwic3ViIjoiMjQ4Mjg5NzYxMDAxIiwiZW1haWwiOiJqb2huZG9lQGV4YW1wbGUuY29tIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJhdWQiOiJzNkJoZFJrcXQzIiwibm9uY2UiOiJuLTBTNl9XekEyTWoiLCJleHAiOjE3NjIxOTE2ODgsImlhdCI6MTc2MjE5MTk4OH0.TmW5LZmr5tM_gDbk6Tc7VAMw6zYv9eo1BqbKf19rhw8cHsPLLMA25YilywdA66KO2ESWvY3S5YJn3Azypri5jQOeQTmPQZAeXHjcVSBeABzAQz3eGIdtAaDLQ5p0DafdxgEDOrcLLK8yk3X16aBGpJegdBY1HfqAhuYPV2D_LUCeGbJxn0-4nLF9_U7Ws3c4o_3nq9ZNTVEAoJJckRYhXM6pPf2-1tZvRZD2P9B0vPSiJwqN2JFOBoDROwhxPJU4MKWQ3mp5pdGTZqlUL7wn0a2dG-EI1eq6oQrGwINqTHiqZbttCuz1wQtezRxHYITEAoVaI2c3zad0ZSzTbAGNkw"
+}
 </pre><a href="#section-5.3-5" class="pilcrow">¶</a>
 </div>
 </section>
@@ -1783,13 +1783,13 @@ This request MUST use the DPoP-secured Access Token.<a href="#section-8.1-1" cla
 <p id="section-8.1-2">If a DPoP proof was presented by the RP in the Deferred Code Exchange Request, the RP MUST also present a DPoP proof in this request, utilizing the same public key as previously used. The payload of the DPoP proof MUST include the <code>deferred_auth_id</code> value that matches the Deferred Authentication ID parameter provided in the request.<a href="#section-8.1-2" class="pilcrow">¶</a></p>
 <p id="section-8.1-3">The following is a non-normative example of a deferred token request:<a href="#section-8.1-3" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-8.1-4">
-<pre>  POST /token HTTP/1.1
-  Host: server.example.com
-  Content-Type: application/x-www-form-urlencoded
-  Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
-  DPoP: eyJ0eXAiOiJkcG9wK2p3dCIsImFsZyI6IkVTMjU2IiwiandrIjp7Imt0eSI6IkVDIiwieCI6Imw4dEZyaHgtMzR0VjNoUklDUkRZOXpDa0RscEJoRjQyVVFVZldWQVdCRnMiLCJ5IjoiOVZFNGpmX09rX282NHpiVFRsY3VOSmFqSG10NnY5VERWclUwQ2R2R1JEQSIsImNydiI6IlAtMjU2In19.eyJqdGkiOiJwS2piNGFEZjEiLCJodG0iOiJQT1NUIiwiaHR1IjoiaHR0cHM6Ly9zZXJ2ZXIuZXhhbXBsZS5jb20vdG9rZW4iLCJpYXQiOjE3NjM3MjMyMjB9.4dr1uoyy8m1giIcVgfsXmO_WISirgOAJxqJZul58QCu_MdxOBZ76HNO70BNyF8NJdv8HACS54etcvBr6C2iXxg
+<pre>POST /token HTTP/1.1
+Host: server.example.com
+Content-Type: application/x-www-form-urlencoded
+Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
+DPoP: eyJ0eXAiOiJkcG9wK2p3dCIsImFsZyI6IkVTMjU2IiwiandrIjp7Imt0eSI6IkVDIiwieCI6Imw4dEZyaHgtMzR0VjNoUklDUkRZOXpDa0RscEJoRjQyVVFVZldWQVdCRnMiLCJ5IjoiOVZFNGpmX09rX282NHpiVFRsY3VOSmFqSG10NnY5VERWclUwQ2R2R1JEQSIsImNydiI6IlAtMjU2In19.eyJqdGkiOiJwS2piNGFEZjEiLCJodG0iOiJQT1NUIiwiaHR1IjoiaHR0cHM6Ly9zZXJ2ZXIuZXhhbXBsZS5jb20vdG9rZW4iLCJpYXQiOjE3NjM3MjMyMjB9.4dr1uoyy8m1giIcVgfsXmO_WISirgOAJxqJZul58QCu_MdxOBZ76HNO70BNyF8NJdv8HACS54etcvBr6C2iXxg
 
-  grant_type=urn:openid:params:grant-type:deferred&amp;deferred_auth_id=f4oirNBUlM
+grant_type=urn:openid:params:grant-type:deferred&amp;deferred_auth_id=f4oirNBUlM
 </pre><a href="#section-8.1-4" class="pilcrow">¶</a>
 </div>
 </section>
@@ -1839,17 +1839,17 @@ This request MUST use the DPoP-secured Access Token.<a href="#section-8.1-1" cla
 <p id="section-8.3-1">This will define the Token Response that the OP responds to the RP's poll with when the Authentication Process has finished successfully.<a href="#section-8.3-1" class="pilcrow">¶</a></p>
 <p id="section-8.3-2">The following is a non-normative example of a successful token response:<a href="#section-8.3-2" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-8.3-3">
-<pre>  HTTP/1.1 200 OK
-  Content-Type: application/json
-  Cache-Control: no-store
+<pre>HTTP/1.1 200 OK
+Content-Type: application/json
+Cache-Control: no-store
 
-  {
-   "access_token": "SlAV32hkKG",
-   "token_type": "DPoP",
-   "expires_in": 3600,
-   "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjI3MTdmMzAzYTI3NjVlOGFjYmY0MTEwMGFhOGE0NjllIiwidHlwIjoiSldUIn0.eyJpc3MiOiJodHRwOi8vc2VydmVyLmV4YW1wbGUuY29tIiwic3ViIjoiMjQ4Mjg5NzYxMDAxIiwiZW1haWwiOiJqb2huZG9lQGV4YW1wbGUuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF1ZCI6InM2QmhkUmtxdDMiLCJuYW1lIjoiSm9obkRvZSIsIm5vbmNlIjoibi0wUzZfV3pBMk1qIiwiZXhwIjoxNzYyMTkyNTg4LCJpYXQiOjE3NjIxOTI5ODh9.V0hhdCBkb2VzIG15IHNob2VsIHNheT8gWW91IHNob3VsZCBub3Qgc2hvdw",
-   "refresh_token": "8xLOxBtZp8"
-  }
+{
+  "access_token": "SlAV32hkKG",
+  "token_type": "DPoP",
+  "expires_in": 3600,
+  "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjI3MTdmMzAzYTI3NjVlOGFjYmY0MTEwMGFhOGE0NjllIiwidHlwIjoiSldUIn0.eyJpc3MiOiJodHRwOi8vc2VydmVyLmV4YW1wbGUuY29tIiwic3ViIjoiMjQ4Mjg5NzYxMDAxIiwiZW1haWwiOiJqb2huZG9lQGV4YW1wbGUuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF1ZCI6InM2QmhkUmtxdDMiLCJuYW1lIjoiSm9obkRvZSIsIm5vbmNlIjoibi0wUzZfV3pBMk1qIiwiZXhwIjoxNzYyMTkyNTg4LCJpYXQiOjE3NjIxOTI5ODh9.V0hhdCBkb2VzIG15IHNob2VsIHNheT8gWW91IHNob3VsZCBub3Qgc2hvdw",
+  "refresh_token": "8xLOxBtZp8"
+}
 </pre><a href="#section-8.3-3" class="pilcrow">¶</a>
 </div>
 </section>
@@ -1864,14 +1864,14 @@ This request MUST use the DPoP-secured Access Token.<a href="#section-8.1-1" cla
 <p id="section-8.4-3">In this request, the OP sends the <code>deferred_notification_token</code> in the <code>Authorization</code> header as a Bearer token in order to authenticate the request. The OP MUST ensure that a <a href="#successful-deferred-code-exchange-response" class="auto internal xref">Section 5.3</a> was previously sent to the RP containing the <code>deferred_auth_id</code>. RPs MAY associate the <code>deferred_notification_token</code> with the <code>deferred_auth_id</code> in order to strengthen validation.<a href="#section-8.4-3" class="pilcrow">¶</a></p>
 <p id="section-8.4-4">The following is a non-normative example of a Ping callback sent as an HTTP POST request to the Deferred Client Notification Endpoint (with line wraps within values for display purposes only).<a href="#section-8.4-4" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-8.4-5">
-<pre>    POST /cb HTTP/1.1
-    Host: client.example.com
-    Authorization: Bearer 8d67dc78-7faa-4d41-aabd-67707b374255
-    Content-Type: application/json
+<pre>POST /cb HTTP/1.1
+Host: client.example.com
+Authorization: Bearer 8d67dc78-7faa-4d41-aabd-67707b374255
+Content-Type: application/json
 
-    {
-     "deferred_auth_id": "f4oirNBUlM"
-    }
+{
+  "deferred_auth_id": "f4oirNBUlM"
+}
 </pre><a href="#section-8.4-5" class="pilcrow">¶</a>
 </div>
 <p id="section-8.4-6">The Client MUST verify the <code>deferred_notification_token</code> to authenticate the request. If the bearer token is invalid, the RP SHOULD respond with an HTTP 401 Unauthorized status code.<a href="#section-8.4-6" class="pilcrow">¶</a></p>
@@ -1899,12 +1899,12 @@ This request MUST use the DPoP-secured Access Token.<a href="#section-8.1-1" cla
 <p id="section-9.1-1">Once the RP gets possession of the <code>deferred_code</code> from the Initial Token Response, it can send an Authentication Cancellation Request to the OP in order to cancel the ongoing Authentication Process.<a href="#section-9.1-1" class="pilcrow">¶</a></p>
 <p id="section-9.1-2">The following is a non-normative example of an authentication cancellation request:<a href="#section-9.1-2" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-9.1-3">
-<pre>  POST /df-authentication/cancel HTTP/1.1
-  Host: server.example.com
-  Content-Type: application/x-www-form-urlencoded
-  Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
+<pre>POST /df-authentication/cancel HTTP/1.1
+Host: server.example.com
+Content-Type: application/x-www-form-urlencoded
+Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
 
-  deferred_auth_id=SplxlOBeZQQYbYS6WxSbIA
+deferred_auth_id=SplxlOBeZQQYbYS6WxSbIA
 </pre><a href="#section-9.1-3" class="pilcrow">¶</a>
 </div>
 </section>
@@ -1937,9 +1937,9 @@ This request MUST use the DPoP-secured Access Token.<a href="#section-8.1-1" cla
 This behavior is similar to <span><a href="https://rfc-editor.org/rfc/rfc7009#section-2.2" class="relref">Section 2.2</a> of [<a href="#RFC7009" class="cite xref">RFC7009</a>]</span>.<a href="#section-9.3-2" class="pilcrow">¶</a></p>
 <p id="section-9.3-3">The following is a non-normative example of an authentication cancellation response:<a href="#section-9.3-3" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-9.3-4">
-<pre>  HTTP/1.1 200 OK
-  Content-Type: application/json
-  Cache-Control: no-store
+<pre>HTTP/1.1 200 OK
+Content-Type: application/json
+Cache-Control: no-store
 </pre><a href="#section-9.3-4" class="pilcrow">¶</a>
 </div>
 </section>
