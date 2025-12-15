@@ -268,14 +268,14 @@ Cache-Control: no-store
 
 ## Deferred Code Exchange Response Validation
 
-This will define the logic that the RP should use to validate the Initial Token Response.
+This will define the logic that the RP should use to validate the Deferred Code Exchange Response.
 Note to mention the possibility of associating the `deferred_notification_token` with the `deferred_auth_id` for later validation of the Ping Callback.
 
 # OpenID Provider Authenticates End-User
 
 After issuing the `deferred_code` in the Authentication Request Acknowledgment, the OP continues the Authentication Process by validating the Identity Information obtained from the End-User. The OP MAY take an arbitrary amount of time to complete this process.
 
-The specific processing performed by the OP during this step is outside the scope of this specification. For example, the OP might perform manual review, contact using the information provided, or other methods to authenticate the End-User based on the provided Identity Information.
+The specific processing performed by the OP during this step is outside the scope of this specification. For example, the OP might perform manual review, contact the End User, or use other methods to authenticate the End-User based on the provided Identity Information.
 
 While processing the request, the OP MAY allow the RP to cancel the request as described in (#canceling-an-ongoing-authentication-process).
 
