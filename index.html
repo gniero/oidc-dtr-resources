@@ -1771,7 +1771,7 @@ Cache-Control: no-store
   "deferred_auth_id": "f4oirNBUlM",
   "expires_in": 10800
   "interval": 60,
-  "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjI3MTdmMzAzYTI3NjVlOGFjYmY0MTEwMGFhOGE0NjllIiwidHlwIjoiSldUIn0.eyJpc3MiOiJodHRwOi8vc2VydmVyLmV4YW1wbGUuY29tIiwic3ViIjoiMjQ4Mjg5NzYxMDAxIiwiZW1haWwiOiJqb2huZG9lQGV4YW1wbGUuY29tIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJhdWQiOiJzNkJoZFJrcXQzIiwibm9uY2UiOiJuLTBTNl9XekEyTWoiLCJleHAiOjE3NjIxOTE2ODgsImlhdCI6MTc2MjE5MTk4OH0.TmW5LZmr5tM_gDbk6Tc7VAMw6zYv9eo1BqbKf19rhw8cHsPLLMA25YilywdA66KO2ESWvY3S5YJn3Azypri5jQOeQTmPQZAeXHjcVSBeABzAQz3eGIdtAaDLQ5p0DafdxgEDOrcLLK8yk3X16aBGpJegdBY1HfqAhuYPV2D_LUCeGbJxn0-4nLF9_U7Ws3c4o_3nq9ZNTVEAoJJckRYhXM6pPf2-1tZvRZD2P9B0vPSiJwqN2JFOBoDROwhxPJU4MKWQ3mp5pdGTZqlUL7wn0a2dG-EI1eq6oQrGwINqTHiqZbttCuz1wQtezRxHYITEAoVaI2c3zad0ZSzTbAGNkw"
+  "interim_id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjI3MTdmMzAzYTI3NjVlOGFjYmY0MTEwMGFhOGE0NjllIiwidHlwIjoiSldUIn0.eyJpc3MiOiJodHRwOi8vc2VydmVyLmV4YW1wbGUuY29tIiwic3ViIjoiMjQ4Mjg5NzYxMDAxIiwiZW1haWwiOiJqb2huZG9lQGV4YW1wbGUuY29tIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJhdWQiOiJzNkJoZFJrcXQzIiwibm9uY2UiOiJuLTBTNl9XekEyTWoiLCJleHAiOjE3NjIxOTE2ODgsImlhdCI6MTc2MjE5MTk4OH0.TmW5LZmr5tM_gDbk6Tc7VAMw6zYv9eo1BqbKf19rhw8cHsPLLMA25YilywdA66KO2ESWvY3S5YJn3Azypri5jQOeQTmPQZAeXHjcVSBeABzAQz3eGIdtAaDLQ5p0DafdxgEDOrcLLK8yk3X16aBGpJegdBY1HfqAhuYPV2D_LUCeGbJxn0-4nLF9_U7Ws3c4o_3nq9ZNTVEAoJJckRYhXM6pPf2-1tZvRZD2P9B0vPSiJwqN2JFOBoDROwhxPJU4MKWQ3mp5pdGTZqlUL7wn0a2dG-EI1eq6oQrGwINqTHiqZbttCuz1wQtezRxHYITEAoVaI2c3zad0ZSzTbAGNkw"
 }
 </pre><a href="#section-5.3-7" class="pilcrow">¶</a>
 </div>
@@ -1782,7 +1782,7 @@ Cache-Control: no-store
         <h3 id="name-deferred-code-exchange-resp">
 <a href="#section-5.4" class="section-number selfRef">5.4. </a><a href="#name-deferred-code-exchange-resp" class="section-name selfRef">Deferred Code Exchange Response Validation</a>
         </h3>
-<p id="section-5.4-1">This will define the logic that the RP should use to validate the Initial Token Response.
+<p id="section-5.4-1">This will define the logic that the RP should use to validate the Deferred Code Exchange Response.
 Note to mention the possibility of associating the <code>deferred_notification_token</code> with the <code>deferred_auth_id</code> for later validation of the Ping Callback.<a href="#section-5.4-1" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1794,7 +1794,7 @@ Note to mention the possibility of associating the <code>deferred_notification_t
 <a href="#section-6" class="section-number selfRef">6. </a><a href="#name-openid-provider-authenticat" class="section-name selfRef">OpenID Provider Authenticates End-User</a>
       </h2>
 <p id="section-6-1">After issuing the <code>deferred_code</code> in the Authentication Request Acknowledgment, the OP continues the Authentication Process by validating the Identity Information obtained from the End-User. The OP MAY take an arbitrary amount of time to complete this process.<a href="#section-6-1" class="pilcrow">¶</a></p>
-<p id="section-6-2">The specific processing performed by the OP during this step is outside the scope of this specification. For example, the OP might perform manual review, contact using the information provided, or other methods to authenticate the End-User based on the provided Identity Information.<a href="#section-6-2" class="pilcrow">¶</a></p>
+<p id="section-6-2">The specific processing performed by the OP during this step is outside the scope of this specification. For example, the OP might perform manual review, contact the End User, or use other methods to authenticate the End-User based on the provided Identity Information.<a href="#section-6-2" class="pilcrow">¶</a></p>
 <p id="section-6-3">While processing the request, the OP MAY allow the RP to cancel the request as described in <a href="#canceling-an-ongoing-authentication-process" class="auto internal xref">Section 9</a>.<a href="#section-6-3" class="pilcrow">¶</a></p>
 </section>
 </div>
