@@ -513,6 +513,14 @@ HTTP 401 Unauthorized
 
 # Implementation Considerations
 
+## Interim ID Tokens
+
+The Interim ID Token MAY contain both validated and unvalidated claims about the End User.
+The scheme used to distinguish validated claims from unvalidated claims is outside the scope of this specification.
+Options include:
+1. Using the `verified_claims` from [@?OpenID4IDA].
+2. Coordination between each Client and OP to define claim names.
+
 ## Multi-valued Response Type Authentication Request
 
 The OP MAY accept Authentication Requests providing the response type value as `deferred_code code`. In those cases, it means for the OP that it MAY chose, by its own means, when the Authentication response will be of deferred type or any other provided alternative. 
@@ -581,6 +589,32 @@ No new registrations.
       <organization abbrev="Ping Identity">Ping Identity</organization>
     </author>
     <date day="1" month="September" year="2021"/>
+  </front>
+</reference>
+<reference anchor="OpenID4IDA" target="https://openid.net/specs/openid-connect-4-identity-assurance-1_0.html">
+  <front>
+    <title>OpenID Connect for Identity Assurance 1.0</title>
+    <author fullname="Torsten Lodderstedt" initials="T." surname="Lodderstedt">
+      <organization abbrev="sprind.org">sprind.org</organization>
+    </author>
+    <author fullname="Daniel Fett" initials="D." surname="Fett">
+      <organization abbrev="Authlete">Authlete</organization>
+    </author>
+    <author fullname="Mark Haine" initials="M." surname="Haine">
+      <organization abbrev="Considrd.Consulting Ltd">Considrd.Consulting Ltd</organization>
+    </author>
+    <author fullname="Alberto Pulido" initials="A." surname="Pulido">
+      <organization abbrev="Santander">Santander</organization>
+    </author>
+    <author fullname="Kai Lehmann" initials="K." surname="Lehmann">
+      <organization abbrev="1&amp;1 Mail &amp; Media Development &amp; Technology GmbH
+">1&amp;1 Mail &amp; Media Development &amp; Technology GmbH
+      </organization>
+    </author>
+    <author fullname="Kosuke Koiwai" initials="K." surname="Koiwai">
+      <organization abbrev="KDDI Corporation">KDDI Corporation</organization>
+    </author>
+    <date day="1" month="October" year="2024"/>
   </front>
 </reference>
 
