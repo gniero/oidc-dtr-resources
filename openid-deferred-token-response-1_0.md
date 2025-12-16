@@ -103,10 +103,10 @@ This will define any parameters needed for registration and discovery of the DTR
 
 OPs capable of handling the Deferred Token Response Flows MUST advertise support for it in its OAuth 2.0 Authorization Server Metadata [@!RFC8414] as follows:
 
-`response_types_supported`:
+`response_types_supported`
 : A `deferred_code` response type is introduced by this specification in order to indicate to the OP that a deferred authentication response is acceptable once the user interaction ends.
 
-`grant_types_supported`: 
+`grant_types_supported`
 : This specification introduces the Deferred grant type (an extension grant type as defined by [@!RFC6749, section 4.5]) with the value: `urn:openid:params:grant-type:deferred`
 
 ## Client Registration Metadata
@@ -115,8 +115,7 @@ Since the Deferred Token Response introduces a way to asynchronously notify the 
 
 The [@?OpenID.CIBA] introduces callback modes for the Authorization Server to inform the Client that an Authorization decision has been made, either by pushing the response directly, or notifying that a decision is available to be queried. Although some parameters work similarly, introducing them separately allows for an RP that supports both specs to handle responses on endpoints at their discretion and avoid future conflicts.
 
-
-`deferred_client_notification_endpoint`:
+`deferred_client_notification_endpoint`
 : REQUIRED if the RP desires to be notified when the Authentication decision has been taken. It MUST be an HTTPS URL.
 
 
@@ -138,9 +137,10 @@ The intended purpose of the `deferred_code` is that the response MUST contain a 
 
 ## Authentication Request {#authentication-request}
 
-Deferred Token Response introduces a new Authentication Request using the OAuth 2.0 Authorization Request. This request is based on the Authentication request of the Authorization Code Flow introduced in Section 3.1.2.1 of [@!OpenID.Core] with the exception of following parameter:
+Deferred Token Response introduces a new Authentication Request using the OAuth 2.0 Authorization Request.
+This request is the same as the Authentication request of the Authorization Code Flow introduced in Section 3.1.2.1 of [@!OpenID.Core] with the exception of the following parameter:
 
-`response_type`:
+`response_type`
 : REQUIRED. Deferred Token Response value that determines the authorization processing flow to be used, including what parameters are returned from the endpoints used. This value MUST be either `deferred_code` or `deferred_code code`.
 
 Relying Parties MAY present additional parameters in this request regarding to OAuth 2.0 extensions (such as Rich Authorization Requests).
@@ -188,8 +188,16 @@ If the Authentication Request is successfully processed in accordance with (#op-
 If the `response_type` requested by the Relying Party was `deferred_code code`, the OpenID Provider MAY respond with a Successful Authentication Response as defined in Section 3.1.2.5 of [@!OpenID.Core] to indicate that the user was authenticated immediately.
 The remainder of the Authentication then proceeds as an Authorization Code Flow as defined in Section 3.1 of [@!OpenID.Core].
 
-Otherwise, the response MUST contain the parameter `deferred_code`.
-Note that a response containing the `deferred_code` parameter does not constitute a final Authentication Response, but rather serves as an indication that processing is underway.
+Otherwise, the response MUST be an Authentication Request Acknowledgment.
+Note that an Authentication Request Acknowledgment does not constitute a final Authentication Response, but rather serves as an indication that further processing is underway.
+
+An Authentication Request Acknowledgment is composed of the following parameters:
+
+`deferred_code`
+: REQUIRED. This is a unique identifier to identify the Authentication Request made by the Client. It MUST contain sufficient entropy (a minimum of 128 bits while 160 bits is RECOMMENDED) to make brute force guessing or forgery of a valid auth_req_id computationally infeasible. The means of achieving this are implementation-specific, with possible approaches including secure pseudorandom number generation or cryptographically secured self-contained tokens. The OpenID Provider MUST restrict the characters used to 'A'-'Z', 'a'-'z', '0'-'9', '.', '-' and '_', to reduce the chance of the client incorrectly decoding or re-encoding the auth_req_id; this character set was chosen to allow the server to use unpadded base64url if it wishes. The identifier MUST be treated as opaque by the client.
+
+`state`
+: OAuth 2.0 state value. REQUIRED if the Authorization Request included the state parameter. Set to the value received from the Client.
 
 The following is a non-normative example of an Authentication Request Acknowledgment:
 
@@ -214,13 +222,21 @@ Interactions involving Public Clients as defined in [@!RFC6749] SHOULD be secure
 
 ## Deferred Code Exchange Request {#deferred-code-exchange-request}
 
-The Initial Token Request exchanges the deferred code obtained in the Authentication Request Acknowledgment.
+The Deferred Code Exchange Request exchanges the deferred code obtained in the Authentication Request Acknowledgment.
+
+The Client makes an HTTP POST request to the Token Endpoint by sending the following parameters using the `application/x-www-form-urlencoded` format:
+
+`grant_type`
+: REQUIRED. Value MUST be `urn:openid:params:grant-type:deferred`.
+
+`deferred_code`
+: REQUIRED. The unique identifier to identify the Authentication Request made by the Client. The OP MUST check whether the `deferred_code` was issued to this Client in response to an Authentication Request. Otherwise, an error MUST be returned.
 
 Supported extension parameters from the OAuth 2.0 Token Request MAY be included in this request.
 
 A DPoP proof MAY be included in this request in order to bind the Deferred Authentication ID to a public key. Its payload MUST contain the `deferred_code` matching the one sent in the Deferred Code parameter. The RP SHOULD ensure that a public key is not reused across different Authentication Processes.
 
-The following is a non-normative example of an initial token request:
+The following is a non-normative example of a Deferred Code Exchange Request (with line wraps within values for display purposes only):
 
 ```
 POST /token HTTP/1.1
@@ -229,7 +245,6 @@ Content-Type: application/x-www-form-urlencoded
 Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
 DPoP: eyJ0eXAiOiJkcG9wK2p3dCIsImFsZyI6IkVTMjU2IiwiandrIjp7Imt0eSI6IkVDIiwieCI6Imw4dEZyaHgtMzR0VjNoUklDUkRZOXpDa0RscEJoRjQyVVFVZldWQVdCRnMiLCJ5IjoiOVZFNGpmX09rX282NHpiVFRsY3VOSmFqSG10NnY5VERWclUwQ2R2R1JEQSIsImNydiI6IlAtMjU2In19.eyJqdGkiOiJBeDBwYjcyazRtZCIsImh0bSI6IlBPU1QiLCJodHUiOiJodHRwczovL3NlcnZlci5leGFtcGxlLmNvbS90b2tlbiIsImlhdCI6MTc2MzcyMzExMn0.uy3IfO-j8Yg4Aux0uGAuh7_m24WDCfWCUacRPWtFHS9J-HWASoiEqBsuxI1LN3V4To4Mn1ZRv0AVBxuOA6km3g
 grant_type=urn:openid:params:grant-type:deferred&deferred_code=SplxlOBeZQQYbYS6WxSbIA
-  &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
 ```
 
 ## Deferred Code Exchange Request Validation
@@ -245,13 +260,28 @@ The OP Provider MUST validate the request received as follows:
 
 ## Successful Deferred Code Exchange Response{#successful-deferred-code-exchange-response}
 
-This will define the response that the RP will receive from the OP when the Initial Token Request was successful.
+After receiving and validating a valid and authorized Deferred Code Exchange Request from the Client, the OpenID Provider returns an HTTP 200 OK response to the Client.
+The body of this response contains the following parameters encoded in `application/json` format:
 
-It MAY include an interim ID Token containing unverified claims (at the discretion of the OP).
+`deferred_auth_id`
+: REQUIRED. A unique identifier to identify the Authentication Request made by the Client. The identifier MUST be treated as opaque by the client.
 
-The OP MUST bind the public key used in DPoP proofs to `deferred_auth_id` when RP's Client is of type Public Client as defined in [@!RFC6749] and a DPoP proof is presented in the Deferred Code Exchange Request. Further interactions involving a `deferred_auth_id` MUST require a DPoP proof utilizing the same public key. This mechanism is similar to the binding of DPoP proofs to Refresh Tokens as described in [@!RFC9449, section 5].
+`expires_in`
+: OPTIONAL. A JSON number with a positive integer value indicating the expiration time of the `deferred_auth_id` in seconds. Some requests may naturally become irrelevant once some amount of time has passed. The OP MAY indicate that this is the case by returning a value in this parameter. The method of determining this value is outside the scope of this specification. Clients SHOULD support arbitrarily large values for this parameter.
 
-The following is a non-normative example of a successful initial token response:
+`interval`
+: OPTIONAL. A JSON number with a positive integer value indicating the minimum amount of time in seconds that the Client MUST wait between polling requests to the token endpoint. Clients SHOULD support arbitrarily large values for this parameter.
+
+`interim_id_token`
+: OPTIONAL. In some cases, the OP can immediately authenticate parts of the Identity Information provided by the End User. In some cases, the Client is interested in the Identity Information provided by the End User even before it is validated by the OP. To support this, the OP MAY include an Interim ID Token containing partially verified claims. The method by which the OP indicates the validation status of each claim is outside the scope of this specification.
+
+Once redeemed for a successful Deferred Code Exchange Response, the `deferred_code` value that was used is no longer valid.
+
+The OP MUST bind the public key used in DPoP proofs to `deferred_auth_id` when the Client is of type Public Client as defined in [@!RFC6749] and a DPoP proof is presented in the Deferred Code Exchange Request. Further interactions involving a `deferred_auth_id` MUST require a DPoP proof utilizing the same public key. This mechanism is similar to the binding of DPoP proofs to Refresh Tokens as described in [@!RFC9449, section 5].
+
+Clients MUST ignore unrecognized response parameters.
+
+The following is a non-normative example of a successful Deferred Code Exchange Response:
 
 ```
 HTTP/1.1 200 OK
@@ -291,7 +321,14 @@ This process polls a special endpoint for that purpose.
 
 ## Token Request using the Authentication Request ID
 
-This will define the Token Request that the RP polls the OP with.
+The Client makes an HTTP POST request to the Token Endpoint by sending the following parameters using the `application/x-www-form-urlencoded` format:
+
+`grant_type`
+: REQUIRED. Value MUST be `urn:openid:params:grant-type:deferred`.
+
+`deferred_auth_id`
+: REQUIRED. The unique identifier to identify the Authentication Request made by the Client. The OP MUST check whether the `deferred_code` was issued to this Client in response to an Authentication Request. Otherwise, an error MUST be returned.
+
 This request MUST use the DPoP-secured Access Token.
 
 If a DPoP proof was presented by the RP in the Deferred Code Exchange Request, the RP MUST also present a DPoP proof in this request, utilizing the same public key as previously used. The payload of the DPoP proof MUST include the `deferred_auth_id` value that matches the Deferred Authentication ID parameter provided in the request.
@@ -327,7 +364,8 @@ If the OP encounters any error, it MUST return an error response, per (#token-re
 
 ## Successful Token Response
 
-This will define the Token Response that the OP responds to the RP's poll with when the Authentication Process has finished successfully.
+After receiving and validating a valid and authorized Token Request from the Client and when the End User associated with the supplied `deferred_auth_id` has been authenticated, the OpenID Provider returns a successful response as specified in Section 3.1.3.3 of [OpenID.Core].
+Once redeemed for a successful Token response, the `deferred_auth_id` value that was used is no longer valid.
 
 The following is a non-normative example of a successful token response:
 
@@ -351,7 +389,7 @@ If the client has registered a `deferred_client_notification_endpoint` during cl
 
 Ping callbacks are not sent for timed-out Authentication Processes, since the RP is informed of the expiration time via the `expires_in` parameter in the (#successful-deferred-code-exchange-response).
 
-In this request, the OP sends the `deferred_notification_token` in the `Authorization` header as a Bearer token in order to authenticate the request. The OP MUST ensure that a (#successful-deferred-code-exchange-response) was previously sent to the RP containing the `deferred_auth_id`. RPs MAY associate the `deferred_notification_token` with the `deferred_auth_id` in order to strengthen validation.
+In this request, the OP sends the `deferred_notification_token` in the `Authorization` header as a Bearer token in order to authenticate the request. The OP MUST ensure that a (#successful-deferred-code-exchange-response) was previously sent to the RP containing the `deferred_auth_id`. The Client MAY associate the `deferred_notification_token` with the `deferred_auth_id` in order to strengthen validation.
 
 The following is a non-normative example of a Ping callback sent as an HTTP POST request to the Deferred Client Notification Endpoint (with line wraps within values for display purposes only).
 
@@ -386,8 +424,12 @@ The Authentication Cancellation can be achieved by the RP sending a request to t
 
 ## Authentication Cancellation Request
 
-Once the RP gets possession of the `deferred_code` from the Initial Token Response, it can send an Authentication Cancellation Request to the OP in order to cancel the ongoing Authentication Process.
+Once the RP gets possession of the `deferred_auth_id` from the Deferred Code Exchange Response, it can send an Authentication Cancellation Request to the OP in order to cancel the ongoing Authentication Process.
 
+The Client makes an HTTP POST request to the Authentication Cancellation Endpoint by sending the following parameters using the `application/x-www-form-urlencoded` format:
+
+`deferred_auth_id`
+: REQUIRED. The unique identifier to identify the Authentication Request made by the Client. The OP MUST check whether the `deferred_auth_id` was issued to this Client in response to an Authentication Request. Otherwise, an error MUST be returned.
 
 The following is a non-normative example of an authentication cancellation request:
 
@@ -405,7 +447,7 @@ deferred_auth_id=SplxlOBeZQQYbYS6WxSbIA
 The OP MUST validate the request received as follows:
 
 1. Authenticate the Client in accordance with Section 9 of [@!OpenID.Core].
-2. Ensure the Deferred Authentication was issued to the authenticated Client.
+2. Ensure the given `deferred_auth_id` was issued to the authenticated Client.
 3. Verify that no access token has been issued for the Deferred Authentication.
 
 After successful validation, the OP marks this Authentication Request as cancelled. Any requests to poll for the result of the Authentication Process after the OP accepts the cancellation request MUST be handled as described in (#token-request-error-response). 
@@ -414,7 +456,7 @@ Disposal of any collected Identity Information is beyond the scope of this speci
 
 ## Authentication Cancellation Response
 
-The OP responds to the RP's Authentication Cancellation Request with 200 OK status code if the cancellation was successful, or if the RP submitted an invalid or already-processed `deferred_auth_id`.
+The OP responds to the Authentication Cancellation Request with an HTTP 200 status code if the cancellation was successful, or if the RP submitted an invalid or already-processed `deferred_auth_id`.
 
 Since the purpose of this request is to stop the Authentication Process, distinction of the cancellation outcome is not necessary for the RP.
 This behavior is similar to [@!RFC7009, section 2.2].
@@ -448,25 +490,25 @@ An Authentication Cancellation Error Response is returned directly from the Canc
 
 Authentication Error Responses are sent in the same format as Token Error Responses, i.e. the HTTP response body uses the application/json media type with the following parameters:
 
-`error`:
+`error`
 : REQUIRED. A single ASCII error code from one present in the list below.
 
-`error_description`:
+`error_description`
 : OPTIONAL. Human-readable ASCII [USASCII] text providing additional information, used to assist the client developer in understanding the error that occurred. Values for the "error_description" parameter MUST NOT include characters outside the set %x20-21 / %x23-5B / %x5D-7E.
 
-`error_uri`:
+`error_uri`
 : OPTIONAL. A URI identifying a human-readable web page with information about the error to provide the client developer with additional information. Values for the "error_uri" parameter MUST conform to the URI-reference syntax and thus MUST NOT include characters outside the set %x21 / %x23-5B / %x5D-7E.
 
 List of authentication error codes associated with HTTP Errors.
 
 HTTP 400 Bad Request
 
-`invalid_request`:
+`invalid_request`
 : The request is missing a required parameter, includes an invalid parameter value, includes a parameter more than once, contains more than one of the hints, or is otherwise malformed.
 
 HTTP 401 Unauthorized
 
-`invalid_client`:
+`invalid_client`
 : Client authentication failed (e.g., invalid client credentials, unknown client, no client authentication included, or unsupported authentication method).
 
 # Implementation Considerations
