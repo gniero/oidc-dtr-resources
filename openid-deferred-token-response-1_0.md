@@ -525,6 +525,12 @@ Options include:
 
 The OP MAY accept Authentication Requests providing the response type value as `deferred_code code`. In those cases, it means for the OP that it MAY chose, by its own means, when the Authentication response will be of deferred type or any other provided alternative. 
 
+## Design Considerations for Poll and Ping
+This specification intentionally does not define a "push" mode for delivering a Token Response.
+The push mode is not appropriate for long-running high-value Authentication Processes since losing the single push request would mean losing the outcome of the entire Authentication Process.
+
+The Ping Callback enables long-running Authentication Processes to occur without wasting network resources on a large amount of Poll requests.
+
 # Privacy Considerations
 
 # Security Considerations
