@@ -232,6 +232,9 @@ The Client makes an HTTP POST request to the Token Endpoint by sending the follo
 `deferred_code`
 : REQUIRED. The unique identifier to identify the Authentication Request made by the Client. The OP MUST check whether the `deferred_code` was issued to this Client in response to an Authentication Request. Otherwise, an error MUST be returned.
 
+`deferred_notification_token`
+: OPTIONAL. A bearer access token which can be used by the OP to authorize when sending a Ping Callback for this request.
+
 Supported extension parameters from the OAuth 2.0 Token Request MAY be included in this request.
 
 A DPoP proof MAY be included in this request in order to bind the Deferred Authentication ID to a public key. Its payload MUST contain the `deferred_code` matching the one sent in the Deferred Code parameter. The RP SHOULD ensure that a public key is not reused across different Authentication Processes.
@@ -244,7 +247,7 @@ Host: server.example.com
 Content-Type: application/x-www-form-urlencoded
 Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
 DPoP: eyJ0eXAiOiJkcG9wK2p3dCIsImFsZyI6IkVTMjU2IiwiandrIjp7Imt0eSI6IkVDIiwieCI6Imw4dEZyaHgtMzR0VjNoUklDUkRZOXpDa0RscEJoRjQyVVFVZldWQVdCRnMiLCJ5IjoiOVZFNGpmX09rX282NHpiVFRsY3VOSmFqSG10NnY5VERWclUwQ2R2R1JEQSIsImNydiI6IlAtMjU2In19.eyJqdGkiOiJBeDBwYjcyazRtZCIsImh0bSI6IlBPU1QiLCJodHUiOiJodHRwczovL3NlcnZlci5leGFtcGxlLmNvbS90b2tlbiIsImlhdCI6MTc2MzcyMzExMn0.uy3IfO-j8Yg4Aux0uGAuh7_m24WDCfWCUacRPWtFHS9J-HWASoiEqBsuxI1LN3V4To4Mn1ZRv0AVBxuOA6km3g
-grant_type=urn:openid:params:grant-type:deferred&deferred_code=SplxlOBeZQQYbYS6WxSbIA
+grant_type=urn:openid:params:grant-type:deferred&deferred_code=SplxlOBeZQQYbYS6WxSbIA&deferred_notification_token=8d67dc78-7faa-4d41-aabd-67707b374255
 ```
 
 ## Deferred Code Exchange Request Validation
@@ -280,6 +283,8 @@ Once redeemed for a successful Deferred Code Exchange Response, the `deferred_co
 The OP MUST bind the public key used in DPoP proofs to `deferred_auth_id` when the Client is of type Public Client as defined in [@!RFC6749] and a DPoP proof is presented in the Deferred Code Exchange Request. Further interactions involving a `deferred_auth_id` MUST require a DPoP proof utilizing the same public key. This mechanism is similar to the binding of DPoP proofs to Refresh Tokens as described in [@!RFC9449, section 5].
 
 Clients MUST ignore unrecognized response parameters.
+
+If the Client sent a `deferred_notification_token` in the Deferred Code Exchange Request, the Client SHOULD bind the received `deferred_auth_id` to the `deferred_notification_token` to prevent mix-up attacks.
 
 The following is a non-normative example of a successful Deferred Code Exchange Response:
 
@@ -385,11 +390,21 @@ Cache-Control: no-store
 
 ## Ping Callback
 
-If the client has registered a `deferred_client_notification_endpoint` during client registration, the OP sends a Ping to that endpoint once the Authentication Process has finished, regardless of the outcome.
+If the client has registered a `deferred_client_notification_endpoint` during client registration, the OP sends a Ping Callback to that endpoint once the Authentication Process has finished, regardless of the outcome.
 
-Ping callbacks are not sent for timed-out Authentication Processes, since the RP is informed of the expiration time via the `expires_in` parameter in the (#successful-deferred-code-exchange-response).
+The OP MUST ensure that a successful Deferred Code Exchange Response (#successful-deferred-code-exchange-response) containing the `deferred_auth_id` was sent to the RP before sending the Ping Callback.
 
-In this request, the OP sends the `deferred_notification_token` in the `Authorization` header as a Bearer token in order to authenticate the request. The OP MUST ensure that a (#successful-deferred-code-exchange-response) was previously sent to the RP containing the `deferred_auth_id`. The Client MAY associate the `deferred_notification_token` with the `deferred_auth_id` in order to strengthen validation.
+Ping callbacks are not sent for timed-out Authentication Processes, since the RP is informed of any expiration time via the `expires_in` parameter in the successful Deferred Code Exchange Response (#successful-deferred-code-exchange-response).
+
+The Ping Callback is an HTTP POST request containing the following parameters using the `application/json` format:
+
+`deferred_auth_id`
+: REQUIRED: The unique identifier to identify the Authentication Request which started the finished Authentication Process.
+
+The Client MUST protect the Deferred Client Notification Endpoint from unauthorized access.
+
+If the Client sent a `deferred_notification_token` in the Deferred Code Exchange Request, the OP MUST send the `deferred_notification_token` in the `Authorization` header as a Bearer token in order to authenticate the request.
+The Client SHOULD associate the `deferred_notification_token` with the `deferred_auth_id` in order to strengthen validation.
 
 The following is a non-normative example of a Ping callback sent as an HTTP POST request to the Deferred Client Notification Endpoint (with line wraps within values for display purposes only).
 
@@ -404,9 +419,11 @@ Content-Type: application/json
 }
 ```
 
-The Client MUST verify the `deferred_notification_token` to authenticate the request. If the bearer token is invalid, the RP SHOULD respond with an HTTP 401 Unauthorized status code.
+The Client MUST verify the `deferred_notification_token` to authenticate the request if it is present.
+If the bearer token is invalid, the RP SHOULD respond with an HTTP 401 Unauthorized status code.
 
-For valid requests, the Deferred Client Notification Endpoint SHOULD respond with an HTTP 204 No Content status code. The OP SHOULD also accept responses with HTTP 200 OK, and any body in the response SHOULD be ignored.
+For valid requests, the Deferred Client Notification Endpoint SHOULD respond with an HTTP 204 No Content status code.
+The OP SHOULD also accept responses with HTTP 200 OK, and any HTTP body in the response SHOULD be ignored.
 
 The Client MUST NOT return an HTTP 3xx status code. The OP MUST NOT follow redirects.
 
@@ -523,17 +540,13 @@ The OP MAY accept Authentication Requests providing the response type value as `
 
 In addition to the security considerations described in [@!RFC6749], [@!RFC7519], [@!RFC9449], and [@!OpenID.Core], the following considerations apply to this specification.
 
-## Deferred Notification Token
-
+## Usage of Deferred Notification Tokens
 The `deferred_notification_token` is a bearer token that enables the OP to authenticate to the RP when sending the Ping Callback. Therefore, it is imperative that this token is protected against unauthorized access and disclosure.
 
 This token SHOULD be generated following the least privilege principle, ensuring it can only be used for its intended purpose of authenticating the OP to the RP during the Ping Callback.
 
-Redirection-based flows that include the `deferred_notification_token` in the URL are discouraged, as URLs can be logged or exposed in various ways, potentially leading to token leakage.
-
-RPs MAY consider the adoption of mechanisms such as Pushed Authorization Requests [@!RFC9126] or Encrypted Request Objects defined in Section 6.1 of [@!OpenID.Core] to avoid exposing `deferred_notification_token` in URLs. 
-
-Implementations that opt to use request objects passed by reference SHOULD ensure that the request object is protected against unauthorized access, for example by using short-lived, single-use URIs with adequate entropy, or requiring a form of authentication such as mTLS.
+If the Client chooses not to use Deferred Notification Tokens to protect the Deferred Notification Endpoint, the Client MUST protect the endpoint in some other way.
+One option is to use mutual TLS.
 
 # IANA Considerations
 
