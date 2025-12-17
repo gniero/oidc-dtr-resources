@@ -1388,7 +1388,7 @@ li > p:last-of-type:only-child {
             <p id="section-toc.1-1.16.1"><a href="#section-16" class="auto internal xref">16</a>. <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16.2.1">
-                <p id="section-toc.1-1.16.2.1.1"><a href="#section-16.1" class="auto internal xref">16.1</a>.  <a href="#name-deferred-notification-token" class="internal xref">Deferred Notification Token</a></p>
+                <p id="section-toc.1-1.16.2.1.1"><a href="#section-16.1" class="auto internal xref">16.1</a>.  <a href="#name-usage-of-deferred-notificat" class="internal xref">Usage of Deferred Notification Tokens</a></p>
 </li>
             </ul>
 </li>
@@ -1706,6 +1706,10 @@ Location: https://client.example.org/cb?
 <dt id="section-5.1-3.3"><code>deferred_code</code></dt>
           <dd style="margin-left: 1.5em" id="section-5.1-3.4">REQUIRED. The unique identifier to identify the Authentication Request made by the Client. The OP MUST check whether the <code>deferred_code</code> was issued to this Client in response to an Authentication Request. Otherwise, an error MUST be returned.<a href="#section-5.1-3.4" class="pilcrow">¶</a>
 </dd>
+          <dd class="break"></dd>
+<dt id="section-5.1-3.5"><code>deferred_notification_token</code></dt>
+          <dd style="margin-left: 1.5em" id="section-5.1-3.6">OPTIONAL. A bearer access token which the OP can use to access the Client's Deferred Notification Endpoint when sending a Ping Callback for this request.<a href="#section-5.1-3.6" class="pilcrow">¶</a>
+</dd>
         <dd class="break"></dd>
 </dl>
 <p id="section-5.1-4">Supported extension parameters from the OAuth 2.0 Token Request MAY be included in this request.<a href="#section-5.1-4" class="pilcrow">¶</a></p>
@@ -1717,7 +1721,7 @@ Host: server.example.com
 Content-Type: application/x-www-form-urlencoded
 Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
 DPoP: eyJ0eXAiOiJkcG9wK2p3dCIsImFsZyI6IkVTMjU2IiwiandrIjp7Imt0eSI6IkVDIiwieCI6Imw4dEZyaHgtMzR0VjNoUklDUkRZOXpDa0RscEJoRjQyVVFVZldWQVdCRnMiLCJ5IjoiOVZFNGpmX09rX282NHpiVFRsY3VOSmFqSG10NnY5VERWclUwQ2R2R1JEQSIsImNydiI6IlAtMjU2In19.eyJqdGkiOiJBeDBwYjcyazRtZCIsImh0bSI6IlBPU1QiLCJodHUiOiJodHRwczovL3NlcnZlci5leGFtcGxlLmNvbS90b2tlbiIsImlhdCI6MTc2MzcyMzExMn0.uy3IfO-j8Yg4Aux0uGAuh7_m24WDCfWCUacRPWtFHS9J-HWASoiEqBsuxI1LN3V4To4Mn1ZRv0AVBxuOA6km3g
-grant_type=urn:openid:params:grant-type:deferred&amp;deferred_code=SplxlOBeZQQYbYS6WxSbIA
+grant_type=urn:openid:params:grant-type:deferred&amp;deferred_code=SplxlOBeZQQYbYS6WxSbIA&amp;deferred_notification_token=8d67dc78-7faa-4d41-aabd-67707b374255
 </pre><a href="#section-5.1-7" class="pilcrow">¶</a>
 </div>
 </section>
@@ -1775,8 +1779,9 @@ The body of this response contains the following parameters encoded in <code>app
 <p id="section-5.3-3">Once redeemed for a successful Deferred Code Exchange Response, the <code>deferred_code</code> value that was used is no longer valid.<a href="#section-5.3-3" class="pilcrow">¶</a></p>
 <p id="section-5.3-4">The OP MUST bind the public key used in DPoP proofs to <code>deferred_auth_id</code> when the Client is of type Public Client as defined in <span>[<a href="#RFC6749" class="cite xref">RFC6749</a>]</span> and a DPoP proof is presented in the Deferred Code Exchange Request. Further interactions involving a <code>deferred_auth_id</code> MUST require a DPoP proof utilizing the same public key. This mechanism is similar to the binding of DPoP proofs to Refresh Tokens as described in <span><a href="https://rfc-editor.org/rfc/rfc9449#section-5" class="relref">Section 5</a> of [<a href="#RFC9449" class="cite xref">RFC9449</a>]</span>.<a href="#section-5.3-4" class="pilcrow">¶</a></p>
 <p id="section-5.3-5">Clients MUST ignore unrecognized response parameters.<a href="#section-5.3-5" class="pilcrow">¶</a></p>
-<p id="section-5.3-6">The following is a non-normative example of a successful Deferred Code Exchange Response:<a href="#section-5.3-6" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.3-7">
+<p id="section-5.3-6">If the Client sent a <code>deferred_notification_token</code> in the Deferred Code Exchange Request, the Client SHOULD bind the received <code>deferred_auth_id</code> to the <code>deferred_notification_token</code> to prevent mix-up attacks.<a href="#section-5.3-6" class="pilcrow">¶</a></p>
+<p id="section-5.3-7">The following is a non-normative example of a successful Deferred Code Exchange Response:<a href="#section-5.3-7" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.3-8">
 <pre>HTTP/1.1 200 OK
 Content-Type: application/json
 Cache-Control: no-store
@@ -1787,7 +1792,7 @@ Cache-Control: no-store
   "interval": 60,
   "interim_id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjI3MTdmMzAzYTI3NjVlOGFjYmY0MTEwMGFhOGE0NjllIiwidHlwIjoiSldUIn0.eyJpc3MiOiJodHRwOi8vc2VydmVyLmV4YW1wbGUuY29tIiwic3ViIjoiMjQ4Mjg5NzYxMDAxIiwiZW1haWwiOiJqb2huZG9lQGV4YW1wbGUuY29tIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJhdWQiOiJzNkJoZFJrcXQzIiwibm9uY2UiOiJuLTBTNl9XekEyTWoiLCJleHAiOjE3NjIxOTE2ODgsImlhdCI6MTc2MjE5MTk4OH0.TmW5LZmr5tM_gDbk6Tc7VAMw6zYv9eo1BqbKf19rhw8cHsPLLMA25YilywdA66KO2ESWvY3S5YJn3Azypri5jQOeQTmPQZAeXHjcVSBeABzAQz3eGIdtAaDLQ5p0DafdxgEDOrcLLK8yk3X16aBGpJegdBY1HfqAhuYPV2D_LUCeGbJxn0-4nLF9_U7Ws3c4o_3nq9ZNTVEAoJJckRYhXM6pPf2-1tZvRZD2P9B0vPSiJwqN2JFOBoDROwhxPJU4MKWQ3mp5pdGTZqlUL7wn0a2dG-EI1eq6oQrGwINqTHiqZbttCuz1wQtezRxHYITEAoVaI2c3zad0ZSzTbAGNkw"
 }
-</pre><a href="#section-5.3-7" class="pilcrow">¶</a>
+</pre><a href="#section-5.3-8" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -1925,11 +1930,21 @@ Cache-Control: no-store
         <h3 id="name-ping-callback">
 <a href="#section-8.4" class="section-number selfRef">8.4. </a><a href="#name-ping-callback" class="section-name selfRef">Ping Callback</a>
         </h3>
-<p id="section-8.4-1">If the client has registered a <code>deferred_client_notification_endpoint</code> during client registration, the OP sends a Ping to that endpoint once the Authentication Process has finished, regardless of the outcome.<a href="#section-8.4-1" class="pilcrow">¶</a></p>
-<p id="section-8.4-2">Ping callbacks are not sent for timed-out Authentication Processes, since the RP is informed of the expiration time via the <code>expires_in</code> parameter in the <a href="#successful-deferred-code-exchange-response" class="auto internal xref">Section 5.3</a>.<a href="#section-8.4-2" class="pilcrow">¶</a></p>
-<p id="section-8.4-3">In this request, the OP sends the <code>deferred_notification_token</code> in the <code>Authorization</code> header as a Bearer token in order to authenticate the request. The OP MUST ensure that a <a href="#successful-deferred-code-exchange-response" class="auto internal xref">Section 5.3</a> was previously sent to the RP containing the <code>deferred_auth_id</code>. The Client MAY associate the <code>deferred_notification_token</code> with the <code>deferred_auth_id</code> in order to strengthen validation.<a href="#section-8.4-3" class="pilcrow">¶</a></p>
-<p id="section-8.4-4">The following is a non-normative example of a Ping callback sent as an HTTP POST request to the Deferred Client Notification Endpoint (with line wraps within values for display purposes only).<a href="#section-8.4-4" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-8.4-5">
+<p id="section-8.4-1">If the client has registered a <code>deferred_client_notification_endpoint</code> during client registration, the OP sends a Ping Callback to that endpoint once the Authentication Process has finished, regardless of the outcome.<a href="#section-8.4-1" class="pilcrow">¶</a></p>
+<p id="section-8.4-2">The OP MUST ensure that a successful Deferred Code Exchange Response <a href="#successful-deferred-code-exchange-response" class="auto internal xref">Section 5.3</a> containing the <code>deferred_auth_id</code> was sent to the RP before sending the Ping Callback.<a href="#section-8.4-2" class="pilcrow">¶</a></p>
+<p id="section-8.4-3">Ping callbacks are not sent for timed-out Authentication Processes, since the RP is informed of any expiration time via the <code>expires_in</code> parameter in the successful Deferred Code Exchange Response <a href="#successful-deferred-code-exchange-response" class="auto internal xref">Section 5.3</a>.<a href="#section-8.4-3" class="pilcrow">¶</a></p>
+<p id="section-8.4-4">The Ping Callback is an HTTP POST request containing the following parameters using the <code>application/json</code> format:<a href="#section-8.4-4" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlCompact dlParallel" id="section-8.4-5">
+          <dt id="section-8.4-5.1"><code>deferred_auth_id</code></dt>
+          <dd style="margin-left: 1.5em" id="section-8.4-5.2">REQUIRED: The unique identifier to identify the Authentication Request which started the finished Authentication Process.<a href="#section-8.4-5.2" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+</dl>
+<p id="section-8.4-6">The Client MUST protect the Deferred Client Notification Endpoint from unauthorized access.<a href="#section-8.4-6" class="pilcrow">¶</a></p>
+<p id="section-8.4-7">If the Client sent a <code>deferred_notification_token</code> in the Deferred Code Exchange Request, the OP MUST send the <code>deferred_notification_token</code> in the <code>Authorization</code> header as a Bearer token in order to authenticate the request.
+The Client SHOULD associate the <code>deferred_notification_token</code> with the <code>deferred_auth_id</code> in order to strengthen validation.<a href="#section-8.4-7" class="pilcrow">¶</a></p>
+<p id="section-8.4-8">The following is a non-normative example of a Ping callback sent as an HTTP POST request to the Deferred Client Notification Endpoint (with line wraps within values for display purposes only).<a href="#section-8.4-8" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-8.4-9">
 <pre>POST /cb HTTP/1.1
 Host: client.example.com
 Authorization: Bearer 8d67dc78-7faa-4d41-aabd-67707b374255
@@ -1938,13 +1953,15 @@ Content-Type: application/json
 {
   "deferred_auth_id": "f4oirNBUlM"
 }
-</pre><a href="#section-8.4-5" class="pilcrow">¶</a>
+</pre><a href="#section-8.4-9" class="pilcrow">¶</a>
 </div>
-<p id="section-8.4-6">The Client MUST verify the <code>deferred_notification_token</code> to authenticate the request. If the bearer token is invalid, the RP SHOULD respond with an HTTP 401 Unauthorized status code.<a href="#section-8.4-6" class="pilcrow">¶</a></p>
-<p id="section-8.4-7">For valid requests, the Deferred Client Notification Endpoint SHOULD respond with an HTTP 204 No Content status code. The OP SHOULD also accept responses with HTTP 200 OK, and any body in the response SHOULD be ignored.<a href="#section-8.4-7" class="pilcrow">¶</a></p>
-<p id="section-8.4-8">The Client MUST NOT return an HTTP 3xx status code. The OP MUST NOT follow redirects.<a href="#section-8.4-8" class="pilcrow">¶</a></p>
-<p id="section-8.4-9">Handling of HTTP error codes in the 4xx and 5xx ranges by the OP is out of scope for this specification. Administrative action is likely to be required in these cases.<a href="#section-8.4-9" class="pilcrow">¶</a></p>
-<p id="section-8.4-10">Clients MUST ignore unrecognized request parameters.<a href="#section-8.4-10" class="pilcrow">¶</a></p>
+<p id="section-8.4-10">The Client MUST verify the <code>deferred_notification_token</code> to authenticate the request if it is present.
+If the bearer token is invalid, the RP SHOULD respond with an HTTP 401 Unauthorized status code.<a href="#section-8.4-10" class="pilcrow">¶</a></p>
+<p id="section-8.4-11">For valid requests, the Deferred Client Notification Endpoint SHOULD respond with an HTTP 204 No Content status code.
+The OP SHOULD also accept responses with HTTP 200 OK, and any HTTP body in the response SHOULD be ignored.<a href="#section-8.4-11" class="pilcrow">¶</a></p>
+<p id="section-8.4-12">The Client MUST NOT return an HTTP 3xx status code. The OP MUST NOT follow redirects.<a href="#section-8.4-12" class="pilcrow">¶</a></p>
+<p id="section-8.4-13">Handling of HTTP error codes in the 4xx and 5xx ranges by the OP is out of scope for this specification. Administrative action is likely to be required in these cases.<a href="#section-8.4-13" class="pilcrow">¶</a></p>
+<p id="section-8.4-14">Clients MUST ignore unrecognized request parameters.<a href="#section-8.4-14" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2134,16 +2151,15 @@ The push mode is not appropriate for long-running high-value Authentication Proc
 <a href="#section-16" class="section-number selfRef">16. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
 <p id="section-16-1">In addition to the security considerations described in <span>[<a href="#RFC6749" class="cite xref">RFC6749</a>]</span>, <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span>, <span>[<a href="#RFC9449" class="cite xref">RFC9449</a>]</span>, and <span>[<a href="#OpenID.Core" class="cite xref">OpenID.Core</a>]</span>, the following considerations apply to this specification.<a href="#section-16-1" class="pilcrow">¶</a></p>
-<div id="deferred-notification-token">
+<div id="usage-of-deferred-notification-tokens">
 <section id="section-16.1">
-        <h3 id="name-deferred-notification-token">
-<a href="#section-16.1" class="section-number selfRef">16.1. </a><a href="#name-deferred-notification-token" class="section-name selfRef">Deferred Notification Token</a>
+        <h3 id="name-usage-of-deferred-notificat">
+<a href="#section-16.1" class="section-number selfRef">16.1. </a><a href="#name-usage-of-deferred-notificat" class="section-name selfRef">Usage of Deferred Notification Tokens</a>
         </h3>
 <p id="section-16.1-1">The <code>deferred_notification_token</code> is a bearer token that enables the OP to authenticate to the RP when sending the Ping Callback. Therefore, it is imperative that this token is protected against unauthorized access and disclosure.<a href="#section-16.1-1" class="pilcrow">¶</a></p>
 <p id="section-16.1-2">This token SHOULD be generated following the least privilege principle, ensuring it can only be used for its intended purpose of authenticating the OP to the RP during the Ping Callback.<a href="#section-16.1-2" class="pilcrow">¶</a></p>
-<p id="section-16.1-3">Redirection-based flows that include the <code>deferred_notification_token</code> in the URL are discouraged, as URLs can be logged or exposed in various ways, potentially leading to token leakage.<a href="#section-16.1-3" class="pilcrow">¶</a></p>
-<p id="section-16.1-4">RPs MAY consider the adoption of mechanisms such as Pushed Authorization Requests <span>[<a href="#RFC9126" class="cite xref">RFC9126</a>]</span> or Encrypted Request Objects defined in Section 6.1 of <span>[<a href="#OpenID.Core" class="cite xref">OpenID.Core</a>]</span> to avoid exposing <code>deferred_notification_token</code> in URLs.<a href="#section-16.1-4" class="pilcrow">¶</a></p>
-<p id="section-16.1-5">Implementations that opt to use request objects passed by reference SHOULD ensure that the request object is protected against unauthorized access, for example by using short-lived, single-use URIs with adequate entropy, or requiring a form of authentication such as mTLS.<a href="#section-16.1-5" class="pilcrow">¶</a></p>
+<p id="section-16.1-3">If the Client chooses not to use Deferred Notification Tokens to protect the Deferred Notification Endpoint, the Client MUST protect the endpoint in some other way.
+One option is to use mutual TLS.<a href="#section-16.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2200,10 +2216,6 @@ The push mode is not appropriate for long-running high-value Authentication Proc
 <dt id="RFC8414">[RFC8414]</dt>
         <dd>
 <span class="refAuthor">Jones, M.</span>, <span class="refAuthor">Sakimura, N.</span>, and <span class="refAuthor">J. Bradley</span>, <span class="refTitle">"OAuth 2.0 Authorization Server Metadata"</span>, <span class="seriesInfo">RFC 8414</span>, <span class="seriesInfo">DOI 10.17487/RFC8414</span>, <time datetime="2018-06" class="refDate">June 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8414">https://www.rfc-editor.org/info/rfc8414</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC9126">[RFC9126]</dt>
-        <dd>
-<span class="refAuthor">Lodderstedt, T.</span>, <span class="refAuthor">Campbell, B.</span>, <span class="refAuthor">Sakimura, N.</span>, <span class="refAuthor">Tonge, D.</span>, and <span class="refAuthor">F. Skokan</span>, <span class="refTitle">"OAuth 2.0 Pushed Authorization Requests"</span>, <span class="seriesInfo">RFC 9126</span>, <span class="seriesInfo">DOI 10.17487/RFC9126</span>, <time datetime="2021-09" class="refDate">September 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc9126">https://www.rfc-editor.org/info/rfc9126</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC9449">[RFC9449]</dt>
         <dd>
