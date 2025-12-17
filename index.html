@@ -1227,7 +1227,7 @@ li > p:last-of-type:only-child {
 <dd class="workgroup">OpenID Connect</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-12-16" class="published">16 December 2025</time>
+<time datetime="2025-12-17" class="published">17 December 2025</time>
     </dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
@@ -1375,6 +1375,9 @@ li > p:last-of-type:only-child {
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14.2.2">
                 <p id="section-toc.1-1.14.2.2.1"><a href="#section-14.2" class="auto internal xref">14.2</a>.  <a href="#name-multi-valued-response-type-" class="internal xref">Multi-valued Response Type Authentication Request</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14.2.3">
+                <p id="section-toc.1-1.14.2.3.1"><a href="#section-14.3" class="auto internal xref">14.3</a>.  <a href="#name-design-considerations-for-p" class="internal xref">Design Considerations for Poll and Ping</a></p>
 </li>
             </ul>
 </li>
@@ -2104,6 +2107,16 @@ Options include:
 <a href="#section-14.2" class="section-number selfRef">14.2. </a><a href="#name-multi-valued-response-type-" class="section-name selfRef">Multi-valued Response Type Authentication Request</a>
         </h3>
 <p id="section-14.2-1">The OP MAY accept Authentication Requests providing the response type value as <code>deferred_code code</code>. In those cases, it means for the OP that it MAY chose, by its own means, when the Authentication response will be of deferred type or any other provided alternative.<a href="#section-14.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="design-considerations-for-poll-and-ping">
+<section id="section-14.3">
+        <h3 id="name-design-considerations-for-p">
+<a href="#section-14.3" class="section-number selfRef">14.3. </a><a href="#name-design-considerations-for-p" class="section-name selfRef">Design Considerations for Poll and Ping</a>
+        </h3>
+<p id="section-14.3-1">This specification intentionally does not define a "push" mode for delivering a Token Response.
+The push mode is not appropriate for long-running high-value Authentication Processes since losing the single push request would mean losing the outcome of the entire Authentication Process.<a href="#section-14.3-1" class="pilcrow">¶</a></p>
+<p id="section-14.3-2">The Ping Callback enables long-running Authentication Processes to occur without wasting network resources on a large amount of Poll requests.<a href="#section-14.3-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
