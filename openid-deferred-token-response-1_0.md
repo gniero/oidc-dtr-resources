@@ -233,7 +233,7 @@ The Client makes an HTTP POST request to the Token Endpoint by sending the follo
 : REQUIRED. The unique identifier to identify the Authentication Request made by the Client. The OP MUST check whether the `deferred_code` was issued to this Client in response to an Authentication Request. Otherwise, an error MUST be returned.
 
 `deferred_notification_token`
-: OPTIONAL. A bearer access token which can be used by the OP to authorize when sending a Ping Callback for this request.
+: OPTIONAL. A bearer access token which the OP can use to access the Client's Deferred Notification Endpoint when sending a Ping Callback for this request.
 
 Supported extension parameters from the OAuth 2.0 Token Request MAY be included in this request.
 
