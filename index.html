@@ -1227,7 +1227,7 @@ li > p:last-of-type:only-child {
 <dd class="workgroup">OpenID Connect</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-12-17" class="published">17 December 2025</time>
+<time datetime="2025-12-29" class="published">29 December 2025</time>
     </dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
@@ -1849,10 +1849,11 @@ This process polls a special endpoint for that purpose.<a href="#section-8-1" cl
 </dd>
         <dd class="break"></dd>
 </dl>
-<p id="section-8.1-3">This request MUST use the DPoP-secured Access Token.<a href="#section-8.1-3" class="pilcrow">¶</a></p>
-<p id="section-8.1-4">If a DPoP proof was presented by the RP in the Deferred Code Exchange Request, the RP MUST also present a DPoP proof in this request, utilizing the same public key as previously used. The payload of the DPoP proof MUST include the <code>deferred_auth_id</code> value that matches the Deferred Authentication ID parameter provided in the request.<a href="#section-8.1-4" class="pilcrow">¶</a></p>
-<p id="section-8.1-5">The following is a non-normative example of a deferred token request:<a href="#section-8.1-5" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-8.1-6">
+<p id="section-8.1-3">If a DPoP proof was presented by the RP in the Deferred Code Exchange Request, the RP MUST also present a DPoP proof in this request.<a href="#section-8.1-3" class="pilcrow">¶</a></p>
+<p id="section-8.1-4">If the Client is a Public Client, the public key MUST be the same used in the <a href="#deferred-code-exchange-request" class="auto internal xref">Section 5.1</a>.<a href="#section-8.1-4" class="pilcrow">¶</a></p>
+<p id="section-8.1-5">The payload of the DPoP proof MUST include the <code>deferred_auth_id</code> value that matches the Deferred Authentication ID parameter provided in the request.<a href="#section-8.1-5" class="pilcrow">¶</a></p>
+<p id="section-8.1-6">The following is a non-normative example of a deferred token request:<a href="#section-8.1-6" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-8.1-7">
 <pre>POST /token HTTP/1.1
 Host: server.example.com
 Content-Type: application/x-www-form-urlencoded
@@ -1860,7 +1861,7 @@ Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
 DPoP: eyJ0eXAiOiJkcG9wK2p3dCIsImFsZyI6IkVTMjU2IiwiandrIjp7Imt0eSI6IkVDIiwieCI6Imw4dEZyaHgtMzR0VjNoUklDUkRZOXpDa0RscEJoRjQyVVFVZldWQVdCRnMiLCJ5IjoiOVZFNGpmX09rX282NHpiVFRsY3VOSmFqSG10NnY5VERWclUwQ2R2R1JEQSIsImNydiI6IlAtMjU2In19.eyJqdGkiOiJwS2piNGFEZjEiLCJodG0iOiJQT1NUIiwiaHR1IjoiaHR0cHM6Ly9zZXJ2ZXIuZXhhbXBsZS5jb20vdG9rZW4iLCJpYXQiOjE3NjM3MjMyMjB9.4dr1uoyy8m1giIcVgfsXmO_WISirgOAJxqJZul58QCu_MdxOBZ76HNO70BNyF8NJdv8HACS54etcvBr6C2iXxg
 
 grant_type=urn:openid:params:grant-type:deferred&amp;deferred_auth_id=f4oirNBUlM
-</pre><a href="#section-8.1-6" class="pilcrow">¶</a>
+</pre><a href="#section-8.1-7" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -1880,7 +1881,7 @@ grant_type=urn:openid:params:grant-type:deferred&amp;deferred_auth_id=f4oirNBUlM
 <ol start="1" type="1" class="compact type-1" id="section-8.2-2.3.2">
 <li id="section-8.2-2.3.2.1">Ensure that a DPoP proof is present in the request.<a href="#section-8.2-2.3.2.1" class="pilcrow">¶</a>
 </li>
-              <li id="section-8.2-2.3.2.2">Validate that the public key used for the DPoP proof is the same used for the Deferred Token Exchange as defined in<a href="#deferred-code-exchange-request" class="auto internal xref">Section 5.1</a>.<a href="#section-8.2-2.3.2.2" class="pilcrow">¶</a>
+              <li id="section-8.2-2.3.2.2">Validate that the public key used for the DPoP proof is the same used for the Deferred Token Exchange as defined in <a href="#deferred-code-exchange-request" class="auto internal xref">Section 5.1</a>.<a href="#section-8.2-2.3.2.2" class="pilcrow">¶</a>
 </li>
             </ol>
 </li>
@@ -2041,8 +2042,47 @@ Cache-Control: no-store
       <h2 id="name-token-request-error-respons">
 <a href="#section-10" class="section-number selfRef">10. </a><a href="#name-token-request-error-respons" class="section-name selfRef">Token Request Error Response</a>
       </h2>
-<p id="section-10-1">This will define the Token Error Response that the OP responds to the RP's poll with when the Authentication Process has finished with an error.
-This will usually be because the End-User could not be authenticated based on the provided Identity Information. Reminder to consider cancellation that has been described earlier in this specification.<a href="#section-10-1" class="pilcrow">¶</a></p>
+<p id="section-10-1">If the Token Request is invalid or unauthorized, or if the Authentication Process has not yet completed, the OpenID Provider returns an error response as described in section 3.1.3.4 of <span>[<a href="#OpenID.Core" class="cite xref">OpenID.Core</a>]</span>. The following error codes defined in <span><a href="https://rfc-editor.org/rfc/rfc8628#section-3.5" class="relref">Section 3.5</a> of [<a href="#RFC8628" class="cite xref">RFC8628</a>]</span> and section 11 of <span>[<a href="#OpenID.CIBA" class="cite xref">OpenID.CIBA</a>]</span> are used in the Token Error Response:<a href="#section-10-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlCompact dlParallel" id="section-10-2">
+        <dt id="section-10-2.1"><code>authorization_pending</code></dt>
+        <dd style="margin-left: 1.5em" id="section-10-2.2">The Authentication is being processed and has not yet completed.<a href="#section-10-2.2" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-10-2.3"><code>slow_down</code></dt>
+        <dd style="margin-left: 1.5em" id="section-10-2.4">The Client is polling too quickly and MUST slow down the rate of requests. The interval between requests MUST be increased by at least 5 seconds.<a href="#section-10-2.4" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-10-2.5"><code>expired_token</code></dt>
+        <dd style="margin-left: 1.5em" id="section-10-2.6">The <code>deferred_auth_id</code> has expired. The Client MUST restart the Authentication Process.<a href="#section-10-2.6" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-10-2.7"><code>access_denied</code></dt>
+        <dd style="margin-left: 1.5em" id="section-10-2.8">The Identity Information couldn't be attested according to the requirements of the Authentication Request, or the Authentication Process was cancelled.<a href="#section-10-2.8" class="pilcrow">¶</a>
+</dd>
+      <dd class="break"></dd>
+</dl>
+<p id="section-10-3">When using DPoP <span>[<a href="#RFC9449" class="cite xref">RFC9449</a>]</span>, the following error code is also applicable:<a href="#section-10-3" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlCompact dlParallel" id="section-10-4">
+        <dt id="section-10-4.1"><code>invalid_dpop_proof</code></dt>
+        <dd style="margin-left: 1.5em" id="section-10-4.2">The DPoP proof is missing, invalid, or does not match the requirements of <a href="#token-request-using-the-authentication-request-id" class="auto internal xref">Section 8.1</a>.<a href="#section-10-4.2" class="pilcrow">¶</a>
+</dd>
+      <dd class="break"></dd>
+</dl>
+<p id="section-10-5">If the <code>deferred_auth_id</code> is invalid or was issued to another Client, an <code>invalid_grant</code> error MUST be returned as defined in <span><a href="https://rfc-editor.org/rfc/rfc6749#section-5.2" class="relref">Section 5.2</a> of [<a href="#RFC6749" class="cite xref">RFC6749</a>]</span>.<a href="#section-10-5" class="pilcrow">¶</a></p>
+<p id="section-10-6">If a Client continually polls quickier than the <code>interval</code> parameter of the Deferred Code Exchange Response, the OP MAY respond with an <code>invalid_request</code> error.<a href="#section-10-6" class="pilcrow">¶</a></p>
+<p id="section-10-7">If a Client receives an <code>invalid_request</code> error, it MUST not make any further requests for the same <code>deferred_auth_id</code>.<a href="#section-10-7" class="pilcrow">¶</a></p>
+<p id="section-10-8">The following is a non-normative example of a Token Request Error Response:<a href="#section-10-8" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-10-9">
+<pre>HTTP/1.1 400 Bad Request
+Content-Type: application/json
+Cache-Control: no-store
+
+{
+  "error": "authorization_pending",
+  "error_description": "The authentication is still being processed."
+}
+</pre><a href="#section-10-9" class="pilcrow">¶</a>
+</div>
 </section>
 </div>
 <div id="deferred-code-exchange-error-response">
@@ -2216,6 +2256,10 @@ One option is to use mutual TLS.<a href="#section-16.1-3" class="pilcrow">¶</a>
 <dt id="RFC8414">[RFC8414]</dt>
         <dd>
 <span class="refAuthor">Jones, M.</span>, <span class="refAuthor">Sakimura, N.</span>, and <span class="refAuthor">J. Bradley</span>, <span class="refTitle">"OAuth 2.0 Authorization Server Metadata"</span>, <span class="seriesInfo">RFC 8414</span>, <span class="seriesInfo">DOI 10.17487/RFC8414</span>, <time datetime="2018-06" class="refDate">June 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8414">https://www.rfc-editor.org/info/rfc8414</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8628">[RFC8628]</dt>
+        <dd>
+<span class="refAuthor">Denniss, W.</span>, <span class="refAuthor">Bradley, J.</span>, <span class="refAuthor">Jones, M.</span>, and <span class="refAuthor">H. Tschofenig</span>, <span class="refTitle">"OAuth 2.0 Device Authorization Grant"</span>, <span class="seriesInfo">RFC 8628</span>, <span class="seriesInfo">DOI 10.17487/RFC8628</span>, <time datetime="2019-08" class="refDate">August 2019</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8628">https://www.rfc-editor.org/info/rfc8628</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC9449">[RFC9449]</dt>
         <dd>
