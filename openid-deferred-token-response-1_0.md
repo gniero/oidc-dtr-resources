@@ -324,7 +324,7 @@ This will be configured in client registration metadata and should only be used 
 This will define the steps for the RP to get the result of the Authentication Process.
 This process polls a special endpoint for that purpose.
 
-## Token Request using the Authentication Request ID
+## Token Request using the Authentication Request ID {#token-request-using-the-authentication-request-id}
 
 The Client makes an HTTP POST request to the Token Endpoint by sending the following parameters using the `application/x-www-form-urlencoded` format:
 
@@ -334,9 +334,11 @@ The Client makes an HTTP POST request to the Token Endpoint by sending the follo
 `deferred_auth_id`
 : REQUIRED. The unique identifier to identify the Authentication Request made by the Client. The OP MUST check whether the `deferred_code` was issued to this Client in response to an Authentication Request. Otherwise, an error MUST be returned.
 
-This request MUST use the DPoP-secured Access Token.
+If a DPoP proof was presented by the RP in the Deferred Code Exchange Request, the RP MUST also present a DPoP proof in this request. 
 
-If a DPoP proof was presented by the RP in the Deferred Code Exchange Request, the RP MUST also present a DPoP proof in this request, utilizing the same public key as previously used. The payload of the DPoP proof MUST include the `deferred_auth_id` value that matches the Deferred Authentication ID parameter provided in the request.
+If the Client is a Public Client, the public key MUST be the same used in the (#deferred-code-exchange-request). 
+
+The payload of the DPoP proof MUST include the `deferred_auth_id` value that matches the Deferred Authentication ID parameter provided in the request.
 
 The following is a non-normative example of a deferred token request:
 
@@ -358,7 +360,7 @@ The OP MUST validate the request received as follows:
 2. Ensure the Deferred Authentication ID was issued to the authenticated Client.
 3. If the Client is a Public Client as defined in [@!RFC6749] and a DPoP proof was associated with the Deferred Authentication ID as specified in (#successful-deferred-code-exchange-response):
    1. Ensure that a DPoP proof is present in the request.
-   2. Validate that the public key used for the DPoP proof is the same used for the Deferred Token Exchange as defined in(#deferred-code-exchange-request).
+   2. Validate that the public key used for the DPoP proof is the same used for the Deferred Token Exchange as defined in (#deferred-code-exchange-request).
 4. If a DPoP proof is provided in the request:
    1. Validate the DPoP token in accordance with [@!RFC9449, section 4.3].
    2. Check if the DPoP proof payload contains the `deferred_auth_id` matching the one sent in the Deferred Authentication ID parameter.
@@ -488,8 +490,43 @@ Cache-Control: no-store
 
 # Token Request Error Response {#token-request-error-response}
 
-This will define the Token Error Response that the OP responds to the RP's poll with when the Authentication Process has finished with an error.
-This will usually be because the End-User could not be authenticated based on the provided Identity Information. Reminder to consider cancellation that has been described earlier in this specification.
+If the Token Request is invalid or unauthorized, or if the Authentication Process has not yet completed, the OpenID Provider returns an error response as described in section 3.1.3.4 of [@!OpenID.Core]. The following error codes defined in [@!RFC8628, section 3.5] and section 11 of [@!OpenID.CIBA] are used in the Token Error Response:
+
+`authorization_pending`
+: The Authentication is being processed and has not yet completed.
+
+`slow_down`
+: The Client is polling too quickly and MUST slow down the rate of requests. The interval between requests MUST be increased by at least 5 seconds.
+
+`expired_token`
+: The `deferred_auth_id` has expired. The Client MUST restart the Authentication Process.
+
+`access_denied`
+: The Identity Information couldn't be attested according to the requirements of the Authentication Request, or the Authentication Process was cancelled.
+
+When using DPoP [@!RFC9449], the following error code is also applicable:
+
+`invalid_dpop_proof`
+: The DPoP proof is missing, invalid, or does not match the requirements of (#token-request-using-the-authentication-request-id).
+
+If the `deferred_auth_id` is invalid or was issued to another Client, an `invalid_grant` error MUST be returned as defined in [@!RFC6749, section 5.2].
+
+If a Client continually polls quickier than the `interval` parameter of the Deferred Code Exchange Response, the OP MAY respond with an `invalid_request` error.
+
+If a Client receives an `invalid_request` error, it MUST not make any further requests for the same `deferred_auth_id`.
+
+The following is a non-normative example of a Token Request Error Response:
+
+```
+HTTP/1.1 400 Bad Request
+Content-Type: application/json
+Cache-Control: no-store
+
+{
+  "error": "authorization_pending",
+  "error_description": "The authentication is still being processed."
+}
+```
 
 # Deferred Code Exchange Error Response
 
