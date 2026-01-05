@@ -530,13 +530,43 @@ Cache-Control: no-store
 
 # Deferred Code Exchange Error Response
 
-This will define the Initial Token Error Response that the OP responds to the RP's Initial Token Request with when the Initial Token Request could not be validated.
-This will usually be because the Initial Token Request Validation failed, which will usually happen if the deferred code is expired, the DPoP proof is wrong, or the DPoP headers are missing.
+If the Deferred Code Exchange Request is invalid or unauthorized, the OpenID Provider constructs an error response as described in section 3.1.3.4 of [@!OpenID.Core]. The following error codes have an extended meaning in the context of Deferred Code Exchange:
+
+`invalid_grant`
+: The `deferred_code` is invalid, expired, or was issued to another Client.
+
+`invalid_dpop_proof`
+: The DPoP proof is missing, invalid, or does not match the requirements of (#deferred-code-exchange-request).
+
+The following is a non-normative example of a Deferred Code Exchange Error Response:
+
+```
+HTTP/1.1 400 Bad Request
+Content-Type: application/json
+Cache-Control: no-store
+
+{
+  "error": "invalid_grant",
+  "error_description": "The request grant is invalid, expired, or was issued to another client."
+}
+```
 
 # Authentication Request Error Response {#authentication-request-error-response}
 
-This will define the Authentication Request Error Response that the OP responds to the RP's Authentication Request with when the Authentication Request could not be started.
-This will usually be because the Authentication Request Validation failed, because the End-User did not authorize the request, or because the End-User did not provide acceptable Identity Information to the OP.
+When an Authentication Request is invalid, or the End-User cancels or fails to provide Identity Information, the OpenID Provider creates an Authentication Error Response.
+
+This error response means that no further processing will be performed for the corresponding Authentication Request. The OP MUST return the error response in accordance with section 3.1.2.6 of [@!OpenID.Core].
+
+The following is a non-normative example of an Authentication Request Error Response:
+
+```
+HTTP/1.1 302 Found
+  Location: https://client.example.org/cb?
+    error=unauthorized_client
+    &error_description=
+      Client%20is%20not%20authorized%20to%20use%20deferred_code%20response%20type
+    &state=af0ifjsldkj
+```
 
 # Authentication Cancellation Request Error Response
 
