@@ -1212,7 +1212,7 @@ li > p:last-of-type:only-child {
 <thead><tr>
 <td class="left"></td>
 <td class="center">openid-deferred-token-response</td>
-<td class="right">December 2025</td>
+<td class="right">January 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Jacobsen &amp; de Oliveira Niero</td>
@@ -1227,7 +1227,7 @@ li > p:last-of-type:only-child {
 <dd class="workgroup">OpenID Connect</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-12-29" class="published">29 December 2025</time>
+<time datetime="2026-01-06" class="published">6 January 2026</time>
     </dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
@@ -1992,10 +1992,12 @@ The OP SHOULD also accept responses with HTTP 200 OK, and any HTTP body in the r
 <div class="alignLeft art-text artwork" id="section-9.1-5">
 <pre>POST /df-authentication/cancel HTTP/1.1
 Host: server.example.com
-Content-Type: application/x-www-form-urlencoded
+Content-Type: application/json
 Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
 
-deferred_auth_id=SplxlOBeZQQYbYS6WxSbIA
+{
+  "deferred_auth_id": "SplxlOBeZQQYbYS6WxSbIA"
+}
 </pre><a href="#section-9.1-5" class="pilcrow">¶</a>
 </div>
 </section>
