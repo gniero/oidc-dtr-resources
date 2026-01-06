@@ -455,10 +455,12 @@ The following is a non-normative example of an authentication cancellation reque
 ```
 POST /df-authentication/cancel HTTP/1.1
 Host: server.example.com
-Content-Type: application/x-www-form-urlencoded
+Content-Type: application/json
 Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
 
-deferred_auth_id=SplxlOBeZQQYbYS6WxSbIA
+{
+  "deferred_auth_id": "SplxlOBeZQQYbYS6WxSbIA"
+}
 ```
 
 ## Authentication Cancellation Request Validation
