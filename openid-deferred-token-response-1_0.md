@@ -587,6 +587,9 @@ The push mode is not appropriate for long-running high-value Authentication Proc
 
 The Ping Callback enables long-running Authentication Processes to occur without wasting network resources on a large amount of Poll requests.
 
+In case an OpenID Provider returns an `authorization_pending` Token Request Error Response after sending a Ping Callback, the Relying Party SHOULD keep sending Token Requests.
+This improves the success rates in distributed systems that may incorrectly send Ping Callbacks too early and prevents denial-of-service attacks in case the Deferred Client Notification Endpoint is compromised.
+
 # Privacy Considerations
 
 # Security Considerations
