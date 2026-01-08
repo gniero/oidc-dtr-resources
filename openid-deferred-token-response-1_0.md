@@ -513,7 +513,7 @@ When using DPoP [@!RFC9449], the following error code is also applicable:
 
 If the `deferred_auth_id` is invalid or was issued to another Client, an `invalid_grant` error MUST be returned as defined in [@!RFC6749, section 5.2].
 
-If a Client continually polls quickier than the `interval` parameter of the Deferred Code Exchange Response, the OP MAY respond with an `invalid_request` error.
+If a Client continually polls faster than the `interval` parameter of the Deferred Code Exchange Response, the OP MAY respond with an `invalid_request` error.
 
 If a Client receives an `invalid_request` error, it MUST not make any further requests for the same `deferred_auth_id`.
 
