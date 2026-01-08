@@ -501,7 +501,7 @@ If the Token Request is invalid or unauthorized, or if the Authentication Proces
 : The Client is polling too quickly and MUST slow down the rate of requests. The interval between requests MUST be increased by at least 5 seconds.
 
 `expired_token`
-: The `deferred_auth_id` has expired. The Client MUST restart the Authentication Process.
+: The `deferred_auth_id` has expired. The Client MUST stop polling with this `deferred_auth_id` and MAY restart the Authentication Process.
 
 `access_denied`
 : The Identity Information couldn't be attested according to the requirements of the Authentication Request, or the Authentication Process was cancelled.
