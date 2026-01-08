@@ -1379,6 +1379,9 @@ li > p:last-of-type:only-child {
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14.2.3">
                 <p id="section-toc.1-1.14.2.3.1"><a href="#section-14.3" class="auto internal xref">14.3</a>.  <a href="#name-design-considerations-for-p" class="internal xref">Design Considerations for Poll and Ping</a></p>
 </li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14.2.4">
+                <p id="section-toc.1-1.14.2.4.1"><a href="#section-14.4" class="auto internal xref">14.4</a>.  <a href="#name-context-on-the-progress-of-" class="internal xref">Context on the Progress of Incomplete Authentication Processes</a></p>
+</li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15">
@@ -2178,6 +2181,23 @@ The push mode is not appropriate for long-running high-value Authentication Proc
 <p id="section-14.3-2">The Ping Callback enables long-running Authentication Processes to occur without wasting network resources on a large amount of Poll requests.<a href="#section-14.3-2" class="pilcrow">¶</a></p>
 <p id="section-14.3-3">In case an OpenID Provider returns an <code>authorization_pending</code> Token Request Error Response after sending a Ping Callback, the Relying Party SHOULD keep sending Token Requests.
 This improves the success rates in distributed systems that may incorrectly send Ping Callbacks too early and prevents denial-of-service attacks in case the Deferred Client Notification Endpoint is compromised.<a href="#section-14.3-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="context-on-the-progress-of-incomplete-authentication-processes">
+<section id="section-14.4">
+        <h3 id="name-context-on-the-progress-of-">
+<a href="#section-14.4" class="section-number selfRef">14.4. </a><a href="#name-context-on-the-progress-of-" class="section-name selfRef">Context on the Progress of Incomplete Authentication Processes</a>
+        </h3>
+<p id="section-14.4-1">OpenID Providers SHOULD include appropriate context regarding the progress of the Authentication Process when responding with a Token Request Error Response because the Authentication Process has not yet been completed.
+Such context SHOULD be included in the <code>error_description</code> field of the Token Request Error Response.<a href="#section-14.4-1" class="pilcrow">¶</a></p>
+<p id="section-14.4-2">Appropriate context regarding the progress depends on the use case and the nature of the Authentication Process and the Identity Information.
+The Relying Party MAY forward the context to the End User if appropriate.<a href="#section-14.4-2" class="pilcrow">¶</a></p>
+<p id="section-14.4-3">Examples of appropriate context regarding the progress of the Authentication Process include:
+1. If the Authentication Process includes multiple steps, the step currently being performed.
+2. If the OpenID Provider uses a queue system to schedule Authentication Process work, the number of Authentication Processes queued before the current one.
+3. An estimate of the remaining processing time, if available.<a href="#section-14.4-3" class="pilcrow">¶</a></p>
+<p id="section-14.4-4">The OpenID Provider MAY communicate the progress of each Authentication Process to the Relying Party in other ways.
+Mechanisms for doing so are outside the scope of this specification.<a href="#section-14.4-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
