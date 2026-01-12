@@ -450,6 +450,12 @@ The Client makes an HTTP POST request to the Authentication Cancellation Endpoin
 `deferred_auth_id`
 : REQUIRED. The unique identifier to identify the Authentication Request made by the Client. The OP MUST check whether the `deferred_auth_id` was issued to this Client in response to an Authentication Request. Otherwise, an error MUST be returned.
 
+If a DPoP proof was presented by the RP in the Deferred Code Exchange Request, the RP MUST also present a DPoP proof in this request. 
+
+If the Client is a Public Client, the public key MUST be the same used in the (#deferred-code-exchange-request). 
+
+The payload of the DPoP proof MUST include the `deferred_auth_id` value that matches the Deferred Authentication ID parameter provided in the request.
+
 The following is a non-normative example of an authentication cancellation request:
 
 ```
@@ -457,6 +463,7 @@ POST /df-authentication/cancel HTTP/1.1
 Host: server.example.com
 Content-Type: application/json
 Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
+DPoP: eyJ0eXAiOiJkcG9wK2p3dCIsImFsZyI6IlJTMjU2IiwiandrIjp7Imt0eSI6IkVDIiwieCI6Imw4dEZyaHgtMzR0VjNoUklDUkRZOXpDa0RscEJoRjQyVVFVZldWQVdCRnMiLCJ5IjoiOVZFNGpmX09rX282NHpiVFRsY3VOSmFqSG10NnY5VERWclUwQ2R2R1JEQSIsImNydiI6IlAtMjU2In19.eyJqdGkiOiJwS2piNGFEZjEiLCJodG0iOiJQT1NUIiwiaHR1IjoiaHR0cHM6Ly9zZXJ2ZXIuZXhhbXBsZS5jb20vZGYtYXV0aGVudGljYXRpb24vY2FuY2VsIiwiaWF0IjoxNzYzNzIzMTkwfQ.Ux89nsFXQLRKJxW5OZrOTSSQWtRAZsfB5542hICkOoOBQIOZua5US4sX7JLUqklykKSCHKeWB1FFZF4PJCmTikY9-RQPKh_rQlGFXUjnUUuAi_zatJPMh3e94EdHzHXIkUpNHV6HOTQfJZntM-eRZMGLBoFGKEiHpJlWSLWtV6pRV4GIvE8FgimNP111G_8ZSfty6K-gmIUlDZHl7LHo1GotiRuGyQOxiyqEPqV35unZiskdyIsisnA2O7nXViAD9ARuGAuM-eFlE6QJ1ji4aAPAUJnPLA0mbRhsP2DYU8YDee9tAbAkl9e45l9zhLsdEbQT07yv8zMb7zuRuczQZQ
 
 {
   "deferred_auth_id": "SplxlOBeZQQYbYS6WxSbIA"
@@ -469,7 +476,13 @@ The OP MUST validate the request received as follows:
 
 1. Authenticate the Client in accordance with Section 9 of [@!OpenID.Core].
 2. Ensure the given `deferred_auth_id` was issued to the authenticated Client.
-3. Verify that no access token has been issued for the Deferred Authentication.
+3. If the Client is a Public Client as defined in [@!RFC6749] and a DPoP proof was associated with the Deferred Authentication ID as specified in (#successful-deferred-code-exchange-response):
+   1. Ensure that a DPoP proof is present in the request.
+   2. Validate that the public key used for the DPoP proof is the same used for the Deferred Token Exchange as defined in (#deferred-code-exchange-request).
+4. If a DPoP proof is provided in the request:
+   1. Validate the DPoP token in accordance with [@!RFC9449, section 4.3].
+   2. Check if the DPoP proof payload contains the `deferred_auth_id` matching the one sent in the Deferred Authentication ID parameter.
+5. Verify that no access token has been issued for the Deferred Authentication.
 
 After successful validation, the OP marks this Authentication Request as cancelled. Any requests to poll for the result of the Authentication Process after the OP accepts the cancellation request MUST be handled as described in (#token-request-error-response). 
 
