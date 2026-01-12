@@ -194,7 +194,7 @@ Note that an Authentication Request Acknowledgment does not constitute a final A
 An Authentication Request Acknowledgment is composed of the following parameters:
 
 `deferred_code`
-: REQUIRED. This is a unique identifier to identify the Authentication Request made by the Client. It MUST contain sufficient entropy (a minimum of 128 bits while 160 bits is RECOMMENDED) to make brute force guessing or forgery of a valid auth_req_id computationally infeasible. The means of achieving this are implementation-specific, with possible approaches including secure pseudorandom number generation or cryptographically secured self-contained tokens. The OpenID Provider MUST restrict the characters used to 'A'-'Z', 'a'-'z', '0'-'9', '.', '-' and '_', to reduce the chance of the client incorrectly decoding or re-encoding the auth_req_id; this character set was chosen to allow the server to use unpadded base64url if it wishes. The identifier MUST be treated as opaque by the client.
+: REQUIRED. This is a unique identifier to identify the Authentication Request made by the Client. It MUST contain sufficient entropy (a minimum of 128 bits while 160 bits is RECOMMENDED) to make brute force guessing or forgery of a valid `deferred_code` computationally infeasible. The means of achieving this are implementation-specific, with possible approaches including secure pseudorandom number generation or cryptographically secured self-contained tokens. The OpenID Provider MUST restrict the characters used to 'A'-'Z', 'a'-'z', '0'-'9', '.', '-' and '_', to reduce the chance of the client incorrectly decoding or re-encoding the `deferred_code`; this character set was chosen to allow the server to use unpadded base64url if it wishes. The identifier MUST be treated as opaque by the client.
 
 `state`
 : OAuth 2.0 state value. REQUIRED if the Authorization Request included the state parameter. Set to the value received from the Client.
@@ -455,10 +455,12 @@ The following is a non-normative example of an authentication cancellation reque
 ```
 POST /df-authentication/cancel HTTP/1.1
 Host: server.example.com
-Content-Type: application/x-www-form-urlencoded
+Content-Type: application/json
 Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
 
-deferred_auth_id=SplxlOBeZQQYbYS6WxSbIA
+{
+  "deferred_auth_id": "SplxlOBeZQQYbYS6WxSbIA"
+}
 ```
 
 ## Authentication Cancellation Request Validation
@@ -501,7 +503,7 @@ In Addition to the error codes defined in [@!RFC6749, section 5.2], this specifi
 :   The Client is polling too quickly and MUST slow down the rate of requests. The interval between requests MUST be increased by at least 5 seconds.
 
 `expired_token`
-:   The `deferred_auth_id` has expired. The Client MUST restart the Authentication Process.
+: The `deferred_auth_id` has expired. The Client MUST stop polling with this `deferred_auth_id` and MAY restart the Authentication Process.
 
 `access_denied`
 :   The Identity Information couldn't be attested according to the requirements of the Authentication Request, or the Authentication Process was cancelled.
@@ -513,7 +515,7 @@ The following behaviors apply to the error responses:
 
 * If the `deferred_auth_id` is invalid or was issued to another Client, an `invalid_grant` error MUST be returned as defined in [@!RFC6749, section 5.2].
 
-* If a Client continually polls quickier than the `interval` parameter of the Deferred Code Exchange Response, the OP MAY respond with an `invalid_request` error.
+* If a Client continually polls faster than the `interval` parameter of the Deferred Code Exchange Response, the OP MAY respond with an `invalid_request` error.
 
 * If a Client receives an `invalid_request` error, it MUST not make any further requests for the same `deferred_auth_id`.
 
@@ -670,6 +672,25 @@ This specification intentionally does not define a "push" mode for delivering a 
 The push mode is not appropriate for long-running high-value Authentication Processes since losing the single push request would mean losing the outcome of the entire Authentication Process.
 
 The Ping Callback enables long-running Authentication Processes to occur without wasting network resources on a large amount of Poll requests.
+
+In case an OpenID Provider returns an `authorization_pending` Token Request Error Response after sending a Ping Callback, the Relying Party SHOULD keep sending Token Requests.
+This improves the success rates in distributed systems that may incorrectly send Ping Callbacks too early and prevents denial-of-service attacks in case the Deferred Client Notification Endpoint is compromised.
+
+## Context on the Progress of Incomplete Authentication Processes
+
+OpenID Providers SHOULD include appropriate context regarding the progress of the Authentication Process when responding with a Token Request Error Response because the Authentication Process has not yet been completed.
+Such context SHOULD be included in the `error_description` field of the Token Request Error Response.
+
+Appropriate context regarding the progress depends on the use case and the nature of the Authentication Process and the Identity Information.
+The Relying Party MAY forward the context to the End User if appropriate.
+
+Examples of appropriate context regarding the progress of the Authentication Process include:
+1. If the Authentication Process includes multiple steps, the step currently being performed.
+2. If the OpenID Provider uses a queue system to schedule Authentication Process work, the number of Authentication Processes queued before the current one.
+3. An estimate of the remaining processing time, if available.
+
+The OpenID Provider MAY communicate the progress of each Authentication Process to the Relying Party in other ways.
+Mechanisms for doing so are outside the scope of this specification.
 
 # Privacy Considerations
 
