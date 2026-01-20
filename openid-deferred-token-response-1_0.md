@@ -621,7 +621,7 @@ When an invalid Authentication Cancellation Request is received, the OpenID Prov
 : The request is missing a required parameter, or is otherwise malformed.
 
 `invalid_client`
-: Client authentication failed (e.g., invalid client credentials, unknown client, no client authentication included, or unsupported authentication method).The authorization server MAY return an HTTP 401 (Unauthorized) status code to indicate which HTTP authentication schemes are supported.  If the client attempted to authenticate via the "Authorization" request header field, the authorization server MUST respond with an HTTP 401 (Unauthorized) status code and include the "WWW-Authenticate" response header field matching the authentication scheme used by the client.
+: Client authentication failed (e.g. invalid client credentials, unknown client, no client authentication included, or unsupported authentication method). The authorization server MAY return an HTTP 401 (Unauthorized) status code to indicate which HTTP authentication schemes are supported. If the client attempted to authenticate via the "Authorization" request header field, the authorization server MUST respond with an HTTP 401 (Unauthorized) status code and include the "WWW-Authenticate" response header field matching the authentication scheme used by the client.
 
 `unauthorized_client`
 : The authenticated client is not authorized to use the Deferred Code Grant Type.
