@@ -181,7 +181,7 @@ The nature and extent of the Identity Information collected are determined by th
 
 If no interaction is required, or the End-User successfully completes the required interaction, the OP continues processing the Authentication Request. If the End-User declines or fails to provide sufficient information, the OP MUST return an error response as defined in (#authentication-request-error-response).
 
-## Authentication Request Acknowledgment
+## Authentication Request Acknowledgment {#authentication-request-acknowledgment}
 
 If the Authentication Request is successfully processed in accordance with (#op-obtains-end-user-authorization-and-identity-information), the OpenID Provider (OP) returns a response to the Relying Party indicating that the request has been accepted and any required user interaction has been completed.
 
@@ -210,7 +210,16 @@ Location: https://client.example.org/cb?
 
 ## Authentication Request Acknowledgment Validation
 
-This will define the logic that RPs should apply to validate Authentication Request Acknowledgment responses.
+Upon receiving an Authentication Request Acknowledgment, the Relying Party (RP) MUST validate the response as follows:
+
+1. Ensure that the `deferred_code` parameter is present.
+2. If the Client includes a `state` parameter in Authentication Requests, verify that the `state` parameter is present in the response. The Client MAY perform additional validation to match the `state` parameter response with the one present in the Authentication Request.
+
+When the Client requests the `deferred_code code` response type, it MUST distinguish if the response being validated is an [Authentication Request Acknowledgment](#authentication-request-acknowledgment) or a Successful Authentication Response of [@!OpenID.Core]. This can be achieved by checking for the presence of the `deferred_code` parameter. Determining the type of response is crucial for the Client to proceed with the appropriate flow.
+
+Responses containing both `code` and `deferred_code` parameters MUST be considered invalid.
+
+Any unrecognized parameter MUST be ignored by the Client. 
 
 # Exchanging the Deferred Code to obtain Deferred Authentication ID
 
