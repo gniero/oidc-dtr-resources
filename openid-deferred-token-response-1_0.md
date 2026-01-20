@@ -450,7 +450,7 @@ Other mechanisms such as a timeout parameter in the authentication request MAY b
 
 The Authentication Cancellation can be achieved by the RP sending a request to the OP as described in the following sections. 
 
-## Authentication Cancellation Request
+## Authentication Cancellation Request {#authentication-cancellation-request}
 
 Once the RP gets possession of the `deferred_auth_id` from the Deferred Code Exchange Response, it can send an Authentication Cancellation Request to the OP in order to cancel the ongoing Authentication Process.
 
@@ -514,30 +514,43 @@ Cache-Control: no-store
 
 # Token Request Error Response {#token-request-error-response}
 
-If the Token Request is invalid or unauthorized, or if the Authentication Process has not yet completed, the OpenID Provider returns an error response as described in section 3.1.3.4 of [@!OpenID.Core]. The following error codes defined in [@!RFC8628, section 3.5] and section 11 of [@!OpenID.CIBA] are used in the Token Error Response:
+If the Token Request is invalid or unauthorized, or if the Authentication Process has not yet completed, the OpenID Provider returns an error response as described in section 3.1.3.4 of [@!OpenID.Core].
+
+In Addition to the error codes defined in [@!RFC6749, section 5.2], this specification uses error codes defined in [@!RFC8628, section 3.5], [@!RFC9449, section 5] and section 11 of [@!OpenID.CIBA]:
 
 `authorization_pending`
-: The Authentication is being processed and has not yet completed.
+:   The Authentication is being processed and has not yet completed.
 
 `slow_down`
-: The Client is polling too quickly and MUST slow down the rate of requests. The interval between requests MUST be increased by at least 5 seconds.
+:   The Client is polling too quickly and MUST slow down the rate of requests. The interval between requests MUST be increased by at least 5 seconds.
 
 `expired_token`
 : The `deferred_auth_id` has expired. The Client MUST stop polling with this `deferred_auth_id` and MAY restart the Authentication Process.
 
 `access_denied`
-: The Identity Information couldn't be attested according to the requirements of the Authentication Request, or the Authentication Process was cancelled.
-
-When using DPoP [@!RFC9449], the following error code is also applicable:
+:   The Identity Information couldn't be attested according to the requirements of the Authentication Request, or the Authentication Process was cancelled.
 
 `invalid_dpop_proof`
 : The DPoP proof is missing, invalid, or does not match the requirements of (#token-request-using-the-authentication-request-id).
 
-If the `deferred_auth_id` is invalid or was issued to another Client, an `invalid_grant` error MUST be returned as defined in [@!RFC6749, section 5.2].
+The following behaviors apply to the error responses:
 
-If a Client continually polls faster than the `interval` parameter of the Deferred Code Exchange Response, the OP MAY respond with an `invalid_request` error.
+* If the `deferred_auth_id` is invalid or was issued to another Client, an `invalid_grant` error MUST be returned as defined in [@!RFC6749, section 5.2].
 
-If a Client receives an `invalid_request` error, it MUST not make any further requests for the same `deferred_auth_id`.
+* If a Client continually polls faster than the `interval` parameter of the Deferred Code Exchange Response, the OP MAY respond with an `invalid_request` error.
+
+* If a Client receives an `invalid_request` error, it MUST not make any further requests for the same `deferred_auth_id`.
+
+The error response MUST be encoded in `application/json` media type with the following parameters:
+
+`error`
+: REQUIRED. A single ASCII error code as described above.
+
+`error_description`
+: OPTIONAL. Human-readable ASCII [USASCII] text to assist the client developer.
+
+`error_uri`
+: OPTIONAL. A URI of a web page with information about the error to provide the client developer with additional information.
 
 The following is a non-normative example of a Token Request Error Response:
 
@@ -554,40 +567,113 @@ Cache-Control: no-store
 
 # Deferred Code Exchange Error Response
 
-This will define the Initial Token Error Response that the OP responds to the RP's Initial Token Request with when the Initial Token Request could not be validated.
-This will usually be because the Initial Token Request Validation failed, which will usually happen if the deferred code is expired, the DPoP proof is wrong, or the DPoP headers are missing.
+If the Deferred Code Exchange Request is invalid or unauthorized, the OpenID Provider constructs an error response as described in section 3.1.3.4 of [@!OpenID.Core]. The Deferred Code Exchange extends the definition of the following error code:
+
+`invalid_grant`
+: The `deferred_code` is invalid, expired, or was issued to another Client.
+
+When using DPoP [@!RFC9449], the following error code is also applicable:
+
+`invalid_dpop_proof`
+: The DPoP proof is missing, invalid, or does not match the requirements of (#deferred-code-exchange-request).
+
+The error response parameters MUST be encoded in `application/json` media type with the following parameters:
+
+`error`
+: REQUIRED. Error code.
+
+`error_description`
+: OPTIONAL. Human-readable ASCII encoded text description of the error.
+
+`error_uri`
+: OPTIONAL. URI of a web page that includes additional information about the error.
+
+The following is a non-normative example of a Deferred Code Exchange Error Response:
+
+```
+HTTP/1.1 400 Bad Request
+Content-Type: application/json
+Cache-Control: no-store
+
+{
+  "error": "invalid_grant",
+  "error_description": "The request grant is invalid, expired, or was issued to another client."
+}
+```
 
 # Authentication Request Error Response {#authentication-request-error-response}
 
-This will define the Authentication Request Error Response that the OP responds to the RP's Authentication Request with when the Authentication Request could not be started.
-This will usually be because the Authentication Request Validation failed, because the End-User did not authorize the request, or because the End-User did not provide acceptable Identity Information to the OP.
+When an Authentication Request is invalid, or the End-User cancels or fails to provide Identity Information, the OpenID Provider creates an Authentication Error Response.
+
+This error response means that no further processing will be performed for the corresponding Authentication Request. The OP MUST return the error response in accordance with section 3.1.2.6 of [@!OpenID.Core].
+
+The error response parameters are the following:
+
+`error`
+: REQUIRED. Error code.
+
+`error_description`
+: OPTIONAL. Human-readable ASCII encoded text description of the error.
+
+`error_uri`
+: OPTIONAL. URI of a web page that includes additional information about the error.
+
+`state`
+: OAuth 2.0 state value. REQUIRED if the Authorization Request included the state parameter. Set to the value received from the Client.
+
+Response error parameters MUST be encoded in accordance to the `response_mode` used in the original [Authentication Request](#authentication-request). See [@?OAuth.Responses] and [@?OAuth.Post] for examples.
+
+
+The following is a non-normative example of an Authentication Request Error Response:
+
+```
+HTTP/1.1 302 Found
+  Location: https://client.example.org/cb?
+    error=unauthorized_client
+    &error_description=
+      Client%20is%20not%20authorized%20to%20use%20deferred_code%20response%20type
+    &state=af0ifjsldkj
+```
 
 # Authentication Cancellation Request Error Response
 
-An Authentication Cancellation Error Response is returned directly from the Cancellation Endpoint in response to the Cancellation Request sent by the RP. The applicable error codes are detailed below (some of which are in conformance with OAuth 2.0 section [@RFC6749, 5.2]).
+When an invalid Authentication Cancellation Request is received, the OpenID Provider returns an error response that contains one of the following error codes:
 
-Authentication Error Responses are sent in the same format as Token Error Responses, i.e. the HTTP response body uses the application/json media type with the following parameters:
-
-`error`
-: REQUIRED. A single ASCII error code from one present in the list below.
-
-`error_description`
-: OPTIONAL. Human-readable ASCII [USASCII] text providing additional information, used to assist the client developer in understanding the error that occurred. Values for the "error_description" parameter MUST NOT include characters outside the set %x20-21 / %x23-5B / %x5D-7E.
-
-`error_uri`
-: OPTIONAL. A URI identifying a human-readable web page with information about the error to provide the client developer with additional information. Values for the "error_uri" parameter MUST conform to the URI-reference syntax and thus MUST NOT include characters outside the set %x21 / %x23-5B / %x5D-7E.
-
-List of authentication error codes associated with HTTP Errors.
-
-HTTP 400 Bad Request
-
-`invalid_request`
-: The request is missing a required parameter, includes an invalid parameter value, includes a parameter more than once, contains more than one of the hints, or is otherwise malformed.
-
-HTTP 401 Unauthorized
+`invalid_request` 
+: The request is missing a required parameter, or is otherwise malformed.
 
 `invalid_client`
-: Client authentication failed (e.g., invalid client credentials, unknown client, no client authentication included, or unsupported authentication method).
+: Client authentication failed (e.g. invalid client credentials, unknown client, no client authentication included, or unsupported authentication method). The authorization server MAY return an HTTP 401 (Unauthorized) status code to indicate which HTTP authentication schemes are supported. If the client attempted to authenticate via the "Authorization" request header field, the authorization server MUST respond with an HTTP 401 (Unauthorized) status code and include the "WWW-Authenticate" response header field matching the authentication scheme used by the client.
+
+`unauthorized_client`
+: The authenticated client is not authorized to use the Deferred Code Grant Type.
+
+`invalid_dpop_proof`
+: The DPoP proof is missing, invalid, or does not match the requirements of [Authentication Cancellation Request](#authentication-cancellation-request).
+
+The error response MUST use the 400 status code unless explicitly specified otherwise, and parameters MUST be encoded in `application/json` media type:
+
+`error`
+: REQUIRED. A single ASCII error code as described above.
+
+`error_description`
+: OPTIONAL. Human-readable ASCII [USASCII] text to assist the client developer.
+
+`error_uri`
+: OPTIONAL. A URI of a web page with information about the error to provide the client developer with additional information.
+
+The following is a non-normative example of a Deferred Code Exchange Error Response:
+
+```
+HTTP/1.1 400 Bad Request
+Content-Type: application/json
+Cache-Control: no-store
+
+{
+  "error": "unauthorized_client",
+  "error_description": "The client is not authorized to use the Deferred Code Grant Type."
+}
+```
 
 # Implementation Considerations
 
@@ -714,6 +800,36 @@ No new registrations.
       <organization abbrev="KDDI Corporation">KDDI Corporation</organization>
     </author>
     <date day="1" month="October" year="2024"/>
+  </front>
+</reference>
+<reference anchor="OAuth.Responses" target="https://openid.net/specs/oauth-v2-multiple-response-types-1_0.html">
+  <front>
+	  <title>OAuth 2.0 Multiple Response Type Encoding Practices</title>
+	  <author fullname="Breno de Medeiros" initials="B." role="editor" surname="de Medeiros">
+	    <organization abbrev="Google">Google</organization>
+	  </author>
+	  <author fullname="Marius Scurtescu" initials="M." surname="Scurtescu">
+	    <organization abbrev="Google">Google</organization>
+	  </author>
+	  <author fullname="Paul Tarjan" initials="P." surname="Tarjan">
+	    <organization abbrev="Facebook"> Facebook</organization>
+	  </author>
+	  <author fullname="Michael B. Jones" initials="M.B." surname="Jones">
+	    <organization abbrev="Microsoft">Microsoft</organization>
+	  </author>
+	  <date day="25" month="February" year="2014" />
+  </front>
+</reference>
+<reference anchor="OAuth.Post" target="http://openid.net/specs/oauth-v2-form-post-response-mode-1_0.html">
+  <front>
+	  <title>OAuth 2.0 Form Post Response Mode</title>
+	  <author fullname="Michael B. Jones" initials="M.B." surname="Jones">
+	    <organization abbrev="Microsoft">Microsoft</organization>
+	  </author>
+	  <author fullname="Brian Campbell" initials="B." surname="Campbell">
+	    <organization abbrev="Ping Identity">Ping Identity</organization>
+	  </author>
+	  <date day="25" month="February" year="2014" />
   </front>
 </reference>
 
