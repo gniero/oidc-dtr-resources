@@ -97,7 +97,7 @@ These steps are illustrated in the following diagram:
 
 # Registration and Discovery Metadata
 
-This will define any parameters needed for registration and discovery of the DTR flow features.
+This specification declares parameters for both Authorization Server and Client. Each following section describes them accordingly.
 
 ## Authorization Server Metadata
 
@@ -111,9 +111,7 @@ OPs capable of handling the Deferred Token Response Flows MUST advertise support
 
 ## Client Registration Metadata
 
-Since the Deferred Token Response introduces a way to asynchronously notify the Client of an Authorization decision that could not be instantly made during User interaction, it is necessary for the Client to obtain this response somehow.
-
-The [@?OpenID.CIBA] introduces callback modes for the Authorization Server to inform the Client that an Authorization decision has been made, either by pushing the response directly, or notifying that a decision is available to be queried. Although some parameters work similarly, introducing them separately allows for an RP that supports both specs to handle responses on endpoints at their discretion and avoid future conflicts.
+The following Client Metadata parameter is defined by this specification to be used during Client Registration as defined in [@!RFC7591]:
 
 `deferred_client_notification_endpoint`
 : REQUIRED if the RP desires to be notified when the Authentication decision has been taken. It MUST be an HTTPS URL.
