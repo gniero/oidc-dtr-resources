@@ -1681,7 +1681,16 @@ Location: https://client.example.org/cb?
         <h3 id="name-authentication-request-ackno">
 <a href="#section-4.6" class="section-number selfRef">4.6. </a><a href="#name-authentication-request-ackno" class="section-name selfRef">Authentication Request Acknowledgment Validation</a>
         </h3>
-<p id="section-4.6-1">This will define the logic that RPs should apply to validate Authentication Request Acknowledgment responses.<a href="#section-4.6-1" class="pilcrow">¶</a></p>
+<p id="section-4.6-1">Upon receiving an Authentication Request Acknowledgment, the Relying Party (RP) MUST validate the response as follows:<a href="#section-4.6-1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="compact type-1" id="section-4.6-2">
+<li id="section-4.6-2.1">Ensure that the <code>deferred_code</code> parameter is present.<a href="#section-4.6-2.1" class="pilcrow">¶</a>
+</li>
+          <li id="section-4.6-2.2">If the Client includes a <code>state</code> parameter in Authentication Requests, verify that the <code>state</code> parameter is present in the response. The Client MAY perform additional validation to match the <code>state</code> parameter response with the one present in the Authentication Request.<a href="#section-4.6-2.2" class="pilcrow">¶</a>
+</li>
+        </ol>
+<p id="section-4.6-3">When the Client requests the <code>deferred_code code</code> response type, it MUST distinguish if the response being validated is an <a href="#authentication-request-acknowledgment">Authentication Request Acknowledgment</a> or a Successful Authentication Response of <span>[<a href="#OpenID.Core" class="cite xref">OpenID.Core</a>]</span>. This can be achieved by checking for the presence of the <code>deferred_code</code> parameter. Determining the type of response is crucial for the Client to proceed with the appropriate flow.<a href="#section-4.6-3" class="pilcrow">¶</a></p>
+<p id="section-4.6-4">Responses containing both <code>code</code> and <code>deferred_code</code> parameters MUST be considered invalid.<a href="#section-4.6-4" class="pilcrow">¶</a></p>
+<p id="section-4.6-5">Any unrecognized parameter MUST be ignored by the Client.<a href="#section-4.6-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
