@@ -2078,35 +2078,57 @@ Cache-Control: no-store
       <h2 id="name-token-request-error-respons">
 <a href="#section-10" class="section-number selfRef">10. </a><a href="#name-token-request-error-respons" class="section-name selfRef">Token Request Error Response</a>
       </h2>
-<p id="section-10-1">If the Token Request is invalid or unauthorized, or if the Authentication Process has not yet completed, the OpenID Provider returns an error response as described in section 3.1.3.4 of <span>[<a href="#OpenID.Core" class="cite xref">OpenID.Core</a>]</span>. The following error codes defined in <span><a href="https://rfc-editor.org/rfc/rfc8628#section-3.5" class="relref">Section 3.5</a> of [<a href="#RFC8628" class="cite xref">RFC8628</a>]</span> and section 11 of <span>[<a href="#OpenID.CIBA" class="cite xref">OpenID.CIBA</a>]</span> are used in the Token Error Response:<a href="#section-10-1" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlCompact dlParallel" id="section-10-2">
-        <dt id="section-10-2.1"><code>authorization_pending</code></dt>
-        <dd style="margin-left: 1.5em" id="section-10-2.2">The Authentication is being processed and has not yet completed.<a href="#section-10-2.2" class="pilcrow">¶</a>
+<p id="section-10-1">If the Token Request is invalid or unauthorized, or if the Authentication Process has not yet completed, the OpenID Provider returns an error response as described in section 3.1.3.4 of <span>[<a href="#OpenID.Core" class="cite xref">OpenID.Core</a>]</span>.<a href="#section-10-1" class="pilcrow">¶</a></p>
+<p id="section-10-2">In Addition to the error codes defined in <span><a href="https://rfc-editor.org/rfc/rfc6749#section-5.2" class="relref">Section 5.2</a> of [<a href="#RFC6749" class="cite xref">RFC6749</a>]</span>, this specification uses error codes defined in <span><a href="https://rfc-editor.org/rfc/rfc8628#section-3.5" class="relref">Section 3.5</a> of [<a href="#RFC8628" class="cite xref">RFC8628</a>]</span>, <span><a href="https://rfc-editor.org/rfc/rfc9449#section-5" class="relref">Section 5</a> of [<a href="#RFC9449" class="cite xref">RFC9449</a>]</span> and section 11 of <span>[<a href="#OpenID.CIBA" class="cite xref">OpenID.CIBA</a>]</span>:<a href="#section-10-2" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlCompact dlParallel" id="section-10-3">
+        <dt id="section-10-3.1"><code>authorization_pending</code></dt>
+        <dd style="margin-left: 1.5em" id="section-10-3.2">The Authentication is being processed and has not yet completed.<a href="#section-10-3.2" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
-<dt id="section-10-2.3"><code>slow_down</code></dt>
-        <dd style="margin-left: 1.5em" id="section-10-2.4">The Client is polling too quickly and MUST slow down the rate of requests. The interval between requests MUST be increased by at least 5 seconds.<a href="#section-10-2.4" class="pilcrow">¶</a>
+<dt id="section-10-3.3"><code>slow_down</code></dt>
+        <dd style="margin-left: 1.5em" id="section-10-3.4">The Client is polling too quickly and MUST slow down the rate of requests. The interval between requests MUST be increased by at least 5 seconds.<a href="#section-10-3.4" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
-<dt id="section-10-2.5"><code>expired_token</code></dt>
-        <dd style="margin-left: 1.5em" id="section-10-2.6">The <code>deferred_auth_id</code> has expired. The Client MUST stop polling with this <code>deferred_auth_id</code> and MAY restart the Authentication Process.<a href="#section-10-2.6" class="pilcrow">¶</a>
+<dt id="section-10-3.5"><code>expired_token</code></dt>
+        <dd style="margin-left: 1.5em" id="section-10-3.6">The <code>deferred_auth_id</code> has expired. The Client MUST stop polling with this <code>deferred_auth_id</code> and MAY restart the Authentication Process.<a href="#section-10-3.6" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
-<dt id="section-10-2.7"><code>access_denied</code></dt>
-        <dd style="margin-left: 1.5em" id="section-10-2.8">The Identity Information couldn't be attested according to the requirements of the Authentication Request, or the Authentication Process was cancelled.<a href="#section-10-2.8" class="pilcrow">¶</a>
+<dt id="section-10-3.7"><code>access_denied</code></dt>
+        <dd style="margin-left: 1.5em" id="section-10-3.8">The Identity Information couldn't be attested according to the requirements of the Authentication Request, or the Authentication Process was cancelled.<a href="#section-10-3.8" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-10-3.9"><code>invalid_dpop_proof</code></dt>
+        <dd style="margin-left: 1.5em" id="section-10-3.10">The DPoP proof is missing, invalid, or does not match the requirements of <a href="#token-request-using-the-authentication-request-id" class="auto internal xref">Section 8.1</a>.<a href="#section-10-3.10" class="pilcrow">¶</a>
 </dd>
       <dd class="break"></dd>
 </dl>
-<p id="section-10-3">When using DPoP <span>[<a href="#RFC9449" class="cite xref">RFC9449</a>]</span>, the following error code is also applicable:<a href="#section-10-3" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlCompact dlParallel" id="section-10-4">
-        <dt id="section-10-4.1"><code>invalid_dpop_proof</code></dt>
-        <dd style="margin-left: 1.5em" id="section-10-4.2">The DPoP proof is missing, invalid, or does not match the requirements of <a href="#token-request-using-the-authentication-request-id" class="auto internal xref">Section 8.1</a>.<a href="#section-10-4.2" class="pilcrow">¶</a>
+<p id="section-10-4">The following behaviors apply to the error responses:<a href="#section-10-4" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-10-5.1">
+          <p id="section-10-5.1.1">If the <code>deferred_auth_id</code> is invalid or was issued to another Client, an <code>invalid_grant</code> error MUST be returned as defined in <span><a href="https://rfc-editor.org/rfc/rfc6749#section-5.2" class="relref">Section 5.2</a> of [<a href="#RFC6749" class="cite xref">RFC6749</a>]</span>.<a href="#section-10-5.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-10-5.2">
+          <p id="section-10-5.2.1">If a Client continually polls faster than the <code>interval</code> parameter of the Deferred Code Exchange Response, the OP MAY respond with an <code>invalid_request</code> error.<a href="#section-10-5.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-10-5.3">
+          <p id="section-10-5.3.1">If a Client receives an <code>invalid_request</code> error, it MUST not make any further requests for the same <code>deferred_auth_id</code>.<a href="#section-10-5.3.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="section-10-6">The error response MUST be encoded in <code>application/json</code> media type with the following parameters:<a href="#section-10-6" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlCompact dlParallel" id="section-10-7">
+        <dt id="section-10-7.1"><code>error</code></dt>
+        <dd style="margin-left: 1.5em" id="section-10-7.2">REQUIRED. A single ASCII error code as described above.<a href="#section-10-7.2" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-10-7.3"><code>error_description</code></dt>
+        <dd style="margin-left: 1.5em" id="section-10-7.4">OPTIONAL. Human-readable ASCII [USASCII] text to assist the client developer.<a href="#section-10-7.4" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-10-7.5"><code>error_uri</code></dt>
+        <dd style="margin-left: 1.5em" id="section-10-7.6">OPTIONAL. A URI of a web page with information about the error to provide the client developer with additional information.<a href="#section-10-7.6" class="pilcrow">¶</a>
 </dd>
       <dd class="break"></dd>
 </dl>
-<p id="section-10-5">If the <code>deferred_auth_id</code> is invalid or was issued to another Client, an <code>invalid_grant</code> error MUST be returned as defined in <span><a href="https://rfc-editor.org/rfc/rfc6749#section-5.2" class="relref">Section 5.2</a> of [<a href="#RFC6749" class="cite xref">RFC6749</a>]</span>.<a href="#section-10-5" class="pilcrow">¶</a></p>
-<p id="section-10-6">If a Client continually polls faster than the <code>interval</code> parameter of the Deferred Code Exchange Response, the OP MAY respond with an <code>invalid_request</code> error.<a href="#section-10-6" class="pilcrow">¶</a></p>
-<p id="section-10-7">If a Client receives an <code>invalid_request</code> error, it MUST not make any further requests for the same <code>deferred_auth_id</code>.<a href="#section-10-7" class="pilcrow">¶</a></p>
 <p id="section-10-8">The following is a non-normative example of a Token Request Error Response:<a href="#section-10-8" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-10-9">
 <pre>HTTP/1.1 400 Bad Request
@@ -2126,8 +2148,47 @@ Cache-Control: no-store
       <h2 id="name-deferred-code-exchange-erro">
 <a href="#section-11" class="section-number selfRef">11. </a><a href="#name-deferred-code-exchange-erro" class="section-name selfRef">Deferred Code Exchange Error Response</a>
       </h2>
-<p id="section-11-1">This will define the Initial Token Error Response that the OP responds to the RP's Initial Token Request with when the Initial Token Request could not be validated.
-This will usually be because the Initial Token Request Validation failed, which will usually happen if the deferred code is expired, the DPoP proof is wrong, or the DPoP headers are missing.<a href="#section-11-1" class="pilcrow">¶</a></p>
+<p id="section-11-1">If the Deferred Code Exchange Request is invalid or unauthorized, the OpenID Provider constructs an error response as described in section 3.1.3.4 of <span>[<a href="#OpenID.Core" class="cite xref">OpenID.Core</a>]</span>. The Deferred Code Exchange extends the definition of the following error code:<a href="#section-11-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlCompact dlParallel" id="section-11-2">
+        <dt id="section-11-2.1"><code>invalid_grant</code></dt>
+        <dd style="margin-left: 1.5em" id="section-11-2.2">The <code>deferred_code</code> is invalid, expired, or was issued to another Client.<a href="#section-11-2.2" class="pilcrow">¶</a>
+</dd>
+      <dd class="break"></dd>
+</dl>
+<p id="section-11-3">When using DPoP <span>[<a href="#RFC9449" class="cite xref">RFC9449</a>]</span>, the following error code is also applicable:<a href="#section-11-3" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlCompact dlParallel" id="section-11-4">
+        <dt id="section-11-4.1"><code>invalid_dpop_proof</code></dt>
+        <dd style="margin-left: 1.5em" id="section-11-4.2">The DPoP proof is missing, invalid, or does not match the requirements of <a href="#deferred-code-exchange-request" class="auto internal xref">Section 5.1</a>.<a href="#section-11-4.2" class="pilcrow">¶</a>
+</dd>
+      <dd class="break"></dd>
+</dl>
+<p id="section-11-5">The error response parameters MUST be encoded in <code>application/json</code> media type with the following parameters:<a href="#section-11-5" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlCompact dlParallel" id="section-11-6">
+        <dt id="section-11-6.1"><code>error</code></dt>
+        <dd style="margin-left: 1.5em" id="section-11-6.2">REQUIRED. Error code.<a href="#section-11-6.2" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-11-6.3"><code>error_description</code></dt>
+        <dd style="margin-left: 1.5em" id="section-11-6.4">OPTIONAL. Human-readable ASCII encoded text description of the error.<a href="#section-11-6.4" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-11-6.5"><code>error_uri</code></dt>
+        <dd style="margin-left: 1.5em" id="section-11-6.6">OPTIONAL. URI of a web page that includes additional information about the error.<a href="#section-11-6.6" class="pilcrow">¶</a>
+</dd>
+      <dd class="break"></dd>
+</dl>
+<p id="section-11-7">The following is a non-normative example of a Deferred Code Exchange Error Response:<a href="#section-11-7" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-11-8">
+<pre>HTTP/1.1 400 Bad Request
+Content-Type: application/json
+Cache-Control: no-store
+
+{
+  "error": "invalid_grant",
+  "error_description": "The request grant is invalid, expired, or was issued to another client."
+}
+</pre><a href="#section-11-8" class="pilcrow">¶</a>
+</div>
 </section>
 </div>
 <div id="authentication-request-error-response">
@@ -2135,8 +2196,38 @@ This will usually be because the Initial Token Request Validation failed, which 
       <h2 id="name-authentication-request-erro">
 <a href="#section-12" class="section-number selfRef">12. </a><a href="#name-authentication-request-erro" class="section-name selfRef">Authentication Request Error Response</a>
       </h2>
-<p id="section-12-1">This will define the Authentication Request Error Response that the OP responds to the RP's Authentication Request with when the Authentication Request could not be started.
-This will usually be because the Authentication Request Validation failed, because the End-User did not authorize the request, or because the End-User did not provide acceptable Identity Information to the OP.<a href="#section-12-1" class="pilcrow">¶</a></p>
+<p id="section-12-1">When an Authentication Request is invalid, or the End-User cancels or fails to provide Identity Information, the OpenID Provider creates an Authentication Error Response.<a href="#section-12-1" class="pilcrow">¶</a></p>
+<p id="section-12-2">This error response means that no further processing will be performed for the corresponding Authentication Request. The OP MUST return the error response in accordance with section 3.1.2.6 of <span>[<a href="#OpenID.Core" class="cite xref">OpenID.Core</a>]</span>.<a href="#section-12-2" class="pilcrow">¶</a></p>
+<p id="section-12-3">The error response parameters are the following:<a href="#section-12-3" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlCompact dlParallel" id="section-12-4">
+        <dt id="section-12-4.1"><code>error</code></dt>
+        <dd style="margin-left: 1.5em" id="section-12-4.2">REQUIRED. Error code.<a href="#section-12-4.2" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-12-4.3"><code>error_description</code></dt>
+        <dd style="margin-left: 1.5em" id="section-12-4.4">OPTIONAL. Human-readable ASCII encoded text description of the error.<a href="#section-12-4.4" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-12-4.5"><code>error_uri</code></dt>
+        <dd style="margin-left: 1.5em" id="section-12-4.6">OPTIONAL. URI of a web page that includes additional information about the error.<a href="#section-12-4.6" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-12-4.7"><code>state</code></dt>
+        <dd style="margin-left: 1.5em" id="section-12-4.8">OAuth 2.0 state value. REQUIRED if the Authorization Request included the state parameter. Set to the value received from the Client.<a href="#section-12-4.8" class="pilcrow">¶</a>
+</dd>
+      <dd class="break"></dd>
+</dl>
+<p id="section-12-5">Response error parameters MUST be encoded in accordance to the <code>response_mode</code> used in the original <a href="#authentication-request">Authentication Request</a>. See <span>[<a href="#OAuth.Responses" class="cite xref">OAuth.Responses</a>]</span> and <span>[<a href="#OAuth.Post" class="cite xref">OAuth.Post</a>]</span> for examples.<a href="#section-12-5" class="pilcrow">¶</a></p>
+<p id="section-12-6">The following is a non-normative example of an Authentication Request Error Response:<a href="#section-12-6" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-12-7">
+<pre>HTTP/1.1 302 Found
+  Location: https://client.example.org/cb?
+    error=unauthorized_client
+    &amp;error_description=
+      Client%20is%20not%20authorized%20to%20use%20deferred_code%20response%20type
+    &amp;state=af0ifjsldkj
+</pre><a href="#section-12-7" class="pilcrow">¶</a>
+</div>
 </section>
 </div>
 <div id="authentication-cancellation-request-error-response">
@@ -2144,37 +2235,52 @@ This will usually be because the Authentication Request Validation failed, becau
       <h2 id="name-authentication-cancellation-re">
 <a href="#section-13" class="section-number selfRef">13. </a><a href="#name-authentication-cancellation-re" class="section-name selfRef">Authentication Cancellation Request Error Response</a>
       </h2>
-<p id="section-13-1">An Authentication Cancellation Error Response is returned directly from the Cancellation Endpoint in response to the Cancellation Request sent by the RP. The applicable error codes are detailed below (some of which are in conformance with OAuth 2.0 section <a href="https://rfc-editor.org/rfc/rfc6749#section-5.2" class="relref">5.2</a>).<a href="#section-13-1" class="pilcrow">¶</a></p>
-<p id="section-13-2">Authentication Error Responses are sent in the same format as Token Error Responses, i.e. the HTTP response body uses the application/json media type with the following parameters:<a href="#section-13-2" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlCompact dlParallel" id="section-13-3">
-        <dt id="section-13-3.1"><code>error</code></dt>
-        <dd style="margin-left: 1.5em" id="section-13-3.2">REQUIRED. A single ASCII error code from one present in the list below.<a href="#section-13-3.2" class="pilcrow">¶</a>
+<p id="section-13-1">When an invalid Authentication Cancellation Request is received, the OpenID Provider returns an error response that contains one of the following error codes:<a href="#section-13-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlCompact dlParallel" id="section-13-2">
+        <dt id="section-13-2.1"><code>invalid_request</code></dt>
+        <dd style="margin-left: 1.5em" id="section-13-2.2">The request is missing a required parameter, or is otherwise malformed.<a href="#section-13-2.2" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
-<dt id="section-13-3.3"><code>error_description</code></dt>
-        <dd style="margin-left: 1.5em" id="section-13-3.4">OPTIONAL. Human-readable ASCII [USASCII] text providing additional information, used to assist the client developer in understanding the error that occurred. Values for the "error_description" parameter MUST NOT include characters outside the set %x20-21 / %x23-5B / %x5D-7E.<a href="#section-13-3.4" class="pilcrow">¶</a>
+<dt id="section-13-2.3"><code>invalid_client</code></dt>
+        <dd style="margin-left: 1.5em" id="section-13-2.4">Client authentication failed (e.g. invalid client credentials, unknown client, no client authentication included, or unsupported authentication method). The authorization server MAY return an HTTP 401 (Unauthorized) status code to indicate which HTTP authentication schemes are supported. If the client attempted to authenticate via the "Authorization" request header field, the authorization server MUST respond with an HTTP 401 (Unauthorized) status code and include the "WWW-Authenticate" response header field matching the authentication scheme used by the client.<a href="#section-13-2.4" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
-<dt id="section-13-3.5"><code>error_uri</code></dt>
-        <dd style="margin-left: 1.5em" id="section-13-3.6">OPTIONAL. A URI identifying a human-readable web page with information about the error to provide the client developer with additional information. Values for the "error_uri" parameter MUST conform to the URI-reference syntax and thus MUST NOT include characters outside the set %x21 / %x23-5B / %x5D-7E.<a href="#section-13-3.6" class="pilcrow">¶</a>
+<dt id="section-13-2.5"><code>unauthorized_client</code></dt>
+        <dd style="margin-left: 1.5em" id="section-13-2.6">The authenticated client is not authorized to use the Deferred Code Grant Type.<a href="#section-13-2.6" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-13-2.7"><code>invalid_dpop_proof</code></dt>
+        <dd style="margin-left: 1.5em" id="section-13-2.8">The DPoP proof is missing, invalid, or does not match the requirements of <a href="#authentication-cancellation-request">Authentication Cancellation Request</a>.<a href="#section-13-2.8" class="pilcrow">¶</a>
 </dd>
       <dd class="break"></dd>
 </dl>
-<p id="section-13-4">List of authentication error codes associated with HTTP Errors.<a href="#section-13-4" class="pilcrow">¶</a></p>
-<p id="section-13-5">HTTP 400 Bad Request<a href="#section-13-5" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlCompact dlParallel" id="section-13-6">
-        <dt id="section-13-6.1"><code>invalid_request</code></dt>
-        <dd style="margin-left: 1.5em" id="section-13-6.2">The request is missing a required parameter, includes an invalid parameter value, includes a parameter more than once, contains more than one of the hints, or is otherwise malformed.<a href="#section-13-6.2" class="pilcrow">¶</a>
+<p id="section-13-3">The error response MUST use the 400 status code unless explicitly specified otherwise, and parameters MUST be encoded in <code>application/json</code> media type:<a href="#section-13-3" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlCompact dlParallel" id="section-13-4">
+        <dt id="section-13-4.1"><code>error</code></dt>
+        <dd style="margin-left: 1.5em" id="section-13-4.2">REQUIRED. A single ASCII error code as described above.<a href="#section-13-4.2" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-13-4.3"><code>error_description</code></dt>
+        <dd style="margin-left: 1.5em" id="section-13-4.4">OPTIONAL. Human-readable ASCII [USASCII] text to assist the client developer.<a href="#section-13-4.4" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-13-4.5"><code>error_uri</code></dt>
+        <dd style="margin-left: 1.5em" id="section-13-4.6">OPTIONAL. A URI of a web page with information about the error to provide the client developer with additional information.<a href="#section-13-4.6" class="pilcrow">¶</a>
 </dd>
       <dd class="break"></dd>
 </dl>
-<p id="section-13-7">HTTP 401 Unauthorized<a href="#section-13-7" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlCompact dlParallel" id="section-13-8">
-        <dt id="section-13-8.1"><code>invalid_client</code></dt>
-        <dd style="margin-left: 1.5em" id="section-13-8.2">Client authentication failed (e.g., invalid client credentials, unknown client, no client authentication included, or unsupported authentication method).<a href="#section-13-8.2" class="pilcrow">¶</a>
-</dd>
-      <dd class="break"></dd>
-</dl>
+<p id="section-13-5">The following is a non-normative example of a Deferred Code Exchange Error Response:<a href="#section-13-5" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-13-6">
+<pre>HTTP/1.1 400 Bad Request
+Content-Type: application/json
+Cache-Control: no-store
+
+{
+  "error": "unauthorized_client",
+  "error_description": "The client is not authorized to use the Deferred Code Grant Type."
+}
+</pre><a href="#section-13-6" class="pilcrow">¶</a>
+</div>
 </section>
 </div>
 <div id="implementation-considerations">
@@ -2331,6 +2437,14 @@ One option is to use mutual TLS.<a href="#section-16.1-3" class="pilcrow">¶</a>
 <a href="#section-18.2" class="section-number selfRef">18.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
         </h3>
 <dl class="references">
+<dt id="OAuth.Post">[OAuth.Post]</dt>
+        <dd>
+<span class="refAuthor">Jones, M.B.</span> and <span class="refAuthor">B. Campbell</span>, <span class="refTitle">"OAuth 2.0 Form Post Response Mode"</span>, <time datetime="2014-02-25" class="refDate">25 February 2014</time>, <span>&lt;<a href="http://openid.net/specs/oauth-v2-form-post-response-mode-1_0.html">http://openid.net/specs/oauth-v2-form-post-response-mode-1_0.html</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="OAuth.Responses">[OAuth.Responses]</dt>
+        <dd>
+<span class="refAuthor">de Medeiros, B., Ed.</span>, <span class="refAuthor">Scurtescu, M.</span>, <span class="refAuthor">Tarjan, P.</span>, and <span class="refAuthor">M.B. Jones</span>, <span class="refTitle">"OAuth 2.0 Multiple Response Type Encoding Practices"</span>, <time datetime="2014-02-25" class="refDate">25 February 2014</time>, <span>&lt;<a href="https://openid.net/specs/oauth-v2-multiple-response-types-1_0.html">https://openid.net/specs/oauth-v2-multiple-response-types-1_0.html</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="OpenID4IDA">[OpenID4IDA]</dt>
       <dd>
 <span class="refAuthor">Lodderstedt, T.</span>, <span class="refAuthor">Fett, D.</span>, <span class="refAuthor">Haine, M.</span>, <span class="refAuthor">Pulido, A.</span>, <span class="refAuthor">Lehmann, K.</span>, and <span class="refAuthor">K. Koiwai</span>, <span class="refTitle">"OpenID Connect for Identity Assurance 1.0"</span>, <time datetime="2024-10-01" class="refDate">1 October 2024</time>, <span>&lt;<a href="https://openid.net/specs/openid-connect-4-identity-assurance-1_0.html">https://openid.net/specs/openid-connect-4-identity-assurance-1_0.html</a>&gt;</span>. </dd>
