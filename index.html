@@ -1227,7 +1227,7 @@ li > p:last-of-type:only-child {
 <dd class="workgroup">OpenID Connect</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-01-20" class="published">20 January 2026</time>
+<time datetime="2026-01-21" class="published">21 January 2026</time>
     </dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
@@ -1725,7 +1725,7 @@ Location: https://client.example.org/cb?
         <dd class="break"></dd>
 </dl>
 <p id="section-5.1-4">Supported extension parameters from the OAuth 2.0 Token Request MAY be included in this request.<a href="#section-5.1-4" class="pilcrow">¶</a></p>
-<p id="section-5.1-5">A DPoP proof MAY be included in this request in order to bind the Deferred Authentication ID to a public key. Its payload MUST contain the <code>deferred_code</code> matching the one sent in the Deferred Code parameter. The RP SHOULD ensure that a public key is not reused across different Authentication Processes.<a href="#section-5.1-5" class="pilcrow">¶</a></p>
+<p id="section-5.1-5">A DPoP proof MAY be included in this request. The RP SHOULD ensure that a public key is not reused across different Authentication Processes.<a href="#section-5.1-5" class="pilcrow">¶</a></p>
 <p id="section-5.1-6">The following is a non-normative example of a Deferred Code Exchange Request (with line wraps within values for display purposes only):<a href="#section-5.1-6" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-5.1-7">
 <pre>POST /token HTTP/1.1
@@ -1751,14 +1751,7 @@ grant_type=urn:openid:params:grant-type:deferred&amp;deferred_code=SplxlOBeZQQYb
 </li>
           <li id="section-5.2-2.3">Verify that the Deferred Code is valid and has not been previously used.<a href="#section-5.2-2.3" class="pilcrow">¶</a>
 </li>
-          <li id="section-5.2-2.4">
-            <p id="section-5.2-2.4.1">If a DPoP proof was provided,<a href="#section-5.2-2.4.1" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="compact type-1" id="section-5.2-2.4.2">
-<li id="section-5.2-2.4.2.1">Validate it in accordance with <span><a href="https://rfc-editor.org/rfc/rfc9449#section-4.3" class="relref">Section 4.3</a> of [<a href="#RFC9449" class="cite xref">RFC9449</a>]</span>.<a href="#section-5.2-2.4.2.1" class="pilcrow">¶</a>
-</li>
-              <li id="section-5.2-2.4.2.2">Check if the DPoP proof payload contains the <code>deferred_code</code> matching the one sent in the Deferred Code parameter.<a href="#section-5.2-2.4.2.2" class="pilcrow">¶</a>
-</li>
-            </ol>
+          <li id="section-5.2-2.4">If a DPoP proof was provided, validate it in accordance with <span><a href="https://rfc-editor.org/rfc/rfc9449#section-4.3" class="relref">Section 4.3</a> of [<a href="#RFC9449" class="cite xref">RFC9449</a>]</span>.<a href="#section-5.2-2.4" class="pilcrow">¶</a>
 </li>
         </ol>
 </section>
@@ -1861,11 +1854,9 @@ This process polls a special endpoint for that purpose.<a href="#section-8-1" cl
 </dd>
         <dd class="break"></dd>
 </dl>
-<p id="section-8.1-3">If a DPoP proof was presented by the RP in the Deferred Code Exchange Request, the RP MUST also present a DPoP proof in this request.<a href="#section-8.1-3" class="pilcrow">¶</a></p>
-<p id="section-8.1-4">If the Client is a Public Client, the public key MUST be the same used in the <a href="#deferred-code-exchange-request" class="auto internal xref">Section 5.1</a>.<a href="#section-8.1-4" class="pilcrow">¶</a></p>
-<p id="section-8.1-5">The payload of the DPoP proof MUST include the <code>deferred_auth_id</code> value that matches the Deferred Authentication ID parameter provided in the request.<a href="#section-8.1-5" class="pilcrow">¶</a></p>
-<p id="section-8.1-6">The following is a non-normative example of a deferred token request:<a href="#section-8.1-6" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-8.1-7">
+<p id="section-8.1-3">The RP MUST present a DPoP proof in this request if the <a href="#deferred-code-exchange-request">Deferred Code Exchange Request</a> included one. If the RP's Client is a Public Client, the DPoP proof MUST use the same public key used in the Deferred Code Exchange Request. Public keys SHOULD NOT be reused across different Authentication Processes.<a href="#section-8.1-3" class="pilcrow">¶</a></p>
+<p id="section-8.1-4">The following is a non-normative example of a deferred token request:<a href="#section-8.1-4" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-8.1-5">
 <pre>POST /token HTTP/1.1
 Host: server.example.com
 Content-Type: application/x-www-form-urlencoded
@@ -1873,7 +1864,7 @@ Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
 DPoP: eyJ0eXAiOiJkcG9wK2p3dCIsImFsZyI6IkVTMjU2IiwiandrIjp7Imt0eSI6IkVDIiwieCI6Imw4dEZyaHgtMzR0VjNoUklDUkRZOXpDa0RscEJoRjQyVVFVZldWQVdCRnMiLCJ5IjoiOVZFNGpmX09rX282NHpiVFRsY3VOSmFqSG10NnY5VERWclUwQ2R2R1JEQSIsImNydiI6IlAtMjU2In19.eyJqdGkiOiJwS2piNGFEZjEiLCJodG0iOiJQT1NUIiwiaHR1IjoiaHR0cHM6Ly9zZXJ2ZXIuZXhhbXBsZS5jb20vdG9rZW4iLCJpYXQiOjE3NjM3MjMyMjB9.4dr1uoyy8m1giIcVgfsXmO_WISirgOAJxqJZul58QCu_MdxOBZ76HNO70BNyF8NJdv8HACS54etcvBr6C2iXxg
 
 grant_type=urn:openid:params:grant-type:deferred&amp;deferred_auth_id=f4oirNBUlM
-</pre><a href="#section-8.1-7" class="pilcrow">¶</a>
+</pre><a href="#section-8.1-5" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -1886,29 +1877,22 @@ grant_type=urn:openid:params:grant-type:deferred&amp;deferred_auth_id=f4oirNBUlM
 <ol start="1" type="1" class="compact type-1" id="section-8.2-2">
 <li id="section-8.2-2.1">Authenticate the Client in accordance with Section 9 of <span>[<a href="#OpenID.Core" class="cite xref">OpenID.Core</a>]</span>.<a href="#section-8.2-2.1" class="pilcrow">¶</a>
 </li>
-          <li id="section-8.2-2.2">Ensure the Deferred Authentication ID was issued to the authenticated Client.<a href="#section-8.2-2.2" class="pilcrow">¶</a>
+          <li id="section-8.2-2.2">Ensure the given <code>deferred_auth_id</code> was issued to the authenticated Client.<a href="#section-8.2-2.2" class="pilcrow">¶</a>
 </li>
           <li id="section-8.2-2.3">
-            <p id="section-8.2-2.3.1">If the Client is a Public Client as defined in <span>[<a href="#RFC6749" class="cite xref">RFC6749</a>]</span> and a DPoP proof was associated with the Deferred Authentication ID as specified in <a href="#successful-deferred-code-exchange-response" class="auto internal xref">Section 5.3</a>:<a href="#section-8.2-2.3.1" class="pilcrow">¶</a></p>
+            <p id="section-8.2-2.3.1">If a DPoP proof was provided in the <a href="#deferred-code-exchange-request">Deferred Code Exchange Request</a><a href="#section-8.2-2.3.1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="compact type-1" id="section-8.2-2.3.2">
-<li id="section-8.2-2.3.2.1">Ensure that a DPoP proof is present in the request.<a href="#section-8.2-2.3.2.1" class="pilcrow">¶</a>
+<li id="section-8.2-2.3.2.1">Validate that a DPoP proof is provided in this request.<a href="#section-8.2-2.3.2.1" class="pilcrow">¶</a>
 </li>
-              <li id="section-8.2-2.3.2.2">Validate that the public key used for the DPoP proof is the same used for the Deferred Token Exchange as defined in <a href="#deferred-code-exchange-request" class="auto internal xref">Section 5.1</a>.<a href="#section-8.2-2.3.2.2" class="pilcrow">¶</a>
-</li>
-            </ol>
-</li>
-          <li id="section-8.2-2.4">
-            <p id="section-8.2-2.4.1">If a DPoP proof is provided in the request:<a href="#section-8.2-2.4.1" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="compact type-1" id="section-8.2-2.4.2">
-<li id="section-8.2-2.4.2.1">Validate the DPoP token in accordance with <span><a href="https://rfc-editor.org/rfc/rfc9449#section-4.3" class="relref">Section 4.3</a> of [<a href="#RFC9449" class="cite xref">RFC9449</a>]</span>.<a href="#section-8.2-2.4.2.1" class="pilcrow">¶</a>
-</li>
-              <li id="section-8.2-2.4.2.2">Check if the DPoP proof payload contains the <code>deferred_auth_id</code> matching the one sent in the Deferred Authentication ID parameter.<a href="#section-8.2-2.4.2.2" class="pilcrow">¶</a>
+              <li id="section-8.2-2.3.2.2">If the Client is a Public Client as defined in <span>[<a href="#RFC6749" class="cite xref">RFC6749</a>]</span>, verify that the public key used in this DPoP proof matches the one used in the Deferred Code Exchange Request.<a href="#section-8.2-2.3.2.2" class="pilcrow">¶</a>
 </li>
             </ol>
+</li>
+          <li id="section-8.2-2.4">If a DPoP proof is provided in this request, validate it in accordance with <span><a href="https://rfc-editor.org/rfc/rfc9449#section-4.3" class="relref">Section 4.3</a> of [<a href="#RFC9449" class="cite xref">RFC9449</a>]</span>.<a href="#section-8.2-2.4" class="pilcrow">¶</a>
 </li>
           <li id="section-8.2-2.5">Verify that the Authentication Process has been completed, has not been canceled and has not reached timeout<a href="#section-8.2-2.5" class="pilcrow">¶</a>
 </li>
-          <li id="section-8.2-2.6">Ensure that no access token has been previously issued for the Deferred Authentication ID.<a href="#section-8.2-2.6" class="pilcrow">¶</a>
+          <li id="section-8.2-2.6">Verify that no access token has been previously issued for the Deferred Authentication ID.<a href="#section-8.2-2.6" class="pilcrow">¶</a>
 </li>
         </ol>
 <p id="section-8.2-3">If the OP encounters any error, it MUST return an error response, per <a href="#token-request-error-response" class="auto internal xref">Section 10</a>.<a href="#section-8.2-3" class="pilcrow">¶</a></p>
@@ -2000,11 +1984,9 @@ The OP SHOULD also accept responses with HTTP 200 OK, and any HTTP body in the r
 </dd>
         <dd class="break"></dd>
 </dl>
-<p id="section-9.1-4">If a DPoP proof was presented by the RP in the Deferred Code Exchange Request, the RP MUST also present a DPoP proof in this request.<a href="#section-9.1-4" class="pilcrow">¶</a></p>
-<p id="section-9.1-5">If the Client is a Public Client, the public key MUST be the same used in the <a href="#deferred-code-exchange-request" class="auto internal xref">Section 5.1</a>.<a href="#section-9.1-5" class="pilcrow">¶</a></p>
-<p id="section-9.1-6">The payload of the DPoP proof MUST include the <code>deferred_auth_id</code> value that matches the Deferred Authentication ID parameter provided in the request.<a href="#section-9.1-6" class="pilcrow">¶</a></p>
-<p id="section-9.1-7">The following is a non-normative example of an authentication cancellation request:<a href="#section-9.1-7" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-9.1-8">
+<p id="section-9.1-4">The RP MUST present a DPoP proof in this request if the <a href="#deferred-code-exchange-request">Deferred Code Exchange Request</a> included one. If the RP's Client is a Public Client, the DPoP proof MUST use the same public key used in the Deferred Code Exchange Request. Public keys SHOULD NOT be reused across different Authentication Processes.<a href="#section-9.1-4" class="pilcrow">¶</a></p>
+<p id="section-9.1-5">The following is a non-normative example of an authentication cancellation request:<a href="#section-9.1-5" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-9.1-6">
 <pre>POST /df-authentication/cancel HTTP/1.1
 Host: server.example.com
 Content-Type: application/json
@@ -2014,7 +1996,7 @@ DPoP: eyJ0eXAiOiJkcG9wK2p3dCIsImFsZyI6IlJTMjU2IiwiandrIjp7Imt0eSI6IkVDIiwieCI6Im
 {
   "deferred_auth_id": "SplxlOBeZQQYbYS6WxSbIA"
 }
-</pre><a href="#section-9.1-8" class="pilcrow">¶</a>
+</pre><a href="#section-9.1-6" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -2030,24 +2012,17 @@ DPoP: eyJ0eXAiOiJkcG9wK2p3dCIsImFsZyI6IlJTMjU2IiwiandrIjp7Imt0eSI6IkVDIiwieCI6Im
           <li id="section-9.2-2.2">Ensure the given <code>deferred_auth_id</code> was issued to the authenticated Client.<a href="#section-9.2-2.2" class="pilcrow">¶</a>
 </li>
           <li id="section-9.2-2.3">
-            <p id="section-9.2-2.3.1">If the Client is a Public Client as defined in <span>[<a href="#RFC6749" class="cite xref">RFC6749</a>]</span> and a DPoP proof was associated with the Deferred Authentication ID as specified in <a href="#successful-deferred-code-exchange-response" class="auto internal xref">Section 5.3</a>:<a href="#section-9.2-2.3.1" class="pilcrow">¶</a></p>
+            <p id="section-9.2-2.3.1">If a DPoP proof was provided in the <a href="#deferred-code-exchange-request">Deferred Code Exchange Request</a><a href="#section-9.2-2.3.1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="compact type-1" id="section-9.2-2.3.2">
-<li id="section-9.2-2.3.2.1">Ensure that a DPoP proof is present in the request.<a href="#section-9.2-2.3.2.1" class="pilcrow">¶</a>
+<li id="section-9.2-2.3.2.1">Validate that a DPoP proof is provided in this request.<a href="#section-9.2-2.3.2.1" class="pilcrow">¶</a>
 </li>
-              <li id="section-9.2-2.3.2.2">Validate that the public key used for the DPoP proof is the same used for the Deferred Token Exchange as defined in <a href="#deferred-code-exchange-request" class="auto internal xref">Section 5.1</a>.<a href="#section-9.2-2.3.2.2" class="pilcrow">¶</a>
-</li>
-            </ol>
-</li>
-          <li id="section-9.2-2.4">
-            <p id="section-9.2-2.4.1">If a DPoP proof is provided in the request:<a href="#section-9.2-2.4.1" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="compact type-1" id="section-9.2-2.4.2">
-<li id="section-9.2-2.4.2.1">Validate the DPoP token in accordance with <span><a href="https://rfc-editor.org/rfc/rfc9449#section-4.3" class="relref">Section 4.3</a> of [<a href="#RFC9449" class="cite xref">RFC9449</a>]</span>.<a href="#section-9.2-2.4.2.1" class="pilcrow">¶</a>
-</li>
-              <li id="section-9.2-2.4.2.2">Check if the DPoP proof payload contains the <code>deferred_auth_id</code> matching the one sent in the Deferred Authentication ID parameter.<a href="#section-9.2-2.4.2.2" class="pilcrow">¶</a>
+              <li id="section-9.2-2.3.2.2">If the Client is a Public Client as defined in <span>[<a href="#RFC6749" class="cite xref">RFC6749</a>]</span>, verify that the public key used in this DPoP proof matches the one used in the Deferred Code Exchange Request.<a href="#section-9.2-2.3.2.2" class="pilcrow">¶</a>
 </li>
             </ol>
 </li>
-          <li id="section-9.2-2.5">Verify that no access token has been issued for the Deferred Authentication.<a href="#section-9.2-2.5" class="pilcrow">¶</a>
+          <li id="section-9.2-2.4">If a DPoP proof is provided in this request, validate it in accordance with <span><a href="https://rfc-editor.org/rfc/rfc9449#section-4.3" class="relref">Section 4.3</a> of [<a href="#RFC9449" class="cite xref">RFC9449</a>]</span>.<a href="#section-9.2-2.4" class="pilcrow">¶</a>
+</li>
+          <li id="section-9.2-2.5">Verify that no access token has been previously issued for the Deferred Authentication.<a href="#section-9.2-2.5" class="pilcrow">¶</a>
 </li>
         </ol>
 <p id="section-9.2-3">After successful validation, the OP marks this Authentication Request as cancelled. Any requests to poll for the result of the Authentication Process after the OP accepts the cancellation request MUST be handled as described in <a href="#token-request-error-response" class="auto internal xref">Section 10</a>.<a href="#section-9.2-3" class="pilcrow">¶</a></p>
