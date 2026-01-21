@@ -1525,7 +1525,7 @@ The Deferred Token Response Flow consists of the following steps:<a href="#secti
       <h2 id="name-registration-and-discovery-">
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-registration-and-discovery-" class="section-name selfRef">Registration and Discovery Metadata</a>
       </h2>
-<p id="section-3-1">This will define any parameters needed for registration and discovery of the DTR flow features.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-1">This specification declares parameters for both Authorization Server and Client. Each following section describes them accordingly.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <div id="authorization-server-metadata">
 <section id="section-3.1">
         <h3 id="name-authorization-server-metada">
@@ -1549,11 +1549,10 @@ The Deferred Token Response Flow consists of the following steps:<a href="#secti
         <h3 id="name-client-registration-metadat">
 <a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-client-registration-metadat" class="section-name selfRef">Client Registration Metadata</a>
         </h3>
-<p id="section-3.2-1">Since the Deferred Token Response introduces a way to asynchronously notify the Client of an Authorization decision that could not be instantly made during User interaction, it is necessary for the Client to obtain this response somehow.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
-<p id="section-3.2-2">The <span>[<a href="#OpenID.CIBA" class="cite xref">OpenID.CIBA</a>]</span> introduces callback modes for the Authorization Server to inform the Client that an Authorization decision has been made, either by pushing the response directly, or notifying that a decision is available to be queried. Although some parameters work similarly, introducing them separately allows for an RP that supports both specs to handle responses on endpoints at their discretion and avoid future conflicts.<a href="#section-3.2-2" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlCompact dlParallel" id="section-3.2-3">
-          <dt id="section-3.2-3.1"><code>deferred_client_notification_endpoint</code></dt>
-          <dd style="margin-left: 1.5em" id="section-3.2-3.2">REQUIRED if the RP desires to be notified when the Authentication decision has been taken. It MUST be an HTTPS URL.<a href="#section-3.2-3.2" class="pilcrow">¶</a>
+<p id="section-3.2-1">The following Client Metadata parameter is defined by this specification to be used during Client Registration as defined in <span>[<a href="#RFC7591" class="cite xref">RFC7591</a>]</span>:<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlCompact dlParallel" id="section-3.2-2">
+          <dt id="section-3.2-2.1"><code>deferred_client_notification_endpoint</code></dt>
+          <dd style="margin-left: 1.5em" id="section-3.2-2.2">REQUIRED if the RP desires to be notified when the Authentication decision has been taken. It MUST be an HTTPS URL.<a href="#section-3.2-2.2" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
 </dl>
@@ -2384,6 +2383,10 @@ One option is to use mutual TLS.<a href="#section-16.1-3" class="pilcrow">¶</a>
 <dt id="RFC7519">[RFC7519]</dt>
         <dd>
 <span class="refAuthor">Jones, M.</span>, <span class="refAuthor">Bradley, J.</span>, and <span class="refAuthor">N. Sakimura</span>, <span class="refTitle">"JSON Web Token (JWT)"</span>, <span class="seriesInfo">RFC 7519</span>, <span class="seriesInfo">DOI 10.17487/RFC7519</span>, <time datetime="2015-05" class="refDate">May 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc7519">https://www.rfc-editor.org/info/rfc7519</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7591">[RFC7591]</dt>
+        <dd>
+<span class="refAuthor">Richer, J., Ed.</span>, <span class="refAuthor">Jones, M.</span>, <span class="refAuthor">Bradley, J.</span>, <span class="refAuthor">Machulak, M.</span>, and <span class="refAuthor">P. Hunt</span>, <span class="refTitle">"OAuth 2.0 Dynamic Client Registration Protocol"</span>, <span class="seriesInfo">RFC 7591</span>, <span class="seriesInfo">DOI 10.17487/RFC7591</span>, <time datetime="2015-07" class="refDate">July 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc7591">https://www.rfc-editor.org/info/rfc7591</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8174">[RFC8174]</dt>
         <dd>
