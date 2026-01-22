@@ -165,15 +165,15 @@ The OpenID Provider MUST validate the request received as follows:
 2. Check if the Client is registered to use the Deferred Token Response flow.
 3. Validate the remaining Authentication Request parameters in accordance with Section 3.1.2.2 - Authentication Request Validation of [@!OpenID.Core].
 
-If any OAuth 2.0 extensions are present in the request, the OP MUST validate them accordingly.
+Additional Authorization Request parameters regarding to OAuth 2.0 extensions MAY be used. In such cases, they MUST be validated according to their definitions.
 
 If the OpenID Provider encounters any error, it MUST return an error response, per (#authentication-request-error-response).
 
 ## OpenID Provider Obtains End-User Authorization and Identity Information {#op-obtains-end-user-authorization-and-identity-information}
 
-Upon receiving a valid Authentication Request, the OpenID Provider (OP) determines whether End-User interaction is required to complete the authentication process. It MAY present OP-controlled interfaces through the User Agent to collect any required Identity Information from the End-User and obtain explicit authorization.
+Upon receiving a valid Authentication Request, the OpenID Provider (OP) determines whether End-User interaction is required to complete the authentication process. It MAY present OP-controlled interfaces through the User Agent to provide guidance through the Authentication steps.
 
-The OP MAY prompt the End-User to provide credentials, perform multi-factor authentication, or supply additional Identity Information (such as biometric data, government-issued documents, or other forms of verification).
+Through these interfaces, the OP MAY prompt the End-User to provide credentials, perform multi-factor authentication, or supply additional Identity Information (such as biometric data, government-issued documents, or other forms of verification).
 
 The nature and extent of the Identity Information collected are determined by the OP's policies and the authentication requirements of the Relying Party (RP).
 
@@ -192,7 +192,7 @@ Note that an Authentication Request Acknowledgment does not constitute a final A
 An Authentication Request Acknowledgment is composed of the following parameters:
 
 `deferred_code`
-: REQUIRED. This is a unique identifier to identify the Authentication Request made by the Client. It MUST contain sufficient entropy (a minimum of 128 bits while 160 bits is RECOMMENDED) to make brute force guessing or forgery of a valid `deferred_code` computationally infeasible. The means of achieving this are implementation-specific, with possible approaches including secure pseudorandom number generation or cryptographically secured self-contained tokens. The OpenID Provider MUST restrict the characters used to 'A'-'Z', 'a'-'z', '0'-'9', '.', '-' and '_', to reduce the chance of the client incorrectly decoding or re-encoding the `deferred_code`; this character set was chosen to allow the server to use unpadded base64url if it wishes. The identifier MUST be treated as opaque by the client.
+: REQUIRED. This is a unique identifier for the Authentication Request made by the Client. It MUST contain sufficient entropy (a minimum of 128 bits while 160 bits is RECOMMENDED) to make brute force guessing or forgery of a valid `deferred_code` computationally infeasible. The means of achieving this are implementation-specific, with possible approaches including secure pseudorandom number generation or cryptographically secured self-contained tokens. The OpenID Provider MUST restrict the characters used to 'A'-'Z', 'a'-'z', '0'-'9', '.', '-' and '_', to reduce the chance of the client incorrectly decoding or re-encoding the `deferred_code`; this character set was chosen to allow the server to use unpadded base64url if it wishes. The identifier MUST be treated as opaque by the client.
 
 `state`
 : OAuth 2.0 state value. REQUIRED if the Authorization Request included the state parameter. Set to the value received from the Client.
@@ -237,7 +237,7 @@ The Client makes an HTTP POST request to the Token Endpoint by sending the follo
 : REQUIRED. Value MUST be `urn:openid:params:grant-type:deferred`.
 
 `deferred_code`
-: REQUIRED. The unique identifier to identify the Authentication Request made by the Client. The OP MUST check whether the `deferred_code` was issued to this Client in response to an Authentication Request. Otherwise, an error MUST be returned.
+: REQUIRED. The identifier of the Authentication Request. The OP MUST check whether the `deferred_code` was issued to this Client in response to an Authentication Request. Otherwise, an error MUST be returned.
 
 `deferred_notification_token`
 : OPTIONAL. A bearer access token which the OP can use to access the Client's Deferred Notification Endpoint when sending a Ping Callback for this request.
