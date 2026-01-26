@@ -317,9 +317,6 @@ The Client MUST retain the `deferred_auth_id` to validate Ping callbacks and to 
 
 The Client SHOULD store the expiration time in order to clean up authentication requests for which no Ping Callback is received.
 
-This will define the logic that the RP should use to validate the Deferred Code Exchange Response.
-Note to mention the possibility of associating the `deferred_notification_token` with the `deferred_auth_id` for later validation of the Ping Callback.
-
 # OpenID Provider Authenticates End-User
 
 After issuing the `deferred_code` in the Authentication Request Acknowledgment, the OP continues the Authentication Process by validating the Identity Information obtained from the End-User. The OP MAY take an arbitrary amount of time to complete this process.
