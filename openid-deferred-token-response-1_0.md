@@ -308,6 +308,15 @@ Cache-Control: no-store
 
 ## Deferred Code Exchange Response Validation
 
+Upon receiving a Successful Deferred Code Exchange Response, the Relying Party (RP) MUST validate the response as follows:
+
+1. Ensure that the `deferred_auth_id` parameter is present.
+2. If an `interim_id_token` is present, validate it in accordance with Section 3.1.3.7 of [@!OpenID.Core].
+   
+The Client MUST retain the `deferred_auth_id` to validate Ping callbacks and to use when making Token or Cancellation requests.
+
+The Client SHOULD store the expiration time in order to clean up authentication requests for which no Ping Callback is received.
+
 This will define the logic that the RP should use to validate the Deferred Code Exchange Response.
 Note to mention the possibility of associating the `deferred_notification_token` with the `deferred_auth_id` for later validation of the Ping Callback.
 
@@ -395,7 +404,7 @@ If the client has registered a `deferred_client_notification_endpoint` during cl
 
 The OP MUST ensure that a successful Deferred Code Exchange Response (#successful-deferred-code-exchange-response) containing the `deferred_auth_id` was sent to the RP before sending the Ping Callback.
 
-Ping callbacks are not sent for timed-out Authentication Processes, since the RP is informed of any expiration time via the `expires_in` parameter in the successful Deferred Code Exchange Response (#successful-deferred-code-exchange-response).
+Ping callbacks are not sent for timed-out Authentication Processes, since the RP is informed of any expiration time via the `expires_in` parameter in the successful Deferred Code Exchange Response (#successful-deferred-code-exchange-response). The RP MAY opt to poll the Token Endpoint right before the expiration time to confirm that a ping callback was not missed.
 
 The Ping Callback is an HTTP POST request containing the following parameters using the `application/json` format:
 
