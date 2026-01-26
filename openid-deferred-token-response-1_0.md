@@ -42,7 +42,7 @@ Throughout this document, values are quoted to indicate that they are to be take
 When using these values in protocol messages, the quotes MUST NOT be used as part of the value.
 
 ## Terminology
-This specification uses the terms "Access Token", "Authorization Endpoint", "Authorization Request", "Authorization Response", "Authorization Code Grant", "Authorization Server", "Client", "Client Authentication", "Client Identifier", "Token Endpoint", "Token Request" and "Token Response" defined by OAuth 2.0 [@!RFC6749], the terms "OpenID Provider (OP)", "Relying Party (RP)", "End-User" and "Request Object" as defined by OpenID Connect Core [@!OpenID.Core] and the term "JSON Web Token (JWT)" defined by JSON Web Token (JWT) [@!RFC7519].
+This specification uses the terms "Access Token", "Authorization Endpoint", "Authorization Request", "Authorization Response", "Authorization Code Grant", "Authorization Server", "Client", "Public Client", "Client Authentication", "Client Identifier", "Token Endpoint", "Token Request" and "Token Response" defined by OAuth 2.0 [@!RFC6749], the terms "OpenID Provider (OP)", "Relying Party (RP)", "End-User" and "Request Object" as defined by OpenID Connect Core [@!OpenID.Core], the term "JSON Web Token (JWT)" defined by JSON Web Token (JWT) [@!RFC7519], and the term "DPoP Proof" defined by OAuth 2.0 Demonstrating Proof of Possession (DPoP) [@!RFC9449].
 
 This specification also defines the following terms:
 
@@ -226,7 +226,7 @@ The Relying Party (RP) sends a Request to the Token Endpoint, as specified in [@
 
 The `deferred_code` value is not utilized for polling. This allows the OP to apply the same security considerations to the `deferred_code` as are applied to authorization codes, as described in [@!RFC6819, section 4.4.1] and [@!RFC9700].
 
-Interactions involving Public Clients as defined in [@!RFC6749, section 2.1] SHOULD be secured using Demonstration of Proof-of-Possession (DPoP) [@!RFC9449]. In such cases, the public key used for the DPoP proof presented in the Deferred Code Exchange Request MUST be the same for the Token Request. 
+Interactions involving Public Clients SHOULD be secured using Demonstration of Proof-of-Possession (DPoP) [@!RFC9449]. In such cases, the public key used for the DPoP proof presented in the Deferred Code Exchange Request MUST be the same for the Token Request. 
 
 ## Deferred Code Exchange Request {#deferred-code-exchange-request}
 
@@ -285,7 +285,7 @@ After receiving and validating an authorized Deferred Code Exchange Request from
 
 Once redeemed for a successful Deferred Code Exchange Response, the `deferred_code` value that was used is no longer valid.
 
-The OP MUST bind the public key used in DPoP proofs to `deferred_auth_id` when the Client is of type Public Client as defined in [@!RFC6749, section 2.1] and a DPoP proof is presented in the Deferred Code Exchange Request. Further interactions involving a `deferred_auth_id` MUST require a DPoP proof utilizing the same public key. This mechanism is similar to the binding of DPoP proofs to Refresh Tokens as described in [@!RFC9449, section 5].
+The OP MUST bind the public key used in DPoP proofs to `deferred_auth_id` when the Client is of type Public Client and a DPoP proof is presented in the Deferred Code Exchange Request. Further interactions involving a `deferred_auth_id` MUST require a DPoP proof utilizing the same public key. This mechanism is similar to the binding of DPoP proofs to Refresh Tokens as described in [@!RFC9449, section 5].
 
 Clients MUST ignore unrecognized response parameters.
 
@@ -361,7 +361,7 @@ The OP MUST validate the request received as follows:
 2. Ensure the given `deferred_auth_id` was issued to the authenticated Client.
 3. If a DPoP proof was provided in the [Deferred Code Exchange Request](#deferred-code-exchange-request)
    1. Validate that a DPoP proof is provided in this request.
-   2. If the Client is a Public Client as defined in [@!RFC6749, section 2.1], verify that the public key used in this DPoP proof matches the one used in the Deferred Code Exchange Request.
+   2. If the Client is a Public Client, verify that the public key used in this DPoP proof matches the one used in the Deferred Code Exchange Request.
 4. If a DPoP proof is provided in this request, validate it in accordance with [@!RFC9449, section 4.3].
 5. Verify that the Authentication Process has been completed, has not been canceled and has not reached timeout
 6. Verify that no access token has been previously issued for the Deferred Authentication ID.
@@ -471,7 +471,7 @@ The OP MUST validate the request received as follows:
 2. Ensure the given `deferred_auth_id` was issued to the authenticated Client.
 3. If a DPoP proof was provided in the [Deferred Code Exchange Request](#deferred-code-exchange-request)
    1. Validate that a DPoP proof is provided in this request.
-   2. If the Client is a Public Client as defined in [@!RFC6749, section 2.1], verify that the public key used in this DPoP proof matches the one used in the Deferred Code Exchange Request.
+   2. If the Client is a Public Client, verify that the public key used in this DPoP proof matches the one used in the Deferred Code Exchange Request.
 4. If a DPoP proof is provided in this request, validate it in accordance with [@!RFC9449, section 4.3].
 5. Verify that no access token has been previously issued for the Deferred Authentication.
 
