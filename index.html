@@ -1227,7 +1227,7 @@ li > p:last-of-type:only-child {
 <dd class="workgroup">OpenID Connect</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-01-21" class="published">21 January 2026</time>
+<time datetime="2026-01-27" class="published">27 January 2026</time>
     </dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
@@ -1805,8 +1805,15 @@ Cache-Control: no-store
         <h3 id="name-deferred-code-exchange-resp">
 <a href="#section-5.4" class="section-number selfRef">5.4. </a><a href="#name-deferred-code-exchange-resp" class="section-name selfRef">Deferred Code Exchange Response Validation</a>
         </h3>
-<p id="section-5.4-1">This will define the logic that the RP should use to validate the Deferred Code Exchange Response.
-Note to mention the possibility of associating the <code>deferred_notification_token</code> with the <code>deferred_auth_id</code> for later validation of the Ping Callback.<a href="#section-5.4-1" class="pilcrow">¶</a></p>
+<p id="section-5.4-1">Upon receiving a Successful Deferred Code Exchange Response, the Relying Party (RP) MUST validate the response as follows:<a href="#section-5.4-1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="compact type-1" id="section-5.4-2">
+<li id="section-5.4-2.1">Ensure that the <code>deferred_auth_id</code> parameter is present.<a href="#section-5.4-2.1" class="pilcrow">¶</a>
+</li>
+          <li id="section-5.4-2.2">If an <code>interim_id_token</code> is present, validate it in accordance with Section 3.1.3.7 of <span>[<a href="#OpenID.Core" class="cite xref">OpenID.Core</a>]</span>.<a href="#section-5.4-2.2" class="pilcrow">¶</a>
+</li>
+        </ol>
+<p id="section-5.4-3">The Client MUST retain the <code>deferred_auth_id</code> to validate Ping callbacks and to use when making Token or Cancellation requests.<a href="#section-5.4-3" class="pilcrow">¶</a></p>
+<p id="section-5.4-4">The Client SHOULD store the expiration time in order to clean up authentication requests for which no Ping Callback is received.<a href="#section-5.4-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
