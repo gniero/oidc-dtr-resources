@@ -42,7 +42,7 @@ Throughout this document, values are quoted to indicate that they are to be take
 When using these values in protocol messages, the quotes MUST NOT be used as part of the value.
 
 ## Terminology
-This specification uses the terms "Access Token", "Authorization Endpoint", "Authorization Request", "Authorization Response", "Authorization Code Grant", "Authorization Server", "Client", "Client Authentication", "Client Identifier", "Token Endpoint", "Token Request" and "Token Response" defined by OAuth 2.0 [@!RFC6749], the terms "OpenID Provider (OP)", "Relying Party (RP)", "End-User" and "Request Object" as defined by OpenID Connect Core [@!OpenID.Core] and the term "JSON Web Token (JWT)" defined by JSON Web Token (JWT) [@!RFC7519].
+This specification uses the terms "Access Token", "Authorization Endpoint", "Authorization Request", "Authorization Response", "Authorization Code Grant", "Authorization Server", "Client", "Public Client", "Client Authentication", "Client Identifier", "Token Endpoint", "Token Request" and "Token Response" defined by OAuth 2.0 [@!RFC6749], the terms "OpenID Provider (OP)", "Relying Party (RP)", "End-User" and "Request Object" as defined by OpenID Connect Core [@!OpenID.Core], the term "JSON Web Token (JWT)" defined by JSON Web Token (JWT) [@!RFC7519], and the term "DPoP Proof" defined by OAuth 2.0 Demonstrating Proof of Possession (DPoP) [@!RFC9449].
 
 This specification also defines the following terms:
 
@@ -165,15 +165,15 @@ The OpenID Provider MUST validate the request received as follows:
 2. Check if the Client is registered to use the Deferred Token Response flow.
 3. Validate the remaining Authentication Request parameters in accordance with Section 3.1.2.2 - Authentication Request Validation of [@!OpenID.Core].
 
-If any OAuth 2.0 extensions are present in the request, the OP MUST validate them accordingly.
+Additional Authorization Request parameters regarding to OAuth 2.0 extensions MAY be used. In such cases, they MUST be validated according to their definitions.
 
 If the OpenID Provider encounters any error, it MUST return an error response, per (#authentication-request-error-response).
 
 ## OpenID Provider Obtains End-User Authorization and Identity Information {#op-obtains-end-user-authorization-and-identity-information}
 
-Upon receiving a valid Authentication Request, the OpenID Provider (OP) determines whether End-User interaction is required to complete the authentication process. It MAY present OP-controlled interfaces through the User Agent to collect any required Identity Information from the End-User and obtain explicit authorization.
+Upon receiving a valid Authentication Request, the OpenID Provider (OP) determines whether End-User interaction is required to complete the authentication process. It MAY present OP-controlled interfaces through the User Agent to provide guidance through the Authentication steps.
 
-The OP MAY prompt the End-User to provide credentials, perform multi-factor authentication, or supply additional Identity Information (such as biometric data, government-issued documents, or other forms of verification).
+Through these interfaces, the OP MAY prompt the End-User to provide credentials, perform multi-factor authentication, or supply additional Identity Information (such as biometric data, government-issued documents, or other forms of verification).
 
 The nature and extent of the Identity Information collected are determined by the OP's policies and the authentication requirements of the Relying Party (RP).
 
@@ -192,7 +192,7 @@ Note that an Authentication Request Acknowledgment does not constitute a final A
 An Authentication Request Acknowledgment is composed of the following parameters:
 
 `deferred_code`
-: REQUIRED. This is a unique identifier to identify the Authentication Request made by the Client. It MUST contain sufficient entropy (a minimum of 128 bits while 160 bits is RECOMMENDED) to make brute force guessing or forgery of a valid `deferred_code` computationally infeasible. The means of achieving this are implementation-specific, with possible approaches including secure pseudorandom number generation or cryptographically secured self-contained tokens. The OpenID Provider MUST restrict the characters used to 'A'-'Z', 'a'-'z', '0'-'9', '.', '-' and '_', to reduce the chance of the client incorrectly decoding or re-encoding the `deferred_code`; this character set was chosen to allow the server to use unpadded base64url if it wishes. The identifier MUST be treated as opaque by the client.
+: REQUIRED. This is a unique identifier for the Authentication Request made by the Client. It MUST contain sufficient entropy (a minimum of 128 bits while 160 bits is RECOMMENDED) to make brute force guessing or forgery of a valid `deferred_code` computationally infeasible. The means of achieving this are implementation-specific, with possible approaches including secure pseudorandom number generation or cryptographically secured self-contained tokens. The OpenID Provider MUST restrict the characters used to 'A'-'Z', 'a'-'z', '0'-'9', '.', '-' and '_', to reduce the chance of the client incorrectly decoding or re-encoding the `deferred_code`; this character set was chosen to allow the server to use unpadded base64url if it wishes. The identifier MUST be treated as opaque by the client.
 
 `state`
 : OAuth 2.0 state value. REQUIRED if the Authorization Request included the state parameter. Set to the value received from the Client.
@@ -211,7 +211,8 @@ Location: https://client.example.org/cb?
 Upon receiving an Authentication Request Acknowledgment, the Relying Party (RP) MUST validate the response as follows:
 
 1. Ensure that the `deferred_code` parameter is present.
-2. If the Client includes a `state` parameter in Authentication Requests, verify that the `state` parameter is present in the response. The Client MAY perform additional validation to match the `state` parameter response with the one present in the Authentication Request.
+2. Verify that a `code` parameter is not present. 
+3. If the Client includes a `state` parameter in Authentication Requests, verify that the `state` parameter is present in the response. The Client MAY perform additional validation to match the `state` parameter response with the one present in the Authentication Request.
 
 When the Client requests the `deferred_code code` response type, it MUST distinguish if the response being validated is an [Authentication Request Acknowledgment](#authentication-request-acknowledgment) or a Successful Authentication Response of [@!OpenID.Core]. This can be achieved by checking for the presence of the `deferred_code` parameter. Determining the type of response is crucial for the Client to proceed with the appropriate flow.
 
@@ -221,15 +222,15 @@ Any unrecognized parameter MUST be ignored by the Client.
 
 # Exchanging the Deferred Code to obtain Deferred Authentication ID
 
-The Relying Party (RP) sends a Request to the Token Endpoint, as specified in [@!RFC6749, section 3.2], to exchange the deferred code. Upon successful processing of this request, the OpenID Provider (OP) assigns a Deferred Authentication ID to each Authentication Process. This identifier enables the RP to poll for the result of the corresponding process, in a manner analogous to the `auth_req_id` defined in [@!OpenID.CIBA].
+The Relying Party (RP) sends a Request to the Token Endpoint, as specified in [@!RFC6749, section 3.2], to exchange the `deferred_code`. Upon successful processing of this request, the OpenID Provider (OP) assigns a Deferred Authentication ID to each Authentication Process. This identifier enables the RP to poll for the result of the corresponding process, in a manner analogous to the `auth_req_id` defined in [@!OpenID.CIBA].
 
 The `deferred_code` value is not utilized for polling. This allows the OP to apply the same security considerations to the `deferred_code` as are applied to authorization codes, as described in [@!RFC6819, section 4.4.1] and [@!RFC9700].
 
-Interactions involving Public Clients as defined in [@!RFC6749] SHOULD be secured using Demonstration of Proof-of-Possession (DPoP) [@!RFC9449]. In such cases, the public key used for the DPoP proof presented in the Deferred Code Exchange Request MUST be the same for the Token Request. 
+Interactions involving Public Clients SHOULD be secured using Demonstration of Proof-of-Possession (DPoP) [@!RFC9449]. In such cases, the public key used for the DPoP proof presented in the Deferred Code Exchange Request MUST be the same for the Token Request. 
 
 ## Deferred Code Exchange Request {#deferred-code-exchange-request}
 
-The Deferred Code Exchange Request exchanges the deferred code obtained in the Authentication Request Acknowledgment.
+The Deferred Code Exchange Request exchanges the `deferred_code` obtained in the Authentication Request Acknowledgment.
 
 The Client makes an HTTP POST request to the Token Endpoint by sending the following parameters using the `application/x-www-form-urlencoded` format:
 
@@ -237,7 +238,7 @@ The Client makes an HTTP POST request to the Token Endpoint by sending the follo
 : REQUIRED. Value MUST be `urn:openid:params:grant-type:deferred`.
 
 `deferred_code`
-: REQUIRED. The unique identifier to identify the Authentication Request made by the Client. The OP MUST check whether the `deferred_code` was issued to this Client in response to an Authentication Request. Otherwise, an error MUST be returned.
+: REQUIRED. The identifier of the Authentication Request, issued by the OP to the Client requesting the exchange.
 
 `deferred_notification_token`
 : OPTIONAL. A bearer access token which the OP can use to access the Client's Deferred Notification Endpoint when sending a Ping Callback for this request.
@@ -259,7 +260,7 @@ grant_type=urn:openid:params:grant-type:deferred&deferred_code=SplxlOBeZQQYbYS6W
 
 ## Deferred Code Exchange Request Validation
 
-The OP Provider MUST validate the request received as follows:
+The OP MUST validate the request received as follows:
 
 1. Authenticate the Client in accordance with Section 9 of [@!OpenID.Core].
 2. Ensure the Deferred Code was issued to the authenticated Client.
@@ -268,11 +269,10 @@ The OP Provider MUST validate the request received as follows:
 
 ## Successful Deferred Code Exchange Response{#successful-deferred-code-exchange-response}
 
-After receiving and validating a valid and authorized Deferred Code Exchange Request from the Client, the OpenID Provider returns an HTTP 200 OK response to the Client.
-The body of this response contains the following parameters encoded in `application/json` format:
+After receiving and validating an authorized Deferred Code Exchange Request from the Client, the OpenID Provider returns an HTTP 200 OK response to the Client containing the following parameters encoded in `application/json` format:
 
 `deferred_auth_id`
-: REQUIRED. A unique identifier to identify the Authentication Request made by the Client. The identifier MUST be treated as opaque by the client.
+: REQUIRED. The Deferred Authentication ID is a unique identifier for the Authentication Process. The identifier MUST be treated as opaque by the client.
 
 `expires_in`
 : OPTIONAL. A JSON number with a positive integer value indicating the expiration time of the `deferred_auth_id` in seconds. Some requests may naturally become irrelevant once some amount of time has passed. The OP MAY indicate that this is the case by returning a value in this parameter. The method of determining this value is outside the scope of this specification. Clients SHOULD support arbitrarily large values for this parameter.
@@ -285,7 +285,7 @@ The body of this response contains the following parameters encoded in `applicat
 
 Once redeemed for a successful Deferred Code Exchange Response, the `deferred_code` value that was used is no longer valid.
 
-The OP MUST bind the public key used in DPoP proofs to `deferred_auth_id` when the Client is of type Public Client as defined in [@!RFC6749] and a DPoP proof is presented in the Deferred Code Exchange Request. Further interactions involving a `deferred_auth_id` MUST require a DPoP proof utilizing the same public key. This mechanism is similar to the binding of DPoP proofs to Refresh Tokens as described in [@!RFC9449, section 5].
+The OP MUST bind the public key used in DPoP proofs to `deferred_auth_id` when the Client is of type Public Client and a DPoP proof is presented in the Deferred Code Exchange Request. Further interactions involving a `deferred_auth_id` MUST require a DPoP proof utilizing the same public key. This mechanism is similar to the binding of DPoP proofs to Refresh Tokens as described in [@!RFC9449, section 5].
 
 Clients MUST ignore unrecognized response parameters.
 
@@ -343,7 +343,7 @@ The Client makes an HTTP POST request to the Token Endpoint by sending the follo
 : REQUIRED. Value MUST be `urn:openid:params:grant-type:deferred`.
 
 `deferred_auth_id`
-: REQUIRED. The unique identifier to identify the Authentication Request made by the Client. The OP MUST check whether the `deferred_code` was issued to this Client in response to an Authentication Request. Otherwise, an error MUST be returned.
+: REQUIRED. The unique identifier of the Authentication Process, issued by the OP to the Client requesting the token.
 
 The RP MUST present a DPoP proof in this request if the [Deferred Code Exchange Request](#deferred-code-exchange-request) included one. If the RP's Client is a Public Client, the DPoP proof MUST use the same public key used in the Deferred Code Exchange Request. Public keys SHOULD NOT be reused across different Authentication Processes.
 
@@ -367,7 +367,7 @@ The OP MUST validate the request received as follows:
 2. Ensure the given `deferred_auth_id` was issued to the authenticated Client.
 3. If a DPoP proof was provided in the [Deferred Code Exchange Request](#deferred-code-exchange-request)
    1. Validate that a DPoP proof is provided in this request.
-   2. If the Client is a Public Client as defined in [@!RFC6749], verify that the public key used in this DPoP proof matches the one used in the Deferred Code Exchange Request.
+   2. If the Client is a Public Client, verify that the public key used in this DPoP proof matches the one used in the Deferred Code Exchange Request.
 4. If a DPoP proof is provided in this request, validate it in accordance with [@!RFC9449, section 4.3].
 5. Verify that the Authentication Process has been completed, has not been canceled and has not reached timeout
 6. Verify that no access token has been previously issued for the Deferred Authentication ID.
@@ -376,8 +376,8 @@ If the OP encounters any error, it MUST return an error response, per (#token-re
 
 ## Successful Token Response
 
-After receiving and validating a valid and authorized Token Request from the Client and when the End User associated with the supplied `deferred_auth_id` has been authenticated, the OpenID Provider returns a successful response as specified in Section 3.1.3.3 of [OpenID.Core].
-Once redeemed for a successful Token response, the `deferred_auth_id` value that was used is no longer valid.
+After receiving and validating an authorized Token Request from the Client, and once the End User associated with the supplied `deferred_auth_id` has been authenticated, the OpenID Provider returns a successful response as defined in Section 3.1.3.3 of [OpenID.Core].
+After it has been redeemed for a successful Token response, the used `deferred_auth_id` value becomes invalid.
 
 The following is a non-normative example of a successful token response:
 
@@ -403,10 +403,10 @@ The OP MUST ensure that a successful Deferred Code Exchange Response (#successfu
 
 Ping callbacks are not sent for timed-out Authentication Processes, since the RP is informed of any expiration time via the `expires_in` parameter in the successful Deferred Code Exchange Response (#successful-deferred-code-exchange-response).
 
-The Ping Callback is an HTTP POST request containing the following parameters using the `application/json` format:
+The Ping Callback is an HTTP POST request containing the following parameter using the `application/json` format:
 
 `deferred_auth_id`
-: REQUIRED: The unique identifier to identify the Authentication Request which started the finished Authentication Process.
+: REQUIRED: The unique identifier of the finished Authentication Process.
 
 The Client MUST protect the Deferred Client Notification Endpoint from unauthorized access.
 
@@ -440,9 +440,7 @@ Clients MUST ignore unrecognized request parameters.
 
 # Canceling an Ongoing Authentication Process {#canceling-an-ongoing-authentication-process}
 
-In some scenarios, the RP might want to cancel an ongoing Authentication Process that got deferred before it has completed (e.g. user-initiated cancellation) in order to avoid unnecessary processing for both RP and OP. This specification defines the Cancellation Endpoint that the RP can use to cancel an ongoing Authentication Process. 
-
-Other mechanisms such as a timeout parameter in the authentication request MAY be supported by the OP, but are out of scope for this specification.
+In some scenarios, the RP might need to cancel an ongoing Authentication Process that was deferred before completion (e.g. user-initiated cancellation) to avoid unnecessary processing for both the RP and the OP. This specification defines the Cancellation Endpoint that the RP can use to cancel an ongoing Authentication Process.
 
 The Authentication Cancellation can be achieved by the RP sending a request to the OP as described in the following sections. 
 
@@ -453,7 +451,7 @@ Once the RP gets possession of the `deferred_auth_id` from the Deferred Code Exc
 The Client makes an HTTP POST request to the Authentication Cancellation Endpoint by sending the following parameters using the `application/x-www-form-urlencoded` format:
 
 `deferred_auth_id`
-: REQUIRED. The unique identifier to identify the Authentication Request made by the Client. The OP MUST check whether the `deferred_auth_id` was issued to this Client in response to an Authentication Request. Otherwise, an error MUST be returned.
+: REQUIRED. The unique identifier of the Authentication Process, issued by the OP to the Client requesting the cancellation.
 
 The RP MUST present a DPoP proof in this request if the [Deferred Code Exchange Request](#deferred-code-exchange-request) included one. If the RP's Client is a Public Client, the DPoP proof MUST use the same public key used in the Deferred Code Exchange Request. Public keys SHOULD NOT be reused across different Authentication Processes.
 
@@ -479,7 +477,7 @@ The OP MUST validate the request received as follows:
 2. Ensure the given `deferred_auth_id` was issued to the authenticated Client.
 3. If a DPoP proof was provided in the [Deferred Code Exchange Request](#deferred-code-exchange-request)
    1. Validate that a DPoP proof is provided in this request.
-   2. If the Client is a Public Client as defined in [@!RFC6749], verify that the public key used in this DPoP proof matches the one used in the Deferred Code Exchange Request.
+   2. If the Client is a Public Client, verify that the public key used in this DPoP proof matches the one used in the Deferred Code Exchange Request.
 4. If a DPoP proof is provided in this request, validate it in accordance with [@!RFC9449, section 4.3].
 5. Verify that no access token has been previously issued for the Deferred Authentication.
 
