@@ -401,7 +401,7 @@ If the client has registered a `deferred_client_notification_endpoint` during cl
 
 The OP MUST ensure that a successful Deferred Code Exchange Response (#successful-deferred-code-exchange-response) containing the `deferred_auth_id` was sent to the RP before sending the Ping Callback.
 
-Ping callbacks are not sent for timed-out Authentication Processes, since the RP is informed of any expiration time via the `expires_in` parameter in the successful Deferred Code Exchange Response (#successful-deferred-code-exchange-response). The RP MAY opt to poll the Token Endpoint right before the expiration time to confirm that a ping callback was not missed.
+Ping callbacks are not sent for timed-out Authentication Processes, since the RP is informed of any expiration time via the `expires_in` parameter in the successful Deferred Code Exchange Response (#successful-deferred-code-exchange-response).
 
 The Ping Callback is an HTTP POST request containing the following parameters using the `application/json` format:
 
