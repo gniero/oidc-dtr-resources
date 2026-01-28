@@ -327,8 +327,15 @@ While processing the request, the OP MAY allow the RP to cancel the request as d
 
 # Deferred Client Notification Endpoint
 
-This will define the endpoint that the OP should optionally send a Ping to.
-This will be configured in client registration metadata and should only be used if configured.
+Since the Deferred Token Response provides a way to authenticate the End‑User asynchronously after User interaction has ended, the Client needs a mechanism to receive this response.
+
+The simplest approach is for the Client to poll the Token Endpoint. In addition, this specification defines a method for the OP to notify the RP when an Authentication decision has been made by sending a Ping Callback to an RP‑defined endpoint.
+
+This mechanism is RECOMMENDED for both OPs and RPs, as it offers a more efficient way to receive the Authentication decision without relying solely on continuous polling. See (#design-considerations-for-poll-and-ping) for related design considerations.
+
+The Deferred Client Notification Endpoint operates similarly to the callback modes defined in [@?OpenID.CIBA]. Although some parameters behave in comparable ways, they are defined separately to allow an RP supporting both specifications to route and process responses on distinct endpoints, thereby avoiding potential conflicts.
+
+The specific behavior of the Deferred Client Notification Endpoint is described in (#ping-callback).
 
 # Getting the Authentication Result
 
@@ -395,7 +402,7 @@ Cache-Control: no-store
 }
 ```
 
-## Ping Callback
+## Ping Callback {#ping-callback}
 
 If the client has registered a `deferred_client_notification_endpoint` during client registration, the OP sends a Ping Callback to that endpoint once the Authentication Process has finished, regardless of the outcome.
 
@@ -677,7 +684,7 @@ Options include:
 
 The OP MAY accept Authentication Requests providing the response type value as `deferred_code code`. In those cases, it means for the OP that it MAY chose, by its own means, when the Authentication response will be of deferred type or any other provided alternative. 
 
-## Design Considerations for Poll and Ping
+## Design Considerations for Poll and Ping {#design-considerations-for-poll-and-ping}
 This specification intentionally does not define a "push" mode for delivering a Token Response.
 The push mode is not appropriate for long-running high-value Authentication Processes since losing the single push request would mean losing the outcome of the entire Authentication Process.
 
