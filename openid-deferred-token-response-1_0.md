@@ -686,6 +686,8 @@ The Ping Callback enables long-running Authentication Processes to occur without
 In case an OpenID Provider returns an `authorization_pending` Token Request Error Response after sending a Ping Callback, the Relying Party SHOULD keep sending Token Requests.
 This improves the success rates in distributed systems that may incorrectly send Ping Callbacks too early and prevents denial-of-service attacks in case the Deferred Client Notification Endpoint is compromised.
 
+In some polling scenarios, the Authentication Process may expire before the RP’s required interval between token requests has elapsed. To avoid missing a Ping Callback or a last‑moment Authentication Decision, the RP MAY choose to send one final token request just before the expiration time.
+
 ## Context on the Progress of Incomplete Authentication Processes
 
 OpenID Providers SHOULD include appropriate context regarding the progress of the Authentication Process when responding with a Token Request Error Response because the Authentication Process has not yet been completed.
