@@ -688,7 +688,6 @@ An Authentication Process may expire before the RP’s required interval between
 
 This specification intentionally does not define a way to deliver the token directly to the Client Notification Endpoint, known as _push mode_ in CIBA. The _push mode_ is not appropriate for long-running high-value Authentication Processes since losing the single push request would mean losing the outcome of the entire Authentication Process.
 
-
 ## Context on the Progress of Incomplete Authentication Processes
 
 OpenID Providers SHOULD include appropriate context regarding the progress of the Authentication Process when responding with a Token Request Error Response because the Authentication Process has not yet been completed.
