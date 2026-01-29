@@ -332,8 +332,9 @@ This will be configured in client registration metadata and should only be used 
 
 # Getting the Authentication Result
 
-This will define the steps for the RP to get the result of the Authentication Process.
-This process polls a special endpoint for that purpose.
+Once the `deferred_auth_id` is obtained, the Relying Party (RP) can retrieve the result of the Authentication Process through interactions with the OpenID Provider (OP). This section describes the mechanisms by which the RP may obtain the authentication result, including RP‑initiated polling and optional Ping Callbacks sent by the OP.
+
+Detailed information about the specific request and response formats, validation steps, and security considerations can be found in the respective subsections.
 
 ## Token Request using the Authentication Request ID {#token-request-using-the-authentication-request-id}
 
