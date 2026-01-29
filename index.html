@@ -1227,7 +1227,7 @@ li > p:last-of-type:only-child {
 <dd class="workgroup">OpenID Connect</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-01-27" class="published">27 January 2026</time>
+<time datetime="2026-01-29" class="published">29 January 2026</time>
     </dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
@@ -1843,8 +1843,8 @@ This will be configured in client registration metadata and should only be used 
       <h2 id="name-getting-the-authentication-">
 <a href="#section-8" class="section-number selfRef">8. </a><a href="#name-getting-the-authentication-" class="section-name selfRef">Getting the Authentication Result</a>
       </h2>
-<p id="section-8-1">This will define the steps for the RP to get the result of the Authentication Process.
-This process polls a special endpoint for that purpose.<a href="#section-8-1" class="pilcrow">¶</a></p>
+<p id="section-8-1">Once the <code>deferred_auth_id</code> is obtained, the Relying Party (RP) can retrieve the result of the Authentication Process through interactions with the OpenID Provider (OP). This section describes the mechanisms by which the RP may obtain the authentication result, including RP‑initiated polling and optional Ping Callbacks sent by the OP.<a href="#section-8-1" class="pilcrow">¶</a></p>
+<p id="section-8-2">Detailed information about the specific request and response formats, validation steps, and security considerations can be found in the respective subsections.<a href="#section-8-2" class="pilcrow">¶</a></p>
 <div id="token-request-using-the-authentication-request-id">
 <section id="section-8.1">
         <h3 id="name-token-request-using-the-aut">
