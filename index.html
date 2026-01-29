@@ -1834,8 +1834,11 @@ Cache-Control: no-store
       <h2 id="name-deferred-client-notificatio">
 <a href="#section-7" class="section-number selfRef">7. </a><a href="#name-deferred-client-notificatio" class="section-name selfRef">Deferred Client Notification Endpoint</a>
       </h2>
-<p id="section-7-1">This will define the endpoint that the OP should optionally send a Ping to.
-This will be configured in client registration metadata and should only be used if configured.<a href="#section-7-1" class="pilcrow">¶</a></p>
+<p id="section-7-1">Since the Deferred Token Response provides a way to authenticate the End‑User asynchronously after User interaction has ended, the Client needs a mechanism to receive this response.<a href="#section-7-1" class="pilcrow">¶</a></p>
+<p id="section-7-2">The simplest approach is for the Client to poll the Token Endpoint. In addition, this specification defines a method for the OP to notify the RP when an Authentication decision has been made by sending a Ping Callback to an RP‑defined endpoint.<a href="#section-7-2" class="pilcrow">¶</a></p>
+<p id="section-7-3">This mechanism is RECOMMENDED for both OPs and RPs, as it offers a more efficient way to receive the Authentication decision without relying solely on continuous polling. See <a href="#design-considerations-for-poll-and-ping" class="auto internal xref">Section 14.3</a> for related design considerations.<a href="#section-7-3" class="pilcrow">¶</a></p>
+<p id="section-7-4">The Deferred Client Notification Endpoint operates similarly to the callback modes defined in <span>[<a href="#OpenID.CIBA" class="cite xref">OpenID.CIBA</a>]</span>. Although some parameters behave in comparable ways, they are defined separately to allow an RP supporting both specifications to route and process responses on distinct endpoints, thereby avoiding potential conflicts.<a href="#section-7-4" class="pilcrow">¶</a></p>
+<p id="section-7-5">The specific behavior of the Deferred Client Notification Endpoint is described in <a href="#ping-callback" class="auto internal xref">Section 8.4</a>.<a href="#section-7-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="getting-the-authentication-result">
