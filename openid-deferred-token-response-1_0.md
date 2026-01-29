@@ -373,12 +373,13 @@ The OP MUST validate the request received as follows:
 
 1. Authenticate the Client in accordance with Section 9 of [@!OpenID.Core].
 2. Ensure the given `deferred_auth_id` was issued to the authenticated Client.
-3. If a DPoP proof was provided in the [Deferred Code Exchange Request](#deferred-code-exchange-request)
+3. If `expires_in` was provided in (#successful-deferred-code-exchange-response), verify that the expiration time has not elapsed.
+4. If a DPoP proof was provided in the [Deferred Code Exchange Request](#deferred-code-exchange-request)
    1. Validate that a DPoP proof is provided in this request.
    2. If the Client is a Public Client, verify that the public key used in this DPoP proof matches the one used in the Deferred Code Exchange Request.
-4. If a DPoP proof is provided in this request, validate it in accordance with [@!RFC9449, section 4.3].
-5. Verify that the Authentication Process has been completed, has not been canceled and has not reached timeout
-6. Verify that no access token has been previously issued for the Deferred Authentication ID.
+5. If a DPoP proof is provided in this request, validate it in accordance with [@!RFC9449, section 4.3].
+6. Verify that the Authentication Process has been completed, has not been canceled and has not reached timeout
+7. Verify that no access token has been previously issued for the Deferred Authentication ID.
    
 If the OP encounters any error, it MUST return an error response, per (#token-request-error-response).
 
