@@ -1227,7 +1227,7 @@ li > p:last-of-type:only-child {
 <dd class="workgroup">OpenID Connect</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-01-29" class="published">29 January 2026</time>
+<time datetime="2026-01-30" class="published">30 January 2026</time>
     </dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
@@ -1889,20 +1889,22 @@ grant_type=urn:openid:params:grant-type:deferred&amp;deferred_auth_id=f4oirNBUlM
 </li>
           <li id="section-8.2-2.2">Ensure the given <code>deferred_auth_id</code> was issued to the authenticated Client.<a href="#section-8.2-2.2" class="pilcrow">¶</a>
 </li>
-          <li id="section-8.2-2.3">
-            <p id="section-8.2-2.3.1">If a DPoP proof was provided in the <a href="#deferred-code-exchange-request">Deferred Code Exchange Request</a><a href="#section-8.2-2.3.1" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="compact type-1" id="section-8.2-2.3.2">
-<li id="section-8.2-2.3.2.1">Validate that a DPoP proof is provided in this request.<a href="#section-8.2-2.3.2.1" class="pilcrow">¶</a>
+          <li id="section-8.2-2.3">If <code>expires_in</code> was provided in <a href="#successful-deferred-code-exchange-response" class="auto internal xref">Section 5.3</a>, verify that the expiration time has not elapsed.<a href="#section-8.2-2.3" class="pilcrow">¶</a>
 </li>
-              <li id="section-8.2-2.3.2.2">If the Client is a Public Client, verify that the public key used in this DPoP proof matches the one used in the Deferred Code Exchange Request.<a href="#section-8.2-2.3.2.2" class="pilcrow">¶</a>
+          <li id="section-8.2-2.4">
+            <p id="section-8.2-2.4.1">If a DPoP proof was provided in the <a href="#deferred-code-exchange-request">Deferred Code Exchange Request</a><a href="#section-8.2-2.4.1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="compact type-1" id="section-8.2-2.4.2">
+<li id="section-8.2-2.4.2.1">Validate that a DPoP proof is provided in this request.<a href="#section-8.2-2.4.2.1" class="pilcrow">¶</a>
+</li>
+              <li id="section-8.2-2.4.2.2">If the Client is a Public Client, verify that the public key used in this DPoP proof matches the one used in the Deferred Code Exchange Request.<a href="#section-8.2-2.4.2.2" class="pilcrow">¶</a>
 </li>
             </ol>
 </li>
-          <li id="section-8.2-2.4">If a DPoP proof is provided in this request, validate it in accordance with <span><a href="https://rfc-editor.org/rfc/rfc9449#section-4.3" class="relref">Section 4.3</a> of [<a href="#RFC9449" class="cite xref">RFC9449</a>]</span>.<a href="#section-8.2-2.4" class="pilcrow">¶</a>
+          <li id="section-8.2-2.5">If a DPoP proof is provided in this request, validate it in accordance with <span><a href="https://rfc-editor.org/rfc/rfc9449#section-4.3" class="relref">Section 4.3</a> of [<a href="#RFC9449" class="cite xref">RFC9449</a>]</span>.<a href="#section-8.2-2.5" class="pilcrow">¶</a>
 </li>
-          <li id="section-8.2-2.5">Verify that the Authentication Process has been completed, has not been canceled and has not reached timeout<a href="#section-8.2-2.5" class="pilcrow">¶</a>
+          <li id="section-8.2-2.6">Verify that the Authentication Process has been completed, has not been canceled and has not reached timeout<a href="#section-8.2-2.6" class="pilcrow">¶</a>
 </li>
-          <li id="section-8.2-2.6">Verify that no access token has been previously issued for the Deferred Authentication ID.<a href="#section-8.2-2.6" class="pilcrow">¶</a>
+          <li id="section-8.2-2.7">Verify that no access token has been previously issued for the Deferred Authentication ID.<a href="#section-8.2-2.7" class="pilcrow">¶</a>
 </li>
         </ol>
 <p id="section-8.2-3">If the OP encounters any error, it MUST return an error response, per <a href="#token-request-error-response" class="auto internal xref">Section 10</a>.<a href="#section-8.2-3" class="pilcrow">¶</a></p>
