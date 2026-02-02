@@ -831,6 +831,16 @@ No new registrations.
 
 # Use cases
 
+## Sample Use Case 1: High Risk Transaction Approval
+
+An online banking application requires users to approve a high-risk transaction through a multi-step verification process. It is acceptable for this transaction to take several minutes, up to some hours to complete processing, as it may require additional security checks. It is not necessary for the user to remain actively engaged with the banking application during this time.
+
+When a user initiates such a transaction, the banking application (RP) sends an Authentication Request with the `deferred_code code` response type to the bank's OpenID Provider (OP). While interacting with the End-user, the OP notices unusual behavior and decides to defer the Authentication Process until further verification is complete.
+
+Verificating the legitimacy of the intent for such transaction may involve contacting the user through alternative channels, performing manual reviews, or other security measures. During this time, the user is free to leave the banking application.
+
+Transaction processing continues in the background as soon as an Authentication Decision is made.
+
 # Acknowledgments
 
 *To be completed.*
