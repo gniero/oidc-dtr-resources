@@ -841,6 +841,18 @@ Verificating the legitimacy of the intent for such transaction may involve conta
 
 Transaction processing continues in the background as soon as an Authentication Decision is made.
 
+## Sample Use Case 2: Increase the level of assurance during a non-registration process
+
+Many banking applications rely on credentials registered in person at a branch office, which involves human verification of identity documents. In many cases, those credentials are Passwords or Banking Code Cards.
+
+Switching to on-line services, those credentials may not be sufficient to perform high-assurance operations. Applying for a loan or changing contact information may require a higher level of identity assurance, and for such, users should be authenticated using stronger mechanisms to prove their identity.
+
+Concentrating this type of verification at the OP allows the RP to delegate the complexity of identity verification. Also, change on policies and identity verification methods are agnostic to the RP. 
+
+OPs can require the use of Biometric data or documents to perform identity verification that complies to the Assurance Level required by the RP. Since not all data can be verified instantly, the use of deferred authentication allows the OP to take the necessary time to perform identity verification. 
+
+This allows for the RP to provide a better user experience, without forcing the user to stay on the RP site, requiring re-authentication, or other disruptive actions.
+
 # Acknowledgments
 
 *To be completed.*
