@@ -1212,7 +1212,7 @@ li > p:last-of-type:only-child {
 <thead><tr>
 <td class="left"></td>
 <td class="center">openid-deferred-token-response</td>
-<td class="right">January 2026</td>
+<td class="right">February 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Jacobsen &amp; de Oliveira Niero</td>
@@ -1227,7 +1227,7 @@ li > p:last-of-type:only-child {
 <dd class="workgroup">OpenID Connect</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-01-30" class="published">30 January 2026</time>
+<time datetime="2026-02-02" class="published">2 February 2026</time>
     </dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
@@ -1411,6 +1411,14 @@ li > p:last-of-type:only-child {
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.19">
             <p id="section-toc.1-1.19.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-use-cases" class="internal xref">Use cases</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.19.2.1">
+                <p id="section-toc.1-1.19.2.1.1"><a href="#appendix-A.1" class="auto internal xref">A.1</a>.  <a href="#name-sample-use-case-1-high-risk" class="internal xref">Sample Use Case 1: High Risk Transaction Evaluation</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.19.2.2">
+                <p id="section-toc.1-1.19.2.2.1"><a href="#appendix-A.2" class="auto internal xref">A.2</a>.  <a href="#name-sample-use-case-2-step-up-i" class="internal xref">Sample Use Case 2: Step-up identity assurance during a non-registration process</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.20">
             <p id="section-toc.1-1.20.1"><a href="#appendix-B" class="auto internal xref">Appendix B</a>.  <a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
@@ -2446,7 +2454,31 @@ One option is to use mutual TLS.<a href="#section-16.1-3" class="pilcrow">¶</a>
 <section id="appendix-A">
       <h2 id="name-use-cases">
 <a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-use-cases" class="section-name selfRef">Use cases</a>
-    </h2>
+      </h2>
+<div id="sample-use-case-1-high-risk-transaction-evaluation">
+<section id="appendix-A.1">
+        <h3 id="name-sample-use-case-1-high-risk">
+<a href="#appendix-A.1" class="section-number selfRef">A.1. </a><a href="#name-sample-use-case-1-high-risk" class="section-name selfRef">Sample Use Case 1: High Risk Transaction Evaluation</a>
+        </h3>
+<p id="appendix-A.1-1">An online banking application requires users to approve a high-risk transaction through a multi-step verification process. It is acceptable for this transaction to take several minutes, up to some hours to complete processing, as it may require additional security checks. It is not necessary for the user to remain actively engaged with the banking application during this time.<a href="#appendix-A.1-1" class="pilcrow">¶</a></p>
+<p id="appendix-A.1-2">When a user initiates such a transaction, the banking application (RP) sends an Authentication Request with the <code>deferred_code code</code> response type to the bank's OpenID Provider (OP). While interacting with the End-user, the OP notices unusual behavior and decides to defer the Authentication Process until further verification is complete.<a href="#appendix-A.1-2" class="pilcrow">¶</a></p>
+<p id="appendix-A.1-3">Verifying the legitimacy of the intent for such a transaction may involve contacting the user through alternative channels, performing manual reviews, or other security measures. During this time, the user is free to leave the banking application.<a href="#appendix-A.1-3" class="pilcrow">¶</a></p>
+<p id="appendix-A.1-4">Transaction processing continues in the background as soon as an Authentication Decision is made.<a href="#appendix-A.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sample-use-case-2-step-up-identity-assurance-during-a-non-registration-process">
+<section id="appendix-A.2">
+        <h3 id="name-sample-use-case-2-step-up-i">
+<a href="#appendix-A.2" class="section-number selfRef">A.2. </a><a href="#name-sample-use-case-2-step-up-i" class="section-name selfRef">Sample Use Case 2: Step-up identity assurance during a non-registration process</a>
+        </h3>
+<p id="appendix-A.2-1">Many banking applications rely on credentials registered in person at a branch office, which involves human verification of identity documents. In many cases, those credentials are Passwords or Banking Code Cards.<a href="#appendix-A.2-1" class="pilcrow">¶</a></p>
+<p id="appendix-A.2-2">Switching to on-line services, those credentials may not be sufficient to perform high-assurance operations. Applying for a loan or changing contact information may require a higher level of identity assurance, and for such, users should be authenticated using stronger mechanisms to prove their identity.<a href="#appendix-A.2-2" class="pilcrow">¶</a></p>
+<p id="appendix-A.2-3">Concentrating this type of verification at the OP allows the RP to delegate the complexity of identity verification. This also allows changes in policies and identity verification methods without involving the RP.<a href="#appendix-A.2-3" class="pilcrow">¶</a></p>
+<p id="appendix-A.2-4">OPs can require the use of Biometric data or documents to perform identity verification that complies to the Assurance Level required by the RP. Since not all data can be verified instantly, the use of deferred authentication allows the OP to take the necessary time to perform identity verification.<a href="#appendix-A.2-4" class="pilcrow">¶</a></p>
+<p id="appendix-A.2-5">The RP requests Authentication with the <code>deferred_code code</code> response type, and in cases where the deferral is necessary, the OP can take the time needed to verify the identity of the user in the background. The RP can then present steps that don't demand the completion of the Authentication Process such as form filling, and notify the user when the final decision is made.<a href="#appendix-A.2-5" class="pilcrow">¶</a></p>
+<p id="appendix-A.2-6">This allows for the RP to provide a better user experience, without forcing the user to stay on the RP site, requiring re-authentication, or other disruptive actions.<a href="#appendix-A.2-6" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="acknowledgments">
