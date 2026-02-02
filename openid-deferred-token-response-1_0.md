@@ -832,6 +832,30 @@ No new registrations.
 
 # Use cases
 
+## Sample Use Case 1: High Risk Transaction Evaluation
+
+An online banking application requires users to approve a high-risk transaction through a multi-step verification process. It is acceptable for this transaction to take several minutes, up to some hours to complete processing, as it may require additional security checks. It is not necessary for the user to remain actively engaged with the banking application during this time.
+
+When a user initiates such a transaction, the banking application (RP) sends an Authentication Request with the `deferred_code code` response type to the bank's OpenID Provider (OP). While interacting with the End-user, the OP notices unusual behavior and decides to defer the Authentication Process until further verification is complete.
+
+Verifying the legitimacy of the intent for such a transaction may involve contacting the user through alternative channels, performing manual reviews, or other security measures. During this time, the user is free to leave the banking application.
+
+Transaction processing continues in the background as soon as an Authentication Decision is made.
+
+## Sample Use Case 2: Step-up identity assurance during a non-registration process
+
+Many banking applications rely on credentials registered in person at a branch office, which involves human verification of identity documents. In many cases, those credentials are Passwords or Banking Code Cards.
+
+Switching to on-line services, those credentials may not be sufficient to perform high-assurance operations. Applying for a loan or changing contact information may require a higher level of identity assurance, and for such, users should be authenticated using stronger mechanisms to prove their identity.
+
+Concentrating this type of verification at the OP allows the RP to delegate the complexity of identity verification. This also allows changes in policies and identity verification methods without involving the RP.
+
+OPs can require the use of Biometric data or documents to perform identity verification that complies to the Assurance Level required by the RP. Since not all data can be verified instantly, the use of deferred authentication allows the OP to take the necessary time to perform identity verification. 
+
+The RP requests Authentication with the `deferred_code code` response type, and in cases where the deferral is necessary, the OP can take the time needed to verify the identity of the user in the background. The RP can then present steps that don't demand the completion of the Authentication Process such as form filling, and notify the user when the final decision is made.
+
+This allows for the RP to provide a better user experience, without forcing the user to stay on the RP site, requiring re-authentication, or other disruptive actions.
+
 # Acknowledgments
 
 *To be completed.*
