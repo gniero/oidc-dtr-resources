@@ -831,7 +831,7 @@ No new registrations.
 
 # Use cases
 
-## Sample Use Case 1: High Risk Transaction Approval
+## Sample Use Case 1: High Risk Transaction Evaluation
 
 An online banking application requires users to approve a high-risk transaction through a multi-step verification process. It is acceptable for this transaction to take several minutes, up to some hours to complete processing, as it may require additional security checks. It is not necessary for the user to remain actively engaged with the banking application during this time.
 
@@ -841,7 +841,7 @@ Verificating the legitimacy of the intent for such transaction may involve conta
 
 Transaction processing continues in the background as soon as an Authentication Decision is made.
 
-## Sample Use Case 2: Increase the level of assurance during a non-registration process
+## Sample Use Case 2: Step-up identity assurance during a non-registration process
 
 Many banking applications rely on credentials registered in person at a branch office, which involves human verification of identity documents. In many cases, those credentials are Passwords or Banking Code Cards.
 
@@ -850,6 +850,8 @@ Switching to on-line services, those credentials may not be sufficient to perfor
 Concentrating this type of verification at the OP allows the RP to delegate the complexity of identity verification. Also, change on policies and identity verification methods are agnostic to the RP. 
 
 OPs can require the use of Biometric data or documents to perform identity verification that complies to the Assurance Level required by the RP. Since not all data can be verified instantly, the use of deferred authentication allows the OP to take the necessary time to perform identity verification. 
+
+The RP requests Authentication with the `deferred_code code` response type, and in cases where the deferral is necessary, the OP can take the time needed to verify the identity of the user in the background. The RP can then present steps that don't demand the completion of the Authentication Process such as form filling, and notify the user when the final decision is made.
 
 This allows for the RP to provide a better user experience, without forcing the user to stay on the RP site, requiring re-authentication, or other disruptive actions.
 
