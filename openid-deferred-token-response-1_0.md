@@ -327,13 +327,21 @@ While processing the request, the OP MAY allow the RP to cancel the request as d
 
 # Deferred Client Notification Endpoint
 
-This will define the endpoint that the OP should optionally send a Ping to.
-This will be configured in client registration metadata and should only be used if configured.
+Since the Deferred Token Response provides a way to authenticate the End‑User asynchronously after User interaction has ended, the Client needs a mechanism to receive this response.
+
+The simplest approach is for the Client to poll the Token Endpoint. In addition, this specification defines a method for the OP to notify the RP when an Authentication decision has been made by sending a Ping Callback to an RP‑defined endpoint.
+
+This mechanism is RECOMMENDED for both OPs and RPs, as it offers a more efficient way to receive the Authentication decision without relying solely on continuous polling. See (#design-considerations-for-poll-and-ping) for related design considerations.
+
+The Deferred Client Notification Endpoint operates similarly to the callback modes defined in [@?OpenID.CIBA]. Although some parameters behave in comparable ways, they are defined separately to allow an RP supporting both specifications to route and process responses on distinct endpoints, thereby avoiding potential conflicts.
+
+The specific behavior of the Deferred Client Notification Endpoint is described in (#ping-callback).
 
 # Getting the Authentication Result
 
-This will define the steps for the RP to get the result of the Authentication Process.
-This process polls a special endpoint for that purpose.
+Once the `deferred_auth_id` is obtained, the Relying Party (RP) can retrieve the result of the Authentication Process through interactions with the OpenID Provider (OP). This section describes the mechanisms by which the RP may obtain the authentication result, including RP‑initiated polling and optional Ping Callbacks sent by the OP.
+
+Detailed information about the specific request and response formats, validation steps, and security considerations can be found in the respective subsections.
 
 ## Token Request using the Authentication Request ID {#token-request-using-the-authentication-request-id}
 
@@ -365,12 +373,13 @@ The OP MUST validate the request received as follows:
 
 1. Authenticate the Client in accordance with Section 9 of [@!OpenID.Core].
 2. Ensure the given `deferred_auth_id` was issued to the authenticated Client.
-3. If a DPoP proof was provided in the [Deferred Code Exchange Request](#deferred-code-exchange-request)
+3. If `expires_in` was provided in (#successful-deferred-code-exchange-response), verify that the expiration time has not elapsed.
+4. If a DPoP proof was provided in the [Deferred Code Exchange Request](#deferred-code-exchange-request)
    1. Validate that a DPoP proof is provided in this request.
    2. If the Client is a Public Client, verify that the public key used in this DPoP proof matches the one used in the Deferred Code Exchange Request.
-4. If a DPoP proof is provided in this request, validate it in accordance with [@!RFC9449, section 4.3].
-5. Verify that the Authentication Process has been completed, has not been canceled and has not reached timeout
-6. Verify that no access token has been previously issued for the Deferred Authentication ID.
+5. If a DPoP proof is provided in this request, validate it in accordance with [@!RFC9449, section 4.3].
+6. Verify that the Authentication Process has been completed, has not been canceled and has not reached timeout
+7. Verify that no access token has been previously issued for the Deferred Authentication ID.
    
 If the OP encounters any error, it MUST return an error response, per (#token-request-error-response).
 
@@ -395,7 +404,7 @@ Cache-Control: no-store
 }
 ```
 
-## Ping Callback
+## Ping Callback {#ping-callback}
 
 If the client has registered a `deferred_client_notification_endpoint` during client registration, the OP sends a Ping Callback to that endpoint once the Authentication Process has finished, regardless of the outcome.
 
