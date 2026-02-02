@@ -837,7 +837,7 @@ An online banking application requires users to approve a high-risk transaction 
 
 When a user initiates such a transaction, the banking application (RP) sends an Authentication Request with the `deferred_code code` response type to the bank's OpenID Provider (OP). While interacting with the End-user, the OP notices unusual behavior and decides to defer the Authentication Process until further verification is complete.
 
-Verificating the legitimacy of the intent for such transaction may involve contacting the user through alternative channels, performing manual reviews, or other security measures. During this time, the user is free to leave the banking application.
+Verifying the legitimacy of the intent for such a transaction may involve contacting the user through alternative channels, performing manual reviews, or other security measures. During this time, the user is free to leave the banking application.
 
 Transaction processing continues in the background as soon as an Authentication Decision is made.
 
@@ -847,7 +847,7 @@ Many banking applications rely on credentials registered in person at a branch o
 
 Switching to on-line services, those credentials may not be sufficient to perform high-assurance operations. Applying for a loan or changing contact information may require a higher level of identity assurance, and for such, users should be authenticated using stronger mechanisms to prove their identity.
 
-Concentrating this type of verification at the OP allows the RP to delegate the complexity of identity verification. Also, change on policies and identity verification methods are agnostic to the RP. 
+Concentrating this type of verification at the OP allows the RP to delegate the complexity of identity verification. This also allows changes in policies and identity verification methods without involving the RP.
 
 OPs can require the use of Biometric data or documents to perform identity verification that complies to the Assurance Level required by the RP. Since not all data can be verified instantly, the use of deferred authentication allows the OP to take the necessary time to perform identity verification. 
 
