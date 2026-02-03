@@ -2,6 +2,8 @@
 
 This repository holds the resources for the proposition of an extension to the OpenID Connect protocol that we've been naming as *Deferred Token Response*
 
+You can access the latest automatic build from main branch here: https://gniero.github.io/oidc-dtr-resources/
+
 ## What is this?
 The Deferred Token Response protocol makes it possible for an Authorization Server (OpenID Provider) to defer the issuance of a token until a later time when responding to an Authorization Request.
 This is useful in cases where Authenticating the End-User takes a very long time.
