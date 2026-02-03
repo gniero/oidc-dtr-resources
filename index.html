@@ -1279,7 +1279,7 @@ li > p:last-of-type:only-child {
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
-            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-authentication-using-deferr" class="internal xref">Authentication using Deferred Token Flow</a></p>
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-starting-a-deferred-token-f" class="internal xref">Starting a Deferred Token Flow</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1">
                 <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-deferred-code-response-type" class="internal xref">Deferred Code Response Type</a></p>
@@ -1582,12 +1582,12 @@ The Deferred Token Response Flow consists of the following steps:<a href="#secti
 </div>
 </section>
 </div>
-<div id="authentication-using-deferred-token-flow">
+<div id="starting-a-deferred-token-flow">
 <section id="section-4">
-      <h2 id="name-authentication-using-deferr">
-<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-authentication-using-deferr" class="section-name selfRef">Authentication using Deferred Token Flow</a>
+      <h2 id="name-starting-a-deferred-token-f">
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-starting-a-deferred-token-f" class="section-name selfRef">Starting a Deferred Token Flow</a>
       </h2>
-<p id="section-4-1">This section describes how to perform authentication using the Deferred Token Flow.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-4-1">This section describes how to start an Authentication Process using the Deferred Token Flow.<a href="#section-4-1" class="pilcrow">¶</a></p>
 <div id="deferred-code-response-type">
 <section id="section-4.1">
         <h3 id="name-deferred-code-response-type">
@@ -2321,11 +2321,11 @@ Options include:
         <h3 id="name-design-considerations-for-p">
 <a href="#section-14.3" class="section-number selfRef">14.3. </a><a href="#name-design-considerations-for-p" class="section-name selfRef">Design Considerations for Poll and Ping</a>
         </h3>
-<p id="section-14.3-1">This specification intentionally does not define a "push" mode for delivering a Token Response.
-The push mode is not appropriate for long-running high-value Authentication Processes since losing the single push request would mean losing the outcome of the entire Authentication Process.<a href="#section-14.3-1" class="pilcrow">¶</a></p>
-<p id="section-14.3-2">The Ping Callback enables long-running Authentication Processes to occur without wasting network resources on a large amount of Poll requests.<a href="#section-14.3-2" class="pilcrow">¶</a></p>
-<p id="section-14.3-3">In case an OpenID Provider returns an <code>authorization_pending</code> Token Request Error Response after sending a Ping Callback, the Relying Party SHOULD keep sending Token Requests.
-This improves the success rates in distributed systems that may incorrectly send Ping Callbacks too early and prevents denial-of-service attacks in case the Deferred Client Notification Endpoint is compromised.<a href="#section-14.3-3" class="pilcrow">¶</a></p>
+<p id="section-14.3-1">The Ping Callback enables long-running Authentication Processes to occur without wasting network resources on a large amount of Poll requests. Given the asynchronous nature of the interactions introduced by Deferred Token Response, some design considerations are outlined below.<a href="#section-14.3-1" class="pilcrow">¶</a></p>
+<p id="section-14.3-2">In case an OpenID Provider returns an <code>authorization_pending</code> Token Request Error Response after sending a Ping Callback, the Relying Party SHOULD keep sending Token Requests.
+This improves the success rates in distributed systems that may incorrectly send Ping Callbacks too early and prevents denial-of-service attacks in case the Deferred Client Notification Endpoint is compromised.<a href="#section-14.3-2" class="pilcrow">¶</a></p>
+<p id="section-14.3-3">In certain scenarios, an RP awaiting an Authentication Process that is close to expiring may choose to perform one final Token Request slightly before the required polling interval, as close as possible to the process’s expiration time. This RP‑side strategy can help mitigate the impact of missed Ping Callbacks or authentication decisions made too late to fall within the normal polling schedule.<a href="#section-14.3-3" class="pilcrow">¶</a></p>
+<p id="section-14.3-4">This specification intentionally does not define a way to deliver the token directly to the Client Notification Endpoint, known as <em>push mode</em> in CIBA. The <em>push mode</em> is not appropriate for long-running high-value Authentication Processes since losing the single push request would mean losing the outcome of the entire Authentication Process.<a href="#section-14.3-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="context-on-the-progress-of-incomplete-authentication-processes">
