@@ -132,9 +132,9 @@ The following Client Metadata parameter is defined by this specification to be u
 : REQUIRED if the RP desires to be notified when the Authentication decision has been taken. It MUST be an HTTPS URL.
 
 
-# Authentication using Deferred Token Flow
+# Starting a Deferred Token Flow
 
-This section describes how to perform authentication using the Deferred Token Flow.
+This section describes how to start an Authentication Process using the Deferred Token Flow.
 
 ## Deferred Code Response Type
 
