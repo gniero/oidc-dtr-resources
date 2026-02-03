@@ -856,6 +856,21 @@ The RP requests Authentication with the `deferred_code code` response type, and 
 
 This allows for the RP to provide a better user experience, without forcing the user to stay on the RP site, requiring re-authentication, or other disruptive actions.
 
+## Sample Use Case 3: Identification Based on Physical Evidence
+
+Many jurisdictions do not have a widespread method of digital identity verification such as an electronic ID.
+In these jurisdictions, a common way to do identity verification is to scan a physical identity document such as a passport or a driver's license.
+The scan is often supplemented with a liveness check consisting of e.g. a video recording of the End User, which is matched with a photograph on the physical identity document.
+
+In many cases, automated systems can determine whether the physical identity document is authentic and whether the liveness check matches the photograph.
+In some cases, manual verification by a human operator is necessary.
+This manual verification can take a long time and may involve contacting the End User via another channel, which means that an ID Token can not immediately be returned.
+
+The RP requests Authentication with the `deferred_code code` response type, and in cases where the deferral is necessary, the OP can manually verify the authenticity of the physical identity document and the match between the liveness check and the photograph.
+The RP can then continue with steps that don't demand the completion of the Authentication Process, and notify the user when the final decision is made.
+
+This allows the RP to process most identity verification requests immediately while remaining compliant with regulation on automated decision making in identity verification.
+
 # Acknowledgments
 
 *To be completed.*
