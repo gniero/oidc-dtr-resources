@@ -24,7 +24,7 @@ surname="de Oliveira Niero"
 fullname="Guilherme de Oliveira Niero"
 organization="Independent"
     [author.address]
-    email = "gniero@gmail.com"
+    email = "iam@gniero.com"
 
 %%%
 
