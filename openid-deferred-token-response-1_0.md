@@ -702,13 +702,15 @@ Options include:
 The OP MAY accept Authentication Requests providing the response type value as `deferred_code code`. In those cases, it means for the OP that it MAY chose, by its own means, when the Authentication response will be of deferred type or any other provided alternative. 
 
 ## Design Considerations for Poll and Ping {#design-considerations-for-poll-and-ping}
-This specification intentionally does not define a "push" mode for delivering a Token Response.
-The push mode is not appropriate for long-running high-value Authentication Processes since losing the single push request would mean losing the outcome of the entire Authentication Process.
 
-The Ping Callback enables long-running Authentication Processes to occur without wasting network resources on a large amount of Poll requests.
+The Ping Callback enables long-running Authentication Processes to occur without wasting network resources on a large amount of Poll requests. Given the asynchronous nature of the interactions introduced by Deferred Token Response, some design considerations are outlined below.
 
 In case an OpenID Provider returns an `authorization_pending` Token Request Error Response after sending a Ping Callback, the Relying Party SHOULD keep sending Token Requests.
 This improves the success rates in distributed systems that may incorrectly send Ping Callbacks too early and prevents denial-of-service attacks in case the Deferred Client Notification Endpoint is compromised.
+
+In certain scenarios, an RP awaiting an Authentication Process that is close to expiring may choose to perform one final Token Request slightly before the required polling interval, as close as possible to the process’s expiration time. This RP‑side strategy can help mitigate the impact of missed Ping Callbacks or authentication decisions made too late to fall within the normal polling schedule.
+
+This specification intentionally does not define a way to deliver the token directly to the Client Notification Endpoint, known as _push mode_ in CIBA. The _push mode_ is not appropriate for long-running high-value Authentication Processes since losing the single push request would mean losing the outcome of the entire Authentication Process.
 
 ## Context on the Progress of Incomplete Authentication Processes
 
