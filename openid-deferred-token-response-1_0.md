@@ -35,6 +35,21 @@ Draft of the Deferred Token Response Flow.
 
 # Introduction
 
+OpenID Connect allows Relying Parties (RP) to authenticate their users for clients that support HTTP redirection mechanisms.
+OpenID Connect requires the user to start the authentication flow and the Client to receive verifiable assertions about the identity of the user via redirects through the user agent.
+This requires the authentication flow to complete relatively quickly, such that the session is preserved in the user agent.
+
+The OpenID Connect Client-Initiated Backchannel Authentication Flow introduces an asynchronous method for authentication result notification or delivery.
+But the Client-Initiated Backchannel Authentication Flow also requires direct communication from the Client to the OpenID Provider without redirects through the user agent.
+This means that the Client, not the user, must initiate the flow.
+
+Deferred Token Response (DTR) is a new authentication flow in which the end-user initiates the flow and the Client can receive the authentication result asynchronously.
+This allows users to interactively start an authentication flow which may take any amount of time to complete without having to preserve a session in their user agent.
+
+This specification does not change the semantics of the OpenID Connect Authentication flow.
+It introduces new asynchronous methods for authentication result delivery and notification.
+It does not introduce new scope values nor does it change the semantics of standard OpenID Connect parameters.
+
 ## Requirements Notation and Conventions
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 [@!RFC2119] [@!RFC8174] when, and only when, they appear in all capitals, as shown here.
