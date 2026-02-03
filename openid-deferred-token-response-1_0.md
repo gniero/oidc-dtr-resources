@@ -693,7 +693,7 @@ The Ping Callback enables long-running Authentication Processes to occur without
 In case an OpenID Provider returns an `authorization_pending` Token Request Error Response after sending a Ping Callback, the Relying Party SHOULD keep sending Token Requests.
 This improves the success rates in distributed systems that may incorrectly send Ping Callbacks too early and prevents denial-of-service attacks in case the Deferred Client Notification Endpoint is compromised.
 
-An Authentication Process may expire before the RP’s required interval between token requests has elapsed. The RP MAY choose to send one final token request just before the expiration time to make sure that it didn't miss a Ping Callback, or that a last moment Authentication Decision won't be missed.
+In certain scenarios, an RP awaiting an Authentication Process that is close to expiring may choose to perform one final Token Request slightly before the required polling interval, as close as possible to the process’s expiration time. This RP‑side strategy can help mitigate the impact of missed Ping Callbacks or authentication decisions made too late to fall within the normal polling schedule.
 
 This specification intentionally does not define a way to deliver the token directly to the Client Notification Endpoint, known as _push mode_ in CIBA. The _push mode_ is not appropriate for long-running high-value Authentication Processes since losing the single push request would mean losing the outcome of the entire Authentication Process.
 
