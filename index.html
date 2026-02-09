@@ -1227,7 +1227,7 @@ li > p:last-of-type:only-child {
 <dd class="workgroup">OpenID Connect</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-02-03" class="published">3 February 2026</time>
+<time datetime="2026-02-09" class="published">9 February 2026</time>
     </dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
@@ -1598,11 +1598,11 @@ It also defines combinations of the <code>deferred_code</code> Response Type wit
 The intended purpose of the <code>deferred_code</code> is that the response MUST contain a Deferred Authorization Code which can be used at the Token Endpoint.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
 <span class="break"></span><dl class="dlCompact dlParallel" id="section-4.1-2">
           <dt id="section-4.1-2.1"><code>deferred_code</code></dt>
-          <dd style="margin-left: 1.5em" id="section-4.1-2.2">When supplied as the <code>response_type</code> parameter in an OAuth 2.0 Authorization Request, a successful response MUST include the parameter <code>deferred_code</code>. The Authorization Server SHOULD NOT return an OAuth 2.0 Authorization Code, Access Token, or Access Token Type in a successful response to the grant request. If a <code>redirect_uri</code> is supplied, the User Agent SHOULD be redirected there after granting or denying access. The request MAY include a <code>state</code> parameter, and if so, the Authorization Server MUST echo its value as a response parameter when issuing either a successful response or an error response.<a href="#section-4.1-2.2" class="pilcrow">¶</a>
+          <dd style="margin-left: 1.5em" id="section-4.1-2.2">When supplied as the <code>response_type</code> parameter in an OAuth 2.0 Authorization Request, a successful response MUST include the parameter <code>deferred_code</code>. The Authorization Server SHOULD NOT return an OAuth 2.0 Authorization Code, Access Token, or Access Token Type in a successful response to the grant request. The User Agent MUST be redirected to the supplied <code>redirect_uri</code> after all required interaction with End-User has been completed. The request MAY include a <code>state</code> parameter, and if so, the Authorization Server MUST echo its value as a response parameter when issuing either a successful response or an error response.<a href="#section-4.1-2.2" class="pilcrow">¶</a>
 </dd>
           <dd class="break"></dd>
 <dt id="section-4.1-2.3"><code>deferred_code code</code></dt>
-          <dd style="margin-left: 1.5em" id="section-4.1-2.4">When supplied as the <code>response_type</code> parameter in an OAuth 2.0 Authorization Request, a successful response MUST include either the parameter <code>deferred_code</code> or the parameter <code>code</code>. The Authorization Server SHOULD NOT return an OAuth 2.0 Access Token, or Access Token Type in a successful response to the grant request. If a <code>redirect_uri</code> is supplied, the User Agent SHOULD be redirected there after granting or denying access. The request MAY include a <code>state</code> parameter, and if so, the Authorization Server MUST echo its value as a response parameter when issuing either a successful response or an error response.<a href="#section-4.1-2.4" class="pilcrow">¶</a>
+          <dd style="margin-left: 1.5em" id="section-4.1-2.4">When supplied as the <code>response_type</code> parameter in an OAuth 2.0 Authorization Request, a successful response MUST include either the parameter <code>deferred_code</code> or the parameter <code>code</code>. The Authorization Server SHOULD NOT return an OAuth 2.0 Access Token, or Access Token Type in a successful response to the grant request. The User Agent MUST be redirected to the supplied <code>redirect_uri</code> after all required interaction with End-User has been completed. The request MAY include a <code>state</code> parameter, and if so, the Authorization Server MUST echo its value as a response parameter when issuing either a successful response or an error response.<a href="#section-4.1-2.4" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
 </dl>
