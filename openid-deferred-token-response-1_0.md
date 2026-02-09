@@ -186,7 +186,7 @@ If the OpenID Provider encounters any error, it MUST return an error response, p
 
 ## OpenID Provider Obtains End-User Authorization and Identity Information {#op-obtains-end-user-authorization-and-identity-information}
 
-Upon receiving a valid Authentication Request, the OpenID Provider (OP) determines whether End-User interaction is required to complete the authentication process. It MAY present OP-controlled interfaces through the User Agent to provide guidance through the Authentication steps.
+Upon receiving a valid Authentication Request, the OpenID Provider (OP) determines whether End-User interaction is required to complete the authentication process. The OP MAY expose its own interaction interfaces through the User Agent, or it MAY utilize delegated or federated interaction interfaces operated by third‑party providers.
 
 Through these interfaces, the OP MAY prompt the End-User to provide credentials, perform multi-factor authentication, or supply additional Identity Information (such as biometric data, government-issued documents, or other forms of verification).
 
