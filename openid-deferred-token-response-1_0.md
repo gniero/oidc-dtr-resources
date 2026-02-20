@@ -87,7 +87,7 @@ These steps are illustrated in the following diagram:
 |    |                                |    |                  | End- |
 |    |                                |    |<-(2) Start Auth->| User |
 |    |                                |    |                  |      |
-|    |<--(3) Auth Code----------------|    |                  |      |
+|    |<--(3) Deferred Code------------|    |                  |      |
 |    |                                |    |                  +------+
 |    |<--(4) Deferred Code Exchange-->|    |
 |    |                                |    |
