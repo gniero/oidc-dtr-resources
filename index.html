@@ -1227,7 +1227,7 @@ li > p:last-of-type:only-child {
 <dd class="workgroup">OpenID Connect</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-02-10" class="published">10 February 2026</time>
+<time datetime="2026-02-20" class="published">20 February 2026</time>
     </dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
@@ -1517,25 +1517,23 @@ The Deferred Token Response Flow consists of the following steps:<a href="#secti
 |    |                                |    |                  | End- |
 |    |                                |    |&lt;-(2) Start Auth-&gt;| User |
 |    |                                |    |                  |      |
-|    |&lt;--(3) Auth Code----------------|    |                  |      |
+|    |&lt;--(3) Deferred Code------------|    |                  |      |
 |    |                                |    |                  +------+
-|    |---(4a) Initial Token Request--&gt;|    |
-|    |                                |    |
-|    |&lt;--(4b) Initial Token Response--|    |
+|    |&lt;--(4) Deferred Code Exchange--&gt;|    |
 |    |                                |    |
 |    |                                |    |---------+
 |    |                                |    |         |
-| RP |---(5a) Poll Request-----------&gt;| OP |         |
+| RP |---(5a) Token Request----------&gt;| OP |         |
 |    |                                |    | (6) Complete AuthN process
-|    |&lt;--(5b) Poll Response-----------|    |         |
+|    |&lt;--(5b) Token Response----------|    |         |
 |    |                                |    |         |
 |    |               ...              |    |&lt;--------+
 |    |                                |    |
-|    |&lt;--(7) Optional Ping------------|    |
+|    |&lt;--(7) Optional Ping Callback---|    |
 |    |                                |    |
-|    |---(5a) Poll Request-----------&gt;|    |
+|    |---(5a) Token Request----------&gt;|    |
 |    |                                |    |
-|    |&lt;--(5b) Poll Response ----------|    |
+|    |&lt;--(5b) Token Response ---------|    |
 |    |                                |    |
 +----+                                +----+
 </pre><a href="#section-2-4" class="pilcrow">¶</a>
