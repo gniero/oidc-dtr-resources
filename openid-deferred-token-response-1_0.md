@@ -89,23 +89,21 @@ These steps are illustrated in the following diagram:
 |    |                                |    |                  |      |
 |    |<--(3) Auth Code----------------|    |                  |      |
 |    |                                |    |                  +------+
-|    |---(4a) Initial Token Request-->|    |
-|    |                                |    |
-|    |<--(4b) Initial Token Response--|    |
+|    |<--(4) Deferred Code Exchange-->|    |
 |    |                                |    |
 |    |                                |    |---------+
 |    |                                |    |         |
-| RP |---(5a) Poll Request----------->| OP |         |
+| RP |---(5a) Token Request---------->| OP |         |
 |    |                                |    | (6) Complete AuthN process
-|    |<--(5b) Poll Response-----------|    |         |
+|    |<--(5b) Token Response----------|    |         |
 |    |                                |    |         |
 |    |               ...              |    |<--------+
 |    |                                |    |
-|    |<--(7) Optional Ping------------|    |
+|    |<--(7) Optional Ping Callback---|    |
 |    |                                |    |
-|    |---(5a) Poll Request----------->|    |
+|    |---(5a) Token Request---------->|    |
 |    |                                |    |
-|    |<--(5b) Poll Response ----------|    |
+|    |<--(5b) Token Response ---------|    |
 |    |                                |    |
 +----+                                +----+
 ```
