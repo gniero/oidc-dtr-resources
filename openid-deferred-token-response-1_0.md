@@ -22,9 +22,9 @@ organization="Idura"
 initials="G."
 surname="de Oliveira Niero"
 fullname="Guilherme de Oliveira Niero"
-organization="Independent"
+organization="Itaú"
     [author.address]
-    email = "iam@gniero.com"
+    email = "guilherme.niero@itau-unibanco.com.br"
 
 %%%
 
